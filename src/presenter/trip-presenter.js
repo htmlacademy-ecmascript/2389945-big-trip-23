@@ -4,21 +4,28 @@ import EventListView from '../view/event-list-view.js';
 import EventSortView from '../view/event-sort-view.js';
 import EventView from '../view/event-view.js';
 
-export default class EventPresenter {
-  constructor({ eventContainer }) {
-    this.eventContainer = eventContainer;
+export default class TripPresenter {
+  constructor({ tripContainer, eventsModel }) {
+    this.tripContainer = tripContainer;
+    this.eventsModel = eventsModel;
   }
 
   eventListContainer = new EventListView();
 
   init() {
-    const tripEventsElement = this.eventContainer.querySelector('.trip-events');
+    this.tripEvents = [...this.eventsModel.getEvents()];
+    console.log(this.tripEvents);
+
+    const tripEventsElement = this.tripContainer.querySelector('.trip-events');
     render(new EventSortView(), tripEventsElement);
     render(this.eventListContainer, tripEventsElement);
     render(new EventEditPointView(), this.eventListContainer.getElement());
 
-    for (let i = 0; i < 3; i++) {
-      render(new EventView(), this.eventListContainer.getElement());
+    for (let i = 0; i < this.tripEvents.length; i++) {
+      render(
+        new EventView({ event: this.tripEvents[i] }),
+        this.eventListContainer.getElement()
+      );
     }
   }
 }
