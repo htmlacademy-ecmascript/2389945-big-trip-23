@@ -1,5 +1,3 @@
-import { getRandomArrayElement } from '../utils.js';
-
 export const offers = [
   {
     type: 'taxi',
@@ -207,4 +205,4 @@ export const offers = [
   },
 ];
 
-export const getRandomOffer = () => getRandomArrayElement(offers);
+export const getAllOffers = () => offers;

@@ -1,22 +1,22 @@
 import EventsModel from './model/events-model.js';
-import TripPresenter from './presenter/trip-presenter.js';
+import EventPresenter from './presenter/event-presenter.js';
 import { RenderPosition, render } from './render.js';
-import EventFilterView from './view/event-filter-view.js';
+import TripFiltersView from './view/trip-filters-view.js';
 import TripInfoView from './view/trip-info-view.js';
 
-const siteMainElement = document.querySelector('.page-main');
+const tripEventsElement = document.querySelector('.trip-events');
 const tripMainElement = document.querySelector('.trip-main');
 const eventFiltersElement = tripMainElement.querySelector(
   '.trip-controls__filters'
 );
 const eventsModel = new EventsModel();
 
-const tripPresenter = new TripPresenter({
-  tripContainer: siteMainElement,
+const eventPresenter = new EventPresenter({
+  container: tripEventsElement,
   eventsModel,
 });
 
 render(new TripInfoView(), tripMainElement, RenderPosition.AFTERBEGIN);
-render(new EventFilterView(), eventFiltersElement);
+render(new TripFiltersView(), eventFiltersElement);
 
-tripPresenter.init();
+eventPresenter.init();

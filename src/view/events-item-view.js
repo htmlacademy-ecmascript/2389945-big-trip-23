@@ -1,7 +1,20 @@
 import { createElement } from '../render.js';
 import { formatEventDate } from '../utils.js';
 
-function createEventTemplate(event) {
+/*
+<li class="event__offer">
+        <span class="event__offer-title">Book tickets</span>
+          &plus;&euro;&nbsp;
+        <span class="event__offer-price">40</span>
+      </li>
+      <li class="event__offer">
+        <span class="event__offer-title">Lunch in city</span>
+          &plus;&euro;&nbsp;
+        <span class="event__offer-price">30</span>
+      </li>
+*/
+
+function createEventsItemTemplate(event, extEvent) {
   /*
 id: 'a9e591d1-c01d-4211-a72c-f864b782322e',
     basePrice: 8128,
@@ -17,36 +30,46 @@ id: 'a9e591d1-c01d-4211-a72c-f864b782322e',
     ],
     type: 'flight',
 */
-  const DATE_FORMAT = 'HH:mm';
-  const dateFrom = formatEventDate(event.dateFrom, DATE_FORMAT);
-  const dateTo = formatEventDate(event.dateTo, DATE_FORMAT);
+  const TIME_FORMAT = 'HH:mm';
+  const DATE_FORMAT = 'MMM DD';
+  const startDate = formatEventDate(event.dateFrom, DATE_FORMAT);
+  const startTime = formatEventDate(event.dateFrom, TIME_FORMAT);
+  const endTime = formatEventDate(event.dateTo, TIME_FORMAT);
+  const eventType = event.type;
+  const basePrice = event.basePrice;
+  const destinationName = extEvent.cityName;
 
   return `<li class="trip-events__item">
 	<div class="event">
-		<time class="event__date" datetime="2019-03-18">MAR 18</time>
+		<time class="event__date" datetime="2019-03-18">${startDate}</time>
 		<div class="event__type">
 			<img class="event__type-icon" width="42" height="42" src="img/icons/check-in.png" alt="Event type icon">
 		</div>
-		<h3 class="event__title">Check-in Chamonix</h3>
+		<h3 class="event__title">${eventType} ${destinationName}</h3>
 		<div class="event__schedule">
 			<p class="event__time">
-				<time class="event__start-time" datetime="2019-03-18T12:25">${dateFrom}</time>
+				<time class="event__start-time" datetime="2019-03-18T12:25">${startTime}</time>
 				&mdash;
-				<time class="event__end-time" datetime="2019-03-18T13:35">${dateTo}</time>
+				<time class="event__end-time" datetime="2019-03-18T13:35">${endTime}</time>
 			</p>
 			<p class="event__duration">40M</p>
 		</div>
 		<p class="event__price">
-			&euro;&nbsp;<span class="event__price-value">600</span>
+			&euro;&nbsp;<span class="event__price-value">${basePrice}</span>
 		</p>
 		<h4 class="visually-hidden">Offers:</h4>
 		<ul class="event__selected-offers">
-			<li class="event__offer">
-				<span class="event__offer-title">Add breakfast</span>
-				&plus;&euro;&nbsp;
-				<span class="event__offer-price">50</span>
-			</li>
-		</ul>
+      <li class="event__offer">
+        <span class="event__offer-title">Book tickets</span>
+          &plus;&euro;&nbsp;
+        <span class="event__offer-price">40</span>
+      </li>
+      <li class="event__offer">
+        <span class="event__offer-title">Lunch in city</span>
+          &plus;&euro;&nbsp;
+        <span class="event__offer-price">30</span>
+      </li>
+    </ul>
 		<button class="event__favorite-btn event__favorite-btn--active" type="button">
 			<span class="visually-hidden">Add to favorite</span>
 			<svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
@@ -60,13 +83,14 @@ id: 'a9e591d1-c01d-4211-a72c-f864b782322e',
 </li>`;
 }
 
-export default class EventView {
-  constructor({ event }) {
+export default class EventsItemView {
+  constructor({ event, extEvent }) {
     this.event = event;
+    this.extEvent = extEvent;
   }
 
   getTemplate() {
-    return createEventTemplate(this.event);
+    return createEventsItemTemplate(this.event, this.extEvent);
   }
 
   getElement() {
