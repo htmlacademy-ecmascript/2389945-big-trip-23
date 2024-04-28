@@ -32,8 +32,6 @@ export default class EventsModel {
       eventsInfo.set(item, {
         destination: destination,
         offers: item.offers.map((offer) => this.getOfferById(item.type, offer)),
-        //icon: `../../public/img/icons/${destination.type}.png`,
-        //offers: item.offers,
       });
     });
     return eventsInfo;

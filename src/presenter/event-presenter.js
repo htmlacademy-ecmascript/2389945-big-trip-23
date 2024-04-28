@@ -16,11 +16,17 @@ export default class EventPresenter {
     this.tripEvents = [...this.eventsModel.getEvents()];
     this.tripEventsInfo = new Map([...this.eventsModel.getEventsInfo()]);
 
-    console.log(this.tripEventsInfo);
+    //console.log(this.tripEventsInfo);
 
     render(new TripSortView(), this.container);
     render(this.eventsListElement, this.container);
-    render(new EventEditPointView(), this.eventsListElement.getElement());
+    render(
+      new EventEditPointView({
+        event: this.tripEvents[0],
+        eventInfo: this.tripEventsInfo.get(this.tripEvents[0]),
+      }),
+      this.eventsListElement.getElement()
+    );
 
     for (let i = 0; i < this.tripEvents.length; i++) {
       render(

@@ -1,5 +1,6 @@
 import { createElement } from '../render.js';
 import { formatEventDate, getEventDurationTime } from '../utils.js';
+import { EVENTS_LIST_DATE_FORMAT, EVENTS_LIST_TIME_FORMAT } from '../const.js';
 
 const createEventOffersTemplate = (offers) => {
   let offersTemplate = '';
@@ -16,11 +17,9 @@ const createEventOffersTemplate = (offers) => {
 const createEventsItemTemplate = (event, eventInfo) => {
   const { type, basePrice, isFavorite, dateFrom, dateTo } = event;
   const { destination, offers } = eventInfo;
-  const TIME_FORMAT = 'HH:mm';
-  const DATE_FORMAT = 'MMM DD';
-  const startDate = formatEventDate(dateFrom, DATE_FORMAT);
-  const startTime = formatEventDate(dateFrom, TIME_FORMAT);
-  const endTime = formatEventDate(dateTo, TIME_FORMAT);
+  const startDate = formatEventDate(dateFrom, EVENTS_LIST_DATE_FORMAT);
+  const startTime = formatEventDate(dateFrom, EVENTS_LIST_TIME_FORMAT);
+  const endTime = formatEventDate(dateTo, EVENTS_LIST_TIME_FORMAT);
   const durationTime = getEventDurationTime(dateFrom, dateTo);
 
   const totalPrice =
