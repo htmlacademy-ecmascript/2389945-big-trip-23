@@ -1,8 +1,7 @@
 import { createElement } from '../render.js';
 
-function createEventsMessageTemplate(message) {
-  return `<p class="trip-events__msg">${message}</p>`;
-}
+const createEventsMessageTemplate = (message) =>
+  `<p class="trip-events__msg">${message}</p>`;
 
 export default class EventsMessageView {
   constructor({ message }) {

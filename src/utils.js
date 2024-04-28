@@ -6,7 +6,7 @@ export const getRandomArrayElement = (items) =>
 export const formatEventDate = (date, formatPattern) =>
   date ? dayjs(date).format(formatPattern) : '';
 
-export const eventDurationTime = (dateStart, dateEnd) => {
+export const getEventDurationTime = (dateStart, dateEnd) => {
   const diff = dayjs(dateEnd).diff(dateStart, 'minute');
-  return `${Math.floor(diff / 60)}H ${Math.floor(diff % 60)}M`;
+  return `${Math.floor(diff / 60) || ''}H ${Math.floor(diff % 60)}M`;
 };
