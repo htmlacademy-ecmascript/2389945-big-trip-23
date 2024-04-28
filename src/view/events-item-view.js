@@ -1,5 +1,5 @@
 import { createElement } from '../render.js';
-import { formatEventDate, durationTime } from '../utils.js';
+import { formatEventDate, durationEventTime } from '../utils.js';
 
 /*
 <li class="event__offer">
@@ -66,7 +66,10 @@ id: 'a9e591d1-c01d-4211-a72c-f864b782322e',
 				&mdash;
 				<time class="event__end-time" datetime="2019-03-18T13:35">${endTime}</time>
 			</p>
-			<p class="event__duration">${durationTime(event.dateFrom, event.dateTo)}</p>
+			<p class="event__duration">${durationEventTime(
+        event.dateFrom,
+        event.dateTo
+      )}</p>
 		</div>
 		<p class="event__price">
 			&euro;&nbsp;<span class="event__price-value">${totalPrice}</span>
