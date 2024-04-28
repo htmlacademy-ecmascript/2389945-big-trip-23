@@ -15,24 +15,27 @@ export default class EventsModel {
     return getAllOffers().find((item) => item.type === type);
   }
 
-  getOfferById(id) {
+  getOfferById(type, id) {
     return getAllOffers()
-      .find((item) => item.offers.id === id)
-      .offers.find((item) => item.id);
+      .find((item) => item.type === type)
+      .offers.find((item) => item.id === id);
   }
 
   getEvents() {
     return this.events;
   }
 
-  getExtEvents() {
-    const extEvents = new Map();
+  getEventsInfo() {
+    const eventsInfo = new Map();
     this.events.forEach((item) => {
-      extEvents.set(item, {
-        cityName: this.getDestinationById(item.destination).name,
-        offers: item.offers.map((offer) => this.getOfferById(offer.id)),
+      const destination = this.getDestinationById(item.destination);
+      eventsInfo.set(item, {
+        destination: destination,
+        offers: item.offers.map((offer) => this.getOfferById(item.type, offer)),
+        //icon: `../../public/img/icons/${destination.type}.png`,
+        //offers: item.offers,
       });
     });
-    return extEvents;
+    return eventsInfo;
   }
 }

@@ -14,9 +14,9 @@ export default class EventPresenter {
 
   init() {
     this.tripEvents = [...this.eventsModel.getEvents()];
-    this.tripExtEvents = new Map([...this.eventsModel.getExtEvents()]);
+    this.tripEventsInfo = new Map([...this.eventsModel.getEventsInfo()]);
 
-    console.log(this.tripExtEvents);
+    console.log(this.tripEventsInfo);
 
     render(new TripSortView(), this.container);
     render(this.eventsListElement, this.container);
@@ -26,7 +26,7 @@ export default class EventPresenter {
       render(
         new EventsItemView({
           event: this.tripEvents[i],
-          extEvent: this.tripExtEvents.get(this.tripEvents[i]),
+          eventInfo: this.tripEventsInfo.get(this.tripEvents[i]),
         }),
         this.eventsListElement.getElement()
       );
