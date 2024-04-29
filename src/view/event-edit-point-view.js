@@ -2,6 +2,22 @@ import { createElement } from '../render.js';
 import { formatEventDate, calcTotalPrice } from '../utils.js';
 import { EVENT_EDIT_DATE_FORMAT } from '../const.js';
 
+const NEW_EVENT = {
+  id: '',
+  basePrice: 0,
+  dateFrom: '',
+  dateTo: '',
+  destination: '',
+  isFavorite: false,
+  offers: [],
+  type: 'flight',
+};
+
+const NEW_EVENT_INFO = {
+  destination: { name: '', description: '' },
+  selectedOffers: [],
+};
+
 const createDestinstionsTemplate = (destinations) => {
   let destinationsTemplate = '';
   for (let i = 0; i < destinations.length; i++) {
@@ -30,10 +46,14 @@ const createEventOffersTemplate = (availableOffers, selectedOffers) => {
   return offersTemplate;
 };
 
-const createEventEditPointTemplate = (event, eventInfo) => {
+const createEventEditPointTemplate = (
+  event,
+  eventInfo,
+  allDestinations,
+  availableOffers
+) => {
   const { type, basePrice, dateFrom, dateTo } = event;
-  const { destination, allDestinations, selectedOffers, availableOffers } =
-    eventInfo;
+  const { destination, selectedOffers } = eventInfo;
 
   const startDate = formatEventDate(dateFrom, EVENT_EDIT_DATE_FORMAT);
   const endDate = formatEventDate(dateTo, EVENT_EDIT_DATE_FORMAT);
@@ -157,13 +177,25 @@ const createEventEditPointTemplate = (event, eventInfo) => {
 </li>`;
 };
 export default class EventEditPointView {
-  constructor({ event, eventInfo }) {
+  constructor({
+    event = NEW_EVENT,
+    eventInfo = NEW_EVENT_INFO,
+    allDestinations,
+    availableOffers,
+  }) {
     this.event = event;
     this.eventInfo = eventInfo;
+    this.allDestinations = allDestinations;
+    this.availableOffers = availableOffers;
   }
 
   getTemplate() {
-    return createEventEditPointTemplate(this.event, this.eventInfo);
+    return createEventEditPointTemplate(
+      this.event,
+      this.eventInfo,
+      this.allDestinations,
+      this.availableOffers
+    );
   }
 
   getElement() {

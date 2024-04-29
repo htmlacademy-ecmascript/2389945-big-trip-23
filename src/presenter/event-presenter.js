@@ -16,6 +16,9 @@ export default class EventPresenter {
     this.tripEvents = [...this.eventsModel.getEvents()];
     this.tripEventsInfo = new Map([...this.eventsModel.getEventsInfo()]);
 
+    const allDestinations = this.eventsModel.getAllDestinations();
+    const availableOffers = (item) =>
+      this.eventsModel.getOffersByType(this.tripEvents[item].type).offers;
     //console.log(this.tripEventsInfo);
 
     render(new TripSortView(), this.container);
@@ -24,15 +27,21 @@ export default class EventPresenter {
       new EventEditPointView({
         event: this.tripEvents[0],
         eventInfo: this.tripEventsInfo.get(this.tripEvents[0]),
+
+        allDestinations: allDestinations,
+        availableOffers: availableOffers(0),
       }),
       this.eventsListElement.getElement()
     );
 
+    //console.log(this.eventsModel.getOffersByType(this.tripEvents[0].type).offers);
     for (let i = 1; i < this.tripEvents.length; i++) {
       render(
         new EventsItemView({
           event: this.tripEvents[i],
           eventInfo: this.tripEventsInfo.get(this.tripEvents[i]),
+          allDestinations: allDestinations,
+          availableOffers: availableOffers(i),
         }),
         this.eventsListElement.getElement()
       );

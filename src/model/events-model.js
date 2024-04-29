@@ -35,11 +35,9 @@ export default class EventsModel {
       const destination = this.getDestinationById(item.destination);
       eventsInfo.set(item, {
         destination: destination,
-        allDestinations: this.getAllDestinations(),
         selectedOffers: item.offers.map((offer) =>
           this.getOfferById(item.type, offer)
         ),
-        availableOffers: this.getOffersByType(item.type).offers,
       });
     });
     return eventsInfo;
