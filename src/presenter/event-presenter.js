@@ -28,7 +28,7 @@ export default class EventPresenter {
       this.eventsListElement.getElement()
     );
 
-    for (let i = 0; i < this.tripEvents.length; i++) {
+    for (let i = 1; i < this.tripEvents.length; i++) {
       render(
         new EventsItemView({
           event: this.tripEvents[i],

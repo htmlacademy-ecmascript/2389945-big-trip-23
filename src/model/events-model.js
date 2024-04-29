@@ -1,8 +1,8 @@
 import { getAllDestinations } from '../mock/destinations.js';
 import { getRandomEvent } from '../mock/events.js';
 import { getAllOffers } from '../mock/offers.js';
+import { EVENT_COUNT } from '../const.js';
 
-const EVENT_COUNT = 3;
 
 export default class EventsModel {
   events = Array.from({ length: EVENT_COUNT }, getRandomEvent);
