@@ -16,15 +16,15 @@ const createEventOffersTemplate = (offers) => {
 
 const createEventsItemTemplate = (event, eventInfo) => {
   const { type, basePrice, isFavorite, dateFrom, dateTo } = event;
-  const { destination, offers } = eventInfo;
+  const { destination, selectedOffers } = eventInfo;
   const startDate = formatEventDate(dateFrom, EVENTS_LIST_DATE_FORMAT);
   const startTime = formatEventDate(dateFrom, EVENTS_LIST_TIME_FORMAT);
   const endTime = formatEventDate(dateTo, EVENTS_LIST_TIME_FORMAT);
   const durationTime = getEventDurationTime(dateFrom, dateTo);
 
   const totalPrice =
-    basePrice + offers.reduce((sum, offer) => sum + offer.price, 0);
-  const offersTemplate = createEventOffersTemplate(offers);
+    basePrice + selectedOffers.reduce((sum, offer) => sum + offer.price, 0);
+  const offersTemplate = createEventOffersTemplate(selectedOffers);
 
   return `<li class="trip-events__item">
 	<div class="event">
