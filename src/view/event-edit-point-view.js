@@ -1,17 +1,25 @@
 import { createElement } from '../render.js';
-import { formatEventDate } from '../utils.js';
+import { formatEventDate, calcTotalPrice } from '../utils.js';
 import { EVENT_EDIT_DATE_FORMAT } from '../const.js';
+
+const createDestinstionsTemplate = (destinations) => {
+  let destinationsTemplate = '';
+  for (let i = 0; i < destinations.length; i++) {
+    destinationsTemplate += `<option value="${destinations[i].name}"></option>`;
+  }
+  return destinationsTemplate;
+};
 
 const createEventOffersTemplate = (availableOffers, selectedOffers) => {
   let offersTemplate = '';
   for (let i = 0; i < availableOffers.length; i++) {
     offersTemplate += `<div class="event__offer-selector">
     <input class="event__offer-checkbox  visually-hidden" id="${
-      availableOffers[i].id
-    }"
+  availableOffers[i].id
+}"
       type="checkbox" name="${availableOffers[i].title}" ${
-      selectedOffers.includes(availableOffers[i]) ? 'checked' : ''
-    }>
+  selectedOffers.includes(availableOffers[i]) ? 'checked' : ''
+}>
     <label class="event__offer-label" for="${availableOffers[i].id}">
       <span class="event__offer-title">${availableOffers[i].title}</span>
       &plus;&euro;&nbsp;
@@ -24,17 +32,18 @@ const createEventOffersTemplate = (availableOffers, selectedOffers) => {
 
 const createEventEditPointTemplate = (event, eventInfo) => {
   const { type, basePrice, dateFrom, dateTo } = event;
-  const { destination, selectedOffers, availableOffers } = eventInfo;
-  //console.log(availableOffers);
+  const { destination, allDestinations, selectedOffers, availableOffers } =
+    eventInfo;
+
   const startDate = formatEventDate(dateFrom, EVENT_EDIT_DATE_FORMAT);
   const endDate = formatEventDate(dateTo, EVENT_EDIT_DATE_FORMAT);
 
-  const totalPrice =
-    basePrice + selectedOffers.reduce((sum, offer) => sum + offer.price, 0);
+  const totalPrice = calcTotalPrice(basePrice, selectedOffers);
   const offersTemplate = createEventOffersTemplate(
     availableOffers,
     selectedOffers
   );
+  const destinationsTemplate = createDestinstionsTemplate(allDestinations);
 
   return `<li class="trip-events__item">
 	<form class="event event--edit" action="#" method="post">
@@ -104,9 +113,7 @@ const createEventEditPointTemplate = (event, eventInfo) => {
 			</label>
 			<input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
 			<datalist id="destination-list-1">
-				<option value="Amsterdam"></option>
-				<option value="Geneva"></option>
-				<option value="Chamonix"></option>
+				${destinationsTemplate}
 			</datalist>
 		</div>
 

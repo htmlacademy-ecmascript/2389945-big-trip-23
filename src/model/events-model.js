@@ -7,6 +7,10 @@ const EVENT_COUNT = 3;
 export default class EventsModel {
   events = Array.from({ length: EVENT_COUNT }, getRandomEvent);
 
+  getAllDestinations() {
+    return getAllDestinations();
+  }
+
   getDestinationById(id) {
     return getAllDestinations().find((item) => item.id === id);
   }
@@ -31,6 +35,7 @@ export default class EventsModel {
       const destination = this.getDestinationById(item.destination);
       eventsInfo.set(item, {
         destination: destination,
+        allDestinations: this.getAllDestinations(),
         selectedOffers: item.offers.map((offer) =>
           this.getOfferById(item.type, offer)
         ),
