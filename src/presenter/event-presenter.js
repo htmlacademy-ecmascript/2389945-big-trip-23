@@ -19,7 +19,6 @@ export default class EventPresenter {
     const allDestinations = this.eventsModel.getAllDestinations();
     const availableOffers = (item) =>
       this.eventsModel.getOffersByType(this.tripEvents[item].type).offers;
-    //console.log(this.tripEventsInfo);
 
     render(new TripSortView(), this.container);
     render(this.eventsListElement, this.container);
@@ -34,7 +33,6 @@ export default class EventPresenter {
       this.eventsListElement.getElement()
     );
 
-    //console.log(this.eventsModel.getOffersByType(this.tripEvents[0].type).offers);
     for (let i = 1; i < this.tripEvents.length; i++) {
       render(
         new EventsItemView({
