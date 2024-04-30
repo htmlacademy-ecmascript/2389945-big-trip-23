@@ -46,6 +46,21 @@ const createEventOffersTemplate = (availableOffers, selectedOffers) => {
   return offersTemplate;
 };
 
+const createEventPicturesTemplate = (pictures) => {
+  if (pictures.length === 0) {
+    return '';
+  }
+  let picturesTemplate = `<div class="event__photos-container">
+                            <div class="event__photos-tape">`;
+  for (let i = 0; i < pictures.length; i++) {
+    picturesTemplate += `<img class="event__photo" src="${pictures[i].src}" alt="Event photo">`;
+  }
+  picturesTemplate += `</div>
+                         </div>`;
+
+  return picturesTemplate;
+};
+
 const createEventEditPointTemplate = (
   event,
   eventInfo,
@@ -64,6 +79,7 @@ const createEventEditPointTemplate = (
     selectedOffers
   );
   const destinationsTemplate = createDestinstionsTemplate(allDestinations);
+  const picturesTemplate = createEventPicturesTemplate(destination.pictures);
 
   return `<li class="trip-events__item">
 	<form class="event event--edit" action="#" method="post">
@@ -171,6 +187,7 @@ const createEventEditPointTemplate = (
 		<section class="event__section  event__section--destination">
 			<h3 class="event__section-title  event__section-title--destination">Destination</h3>
 			<p class="event__destination-description">${destination.description}</p>
+        ${picturesTemplate}
 		</section>
 	</section>
 </form>
