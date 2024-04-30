@@ -32,9 +32,8 @@ export default class EventsModel {
   getEventsInfo() {
     const eventsInfo = new Map();
     this.events.forEach((item) => {
-      const destination = this.getDestinationById(item.destination);
       eventsInfo.set(item, {
-        destination: destination,
+        destination: this.getDestinationById(item.destination),
         selectedOffers: item.offers.map((offer) =>
           this.getOfferById(item.type, offer)
         ),
