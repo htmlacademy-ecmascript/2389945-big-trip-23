@@ -1,16 +1,10 @@
 import { createElement } from '../render.js';
 
-function createEventEmptyTemplate(message) {
-  return `<p class="trip-events__msg">${message}</p>`;
-}
+const createEventsListTemplate = () => '<ul class="trip-events__list"></ul>';
 
-export default class EventEmptyView {
-  constructor({ message }) {
-    this.message = message;
-  }
-
+export default class EventsListView {
   getTemplate() {
-    return createEventEmptyTemplate(this.message);
+    return createEventsListTemplate();
   }
 
   getElement() {

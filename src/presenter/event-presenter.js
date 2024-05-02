@@ -1,24 +1,48 @@
 import { render } from '../render.js';
 import EventEditPointView from '../view/event-edit-point-view.js';
-import EventListView from '../view/event-list-view.js';
-import EventSortView from '../view/event-sort-view.js';
-import EventView from '../view/event-view.js';
+import EventsItemView from '../view/events-item-view.js';
+import EventsListView from '../view/events-list-view.js';
+import TripSortView from '../view/trip-sort-view.js';
 
 export default class EventPresenter {
-  constructor({ eventContainer }) {
-    this.eventContainer = eventContainer;
+  eventsListElement = new EventsListView();
+
+  constructor({ container, eventsModel }) {
+    this.container = container;
+    this.eventsModel = eventsModel;
   }
 
-  eventListContainer = new EventListView();
-
   init() {
-    const tripEventsElement = this.eventContainer.querySelector('.trip-events');
-    render(new EventSortView(), tripEventsElement);
-    render(this.eventListContainer, tripEventsElement);
-    render(new EventEditPointView(), this.eventListContainer.getElement());
+    this.tripEvents = [...this.eventsModel.getEvents()];
+    this.tripEventsInfo = new Map([...this.eventsModel.getEventsInfo()]);
 
-    for (let i = 0; i < 3; i++) {
-      render(new EventView(), this.eventListContainer.getElement());
+    const allDestinations = this.eventsModel.getAllDestinations();
+    const availableOffers = (item) =>
+      this.eventsModel.getOffersByType(this.tripEvents[item].type).offers;
+
+    render(new TripSortView(), this.container);
+    render(this.eventsListElement, this.container);
+    render(
+      new EventEditPointView({
+        event: this.tripEvents[0],
+        eventInfo: this.tripEventsInfo.get(this.tripEvents[0]),
+
+        allDestinations: allDestinations,
+        availableOffers: availableOffers(0),
+      }),
+      this.eventsListElement.getElement()
+    );
+
+    for (let i = 1; i < this.tripEvents.length; i++) {
+      render(
+        new EventsItemView({
+          event: this.tripEvents[i],
+          eventInfo: this.tripEventsInfo.get(this.tripEvents[i]),
+          allDestinations: allDestinations,
+          availableOffers: availableOffers(i),
+        }),
+        this.eventsListElement.getElement()
+      );
     }
   }
 }
