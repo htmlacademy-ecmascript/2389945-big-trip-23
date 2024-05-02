@@ -1,6 +1,6 @@
 import { createElement } from '../render.js';
 import { formatEventDate, calcTotalPrice } from '../utils.js';
-import { EVENT_EDIT_DATE_FORMAT } from '../const.js';
+import { Event } from '../const.js';
 
 const NEW_EVENT = {
   id: '',
@@ -70,8 +70,8 @@ const createEventEditPointTemplate = (
   const { type, basePrice, dateFrom, dateTo } = event;
   const { destination, selectedOffers } = eventInfo;
 
-  const startDate = formatEventDate(dateFrom, EVENT_EDIT_DATE_FORMAT);
-  const endDate = formatEventDate(dateTo, EVENT_EDIT_DATE_FORMAT);
+  const startDate = formatEventDate(dateFrom, Event.EDIT_DATE_FORMAT);
+  const endDate = formatEventDate(dateTo, Event.EDIT_DATE_FORMAT);
 
   const totalPrice = calcTotalPrice(basePrice, selectedOffers);
   const offersTemplate = createEventOffersTemplate(

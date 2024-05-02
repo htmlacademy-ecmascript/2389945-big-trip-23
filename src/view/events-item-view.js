@@ -4,7 +4,7 @@ import {
   getEventDurationTime,
   calcTotalPrice,
 } from '../utils.js';
-import { EVENTS_LIST_DATE_FORMAT, EVENTS_LIST_TIME_FORMAT } from '../const.js';
+import { Event } from '../const.js';
 
 const createEventOffersTemplate = (offers) => {
   let offersTemplate = '';
@@ -22,9 +22,9 @@ const createEventsItemTemplate = (event, eventInfo) => {
   const { type, basePrice, isFavorite, dateFrom, dateTo } = event;
   const { destination, selectedOffers } = eventInfo;
 
-  const startDate = formatEventDate(dateFrom, EVENTS_LIST_DATE_FORMAT);
-  const startTime = formatEventDate(dateFrom, EVENTS_LIST_TIME_FORMAT);
-  const endTime = formatEventDate(dateTo, EVENTS_LIST_TIME_FORMAT);
+  const startDate = formatEventDate(dateFrom, Event.LIST_DATE_FORMAT);
+  const startTime = formatEventDate(dateFrom, Event.LIST_TIME_FORMAT);
+  const endTime = formatEventDate(dateTo, Event.LIST_TIME_FORMAT);
   const durationTime = getEventDurationTime(dateFrom, dateTo);
 
   const totalPrice = calcTotalPrice(basePrice, selectedOffers);

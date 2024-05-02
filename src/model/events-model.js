@@ -1,18 +1,19 @@
 import { getAllDestinations } from '../mock/destinations.js';
 import { getRandomEvent } from '../mock/events.js';
 import { getAllOffers } from '../mock/offers.js';
-import { EVENT_COUNT } from '../const.js';
+import { Event } from '../const.js';
 
 
 export default class EventsModel {
-  events = Array.from({ length: EVENT_COUNT }, getRandomEvent);
+  events = Array.from({ length: Event.COUNT }, getRandomEvent);
+  destinations = getAllDestinations();
 
   getAllDestinations() {
-    return getAllDestinations();
+    return this.destinations;
   }
 
   getDestinationById(id) {
-    return getAllDestinations().find((item) => item.id === id);
+    return this.destinations.find((item) => item.id === id);
   }
 
   getOffersByType(type) {
