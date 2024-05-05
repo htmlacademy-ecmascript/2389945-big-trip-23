@@ -3,10 +3,10 @@ import { getRandomEvent } from '../mock/events.js';
 import { getAllOffers } from '../mock/offers.js';
 import { Event } from '../const.js';
 
-
 export default class EventsModel {
   events = Array.from({ length: Event.COUNT }, getRandomEvent);
   destinations = getAllDestinations();
+  eventsInfo = new Map();
 
   getAllDestinations() {
     return this.destinations;
@@ -30,16 +30,19 @@ export default class EventsModel {
     return this.events;
   }
 
-  getEventsInfo() {
-    const eventsInfo = new Map();
-    this.events.forEach((item) => {
-      eventsInfo.set(item, {
-        destination: this.getDestinationById(item.destination),
-        selectedOffers: item.offers.map((offer) =>
-          this.getOfferById(item.type, offer)
-        ),
-      });
+  getEventInfo(event) {
+    this.eventsInfo.set(event, {
+      destination: this.getDestinationById(event.destination),
+      selectedOffers: event.offers.map((offer) =>
+        this.getOfferById(event.type, offer)
+      ),
     });
-    return eventsInfo;
+  }
+
+  applyEventsInfo() {
+    this.events.forEach((item) => {
+      this.getEventInfo(item);
+    });
+    return this.eventsInfo;
   }
 }
