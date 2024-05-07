@@ -70,14 +70,25 @@ const createEventsItemTemplate = (event, eventInfo) => {
 export default class EventsItemView extends AbstractView {
   #event = null;
   #eventInfo = null;
+  #handleEditClick = null;
 
-  constructor({ event, eventInfo }) {
+  constructor({ event, eventInfo, onEditClick }) {
     super();
     this.#event = event;
     this.#eventInfo = eventInfo;
+    this.#handleEditClick = onEditClick;
+
+    this.element
+      .querySelector('.event__rollup-btn')
+      .addEventListener('click', this.#editClickHandler);
   }
 
   get template() {
     return createEventsItemTemplate(this.#event, this.#eventInfo);
   }
+
+  #editClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleEditClick();
+  };
 }

@@ -221,17 +221,25 @@ export default class EventEditPointView extends AbstractView {
   #allDestinations = null;
   #availableOffers = null;
 
+  #handleFormSubmit = null;
+
   constructor({
     event = NEW_EVENT,
     eventInfo = NEW_EVENT_INFO,
     allDestinations,
     availableOffers,
+    onFormSubmit,
   }) {
     super();
     this.#event = event;
     this.#eventInfo = eventInfo;
     this.#allDestinations = allDestinations;
     this.#availableOffers = availableOffers;
+    this.#handleFormSubmit = onFormSubmit;
+
+    this.element
+      .querySelector('form')
+      .addEventListener('submit', this.#formSubmitHandler);
   }
 
   get template() {
@@ -242,4 +250,9 @@ export default class EventEditPointView extends AbstractView {
       this.#availableOffers
     );
   }
+
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormSubmit();
+  };
 }

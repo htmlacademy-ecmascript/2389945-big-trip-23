@@ -1,4 +1,4 @@
-import { render } from '../framework/render.js';
+import { render, replace } from '../framework/render.js';
 import EventEditPointView from '../view/event-edit-point-view.js';
 import EventsItemView from '../view/events-item-view.js';
 import EventsListView from '../view/events-list-view.js';
@@ -16,37 +16,55 @@ export default class EventPresenter {
     this.#eventsModel = eventsModel;
   }
 
+  #renderEvent(event) {
+    const escKeyDownHandler = (evt) => {
+      if (evt.key === 'Escape') {
+        evt.preventDefault();
+        replaceFormToEvent();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }
+    };
+    const eventComponent = new EventsItemView({
+      event: event,
+      eventInfo: this.#tripEventsInfo.get(event),
+      allDestinations: this.#eventsModel.getAllDestinations(),
+      availableOffers: this.#eventsModel.getOffersByType(event.type).offers,
+      onEditClick: () => {
+        replaceEventToForm();
+        document.addEventListener('keydown', escKeyDownHandler);
+      },
+    });
+    const eventEditComponent = new EventEditPointView({
+      event: event,
+      eventInfo: this.#tripEventsInfo.get(event),
+      allDestinations: this.#eventsModel.getAllDestinations(),
+      availableOffers: this.#eventsModel.getOffersByType(event.type).offers,
+      onFormSubmit: () => {
+        replaceFormToEvent();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      },
+    });
+
+    function replaceEventToForm() {
+      replace(eventEditComponent, eventComponent);
+    }
+
+    function replaceFormToEvent() {
+      replace(eventComponent, eventEditComponent);
+    }
+
+    render(eventComponent, this.#eventsListElement.element);
+  }
+
   init() {
     this.#tripEvents = [...this.#eventsModel.events];
     this.#tripEventsInfo = new Map([...this.#eventsModel.eventsInfo]);
 
-    const allDestinations = this.#eventsModel.getAllDestinations();
-    const availableOffers = (item) =>
-      this.#eventsModel.getOffersByType(this.#tripEvents[item].type).offers;
-
     render(new TripSortView(), this.#container);
     render(this.#eventsListElement, this.#container);
-    render(
-      new EventEditPointView({
-        event: this.#tripEvents[0],
-        eventInfo: this.#tripEventsInfo.get(this.#tripEvents[0]),
 
-        allDestinations: allDestinations,
-        availableOffers: availableOffers(0),
-      }),
-      this.#eventsListElement.element
-    );
-
-    for (let i = 1; i < this.#tripEvents.length; i++) {
-      render(
-        new EventsItemView({
-          event: this.#tripEvents[i],
-          eventInfo: this.#tripEventsInfo.get(this.#tripEvents[i]),
-          allDestinations: allDestinations,
-          availableOffers: availableOffers(i),
-        }),
-        this.#eventsListElement.element
-      );
+    for (let i = 0; i < this.#tripEvents.length; i++) {
+      this.#renderEvent(this.#tripEvents[i]);
     }
   }
 }
