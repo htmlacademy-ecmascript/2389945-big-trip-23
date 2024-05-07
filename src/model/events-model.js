@@ -5,8 +5,9 @@ import { getAllOffers } from '../mock/offers.js';
 
 export default class EventsModel {
   #events = Array.from({ length: Event.COUNT }, getRandomEvent);
-  #destinations = getAllDestinations();
   #eventsInfo = new Map();
+  #destinations = getAllDestinations();
+
 
   #getDestinationById(id) {
     return this.#destinations.find((item) => item.id === id);
@@ -35,14 +36,19 @@ export default class EventsModel {
     });
   }
 
-  get events() {
-    return this.#events;
-  }
-
-  applyEventsInfo() {
+  #applyEventsInfo() {
     this.#events.forEach((item) => {
       this.#getEventInfo(item);
     });
     return this.#eventsInfo;
   }
+
+  get events() {
+    return this.#events;
+  }
+
+  get eventsInfo() {
+    return this.#applyEventsInfo();
+  }
+
 }

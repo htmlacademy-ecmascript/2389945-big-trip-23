@@ -18,7 +18,7 @@ export default class EventPresenter {
 
   init() {
     this.#tripEvents = [...this.#eventsModel.events];
-    this.#tripEventsInfo = new Map([...this.#eventsModel.applyEventsInfo()]);
+    this.#tripEventsInfo = new Map([...this.#eventsModel.eventsInfo]);
 
     const allDestinations = this.#eventsModel.getAllDestinations();
     const availableOffers = (item) =>
