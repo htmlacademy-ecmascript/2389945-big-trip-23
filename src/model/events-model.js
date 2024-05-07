@@ -37,8 +37,8 @@ export default class EventsModel {
   }
 
   #applyEventsInfo(events) {
-    events.forEach((item) => {
-      this.#getEventInfo(item);
+    events.forEach((event) => {
+      this.#getEventInfo(event);
     });
     return this.#eventsInfo;
   }
