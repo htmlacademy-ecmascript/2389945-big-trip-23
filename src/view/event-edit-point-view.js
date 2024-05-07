@@ -1,5 +1,5 @@
 import { Event } from '../const.js';
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { calcTotalPrice, formatEventDate } from '../utils.js';
 
 const NEW_EVENT = {
@@ -18,7 +18,7 @@ const NEW_EVENT_INFO = {
   selectedOffers: [],
 };
 
-const createDestinstionsTemplate = (destinations) => {
+const createEventDestinstionsTemplate = (destinations) => {
   let destinationsTemplate = '';
   for (let i = 0; i < destinations.length; i++) {
     destinationsTemplate += `<option value="${destinations[i].name}"></option>`;
@@ -31,10 +31,10 @@ const createEventOffersTemplate = (availableOffers, selectedOffers) => {
   for (let i = 0; i < availableOffers.length; i++) {
     offersTemplate += `<div class="event__offer-selector">
     <input class="event__offer-checkbox  visually-hidden" id="${
-  availableOffers[i].id
-}" type="checkbox" name="${availableOffers[i].title}" ${
-  selectedOffers.includes(availableOffers[i]) ? 'checked' : ''
-}>
+      availableOffers[i].id
+    }" type="checkbox" name="${availableOffers[i].title}" ${
+      selectedOffers.includes(availableOffers[i]) ? 'checked' : ''
+    }>
     <label class="event__offer-label" for="${availableOffers[i].id}">
       <span class="event__offer-title">${availableOffers[i].title}</span>
       &plus;&euro;&nbsp;
@@ -80,6 +80,21 @@ const createEventPicturesTemplate = (description, pictures) => {
   return picturesTemplate;
 };
 
+const createEventDetailsTemplate = (
+  availableOffers,
+  selectedOffers,
+  description,
+  pictures
+) => {
+  let detailsTemplate = '';
+  detailsTemplate =
+    createEventOffersTemplate(availableOffers, selectedOffers) +
+    createEventPicturesTemplate(description, pictures);
+  return detailsTemplate
+    ? `<section class="event__details">${detailsTemplate}</section>`
+    : '';
+};
+
 const createEventEditPointTemplate = (
   event,
   eventInfo,
@@ -93,12 +108,10 @@ const createEventEditPointTemplate = (
   const endDate = formatEventDate(dateTo, Event.EDIT_DATE_FORMAT);
 
   const totalPrice = calcTotalPrice(basePrice, selectedOffers);
-  const offersTemplate = createEventOffersTemplate(
+  const destinationsTemplate = createEventDestinstionsTemplate(allDestinations);
+  const detailsTemplate = createEventDetailsTemplate(
     availableOffers,
-    selectedOffers
-  );
-  const destinationsTemplate = createDestinstionsTemplate(allDestinations);
-  const picturesTemplate = createEventPicturesTemplate(
+    selectedOffers,
     destination.description,
     destination.pictures
   );
@@ -197,44 +210,36 @@ const createEventEditPointTemplate = (
 			<span class="visually-hidden">Open event</span>
 		</button>
 	</header>
-	<section class="event__details">
-      ${offersTemplate}
-			${picturesTemplate}
-	</section>
+		${detailsTemplate}
 </form>
 </li>`;
 };
-export default class EventEditPointView {
+
+export default class EventEditPointView extends AbstractView {
+  #event = null;
+  #eventInfo = null;
+  #allDestinations = null;
+  #availableOffers = null;
+
   constructor({
     event = NEW_EVENT,
     eventInfo = NEW_EVENT_INFO,
     allDestinations,
     availableOffers,
   }) {
-    this.event = event;
-    this.eventInfo = eventInfo;
-    this.allDestinations = allDestinations;
-    this.availableOffers = availableOffers;
+    super();
+    this.#event = event;
+    this.#eventInfo = eventInfo;
+    this.#allDestinations = allDestinations;
+    this.#availableOffers = availableOffers;
   }
 
-  getTemplate() {
+  get template() {
     return createEventEditPointTemplate(
-      this.event,
-      this.eventInfo,
-      this.allDestinations,
-      this.availableOffers
+      this.#event,
+      this.#eventInfo,
+      this.#allDestinations,
+      this.#availableOffers
     );
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }

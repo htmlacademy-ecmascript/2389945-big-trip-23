@@ -1,10 +1,10 @@
-import { createElement } from '../render.js';
+import { Event } from '../const.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import {
+  calcTotalPrice,
   formatEventDate,
   getEventDurationTime,
-  calcTotalPrice,
 } from '../utils.js';
-import { Event } from '../const.js';
 
 const createEventOffersTemplate = (offers) => {
   let offersTemplate = '';
@@ -53,8 +53,8 @@ const createEventsItemTemplate = (event, eventInfo) => {
       ${offersTemplate}
     </ul>
 		<button class="event__favorite-btn ${
-  isFavorite ? 'event__favorite-btn--active' : ''
-}" type="button">
+      isFavorite ? 'event__favorite-btn--active' : ''
+    }" type="button">
 			<span class="visually-hidden">Add to favorite</span>
 			<svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
 				<path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
@@ -67,25 +67,17 @@ const createEventsItemTemplate = (event, eventInfo) => {
 </li>`;
 };
 
-export default class EventsItemView {
+export default class EventsItemView extends AbstractView {
+  #event = null;
+  #eventInfo = null;
+
   constructor({ event, eventInfo }) {
-    this.event = event;
-    this.eventInfo = eventInfo;
+    super();
+    this.#event = event;
+    this.#eventInfo = eventInfo;
   }
 
-  getTemplate() {
-    return createEventsItemTemplate(this.event, this.eventInfo);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
+  get template() {
+    return createEventsItemTemplate(this.#event, this.#eventInfo);
   }
 }
