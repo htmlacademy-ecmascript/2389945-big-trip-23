@@ -36,8 +36,8 @@ export default class EventsModel {
     });
   }
 
-  #applyEventsInfo() {
-    this.#events.forEach((item) => {
+  #applyEventsInfo(events) {
+    events.forEach((item) => {
       this.#getEventInfo(item);
     });
     return this.#eventsInfo;
@@ -48,7 +48,7 @@ export default class EventsModel {
   }
 
   get eventsInfo() {
-    return this.#applyEventsInfo();
+    return this.#applyEventsInfo(this.#events);
   }
 
 }
