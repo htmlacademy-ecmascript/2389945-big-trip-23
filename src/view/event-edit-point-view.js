@@ -1,6 +1,6 @@
-import { createElement } from '../render.js';
-import { formatEventDate, calcTotalPrice } from '../utils.js';
 import { Event } from '../const.js';
+import AbstractView from '../framework/view/abstract-view.js';
+import { calcTotalPrice, formatEventDate } from '../utils.js';
 
 const NEW_EVENT = {
   id: '',
@@ -18,7 +18,7 @@ const NEW_EVENT_INFO = {
   selectedOffers: [],
 };
 
-const createDestinstionsTemplate = (destinations) => {
+const createEventDestinstionsTemplate = (destinations) => {
   let destinationsTemplate = '';
   for (let i = 0; i < destinations.length; i++) {
     destinationsTemplate += `<option value="${destinations[i].name}"></option>`;
@@ -32,8 +32,7 @@ const createEventOffersTemplate = (availableOffers, selectedOffers) => {
     offersTemplate += `<div class="event__offer-selector">
     <input class="event__offer-checkbox  visually-hidden" id="${
   availableOffers[i].id
-}"
-      type="checkbox" name="${availableOffers[i].title}" ${
+}" type="checkbox" name="${availableOffers[i].title}" ${
   selectedOffers.includes(availableOffers[i]) ? 'checked' : ''
 }>
     <label class="event__offer-label" for="${availableOffers[i].id}">
@@ -43,22 +42,57 @@ const createEventOffersTemplate = (availableOffers, selectedOffers) => {
     </label>
   </div>`;
   }
+  if (offersTemplate) {
+    offersTemplate = `<section class="event__section  event__section--offers">
+												<h3 class="event__section-title  event__section-title--offers">Offers</h3>
+												<div class="event__available-offers">${offersTemplate}</div>
+											</section>`;
+  }
   return offersTemplate;
 };
 
-const createEventPicturesTemplate = (pictures) => {
+const createEventPicturesTemplate = (description, pictures) => {
   if (pictures.length === 0) {
     return '';
   }
-  let picturesTemplate = `<div class="event__photos-container">
-                            <div class="event__photos-tape">`;
+  let picturesTemplate = '';
   for (let i = 0; i < pictures.length; i++) {
     picturesTemplate += `<img class="event__photo" src="${pictures[i].src}" alt="Event photo">`;
   }
-  picturesTemplate += `</div>
-                         </div>`;
+
+  if (picturesTemplate) {
+    picturesTemplate = `<div class="event__photos-container">
+		<div class="event__photos-tape">${picturesTemplate}</div>
+		</div>`;
+  }
+
+  if (description) {
+    picturesTemplate = `<p class="event__destination-description">${description}</p>${picturesTemplate}`;
+  }
+
+  if (picturesTemplate) {
+    picturesTemplate = `	<section class="event__section  event__section--destination">
+		<h3 class="event__section-title  event__section-title--destination">Destination</h3>
+		${picturesTemplate}
+	</section>`;
+  }
 
   return picturesTemplate;
+};
+
+const createEventDetailsTemplate = (
+  availableOffers,
+  selectedOffers,
+  description,
+  pictures
+) => {
+  let detailsTemplate = '';
+  detailsTemplate =
+    createEventOffersTemplate(availableOffers, selectedOffers) +
+    createEventPicturesTemplate(description, pictures);
+  return detailsTemplate
+    ? `<section class="event__details">${detailsTemplate}</section>`
+    : '';
 };
 
 const createEventEditPointTemplate = (
@@ -74,12 +108,13 @@ const createEventEditPointTemplate = (
   const endDate = formatEventDate(dateTo, Event.EDIT_DATE_FORMAT);
 
   const totalPrice = calcTotalPrice(basePrice, selectedOffers);
-  const offersTemplate = createEventOffersTemplate(
+  const destinationsTemplate = createEventDestinstionsTemplate(allDestinations);
+  const detailsTemplate = createEventDetailsTemplate(
     availableOffers,
-    selectedOffers
+    selectedOffers,
+    destination.description,
+    destination.pictures
   );
-  const destinationsTemplate = createDestinstionsTemplate(allDestinations);
-  const picturesTemplate = createEventPicturesTemplate(destination.pictures);
 
   return `<li class="trip-events__item">
 	<form class="event event--edit" action="#" method="post">
@@ -175,55 +210,60 @@ const createEventEditPointTemplate = (
 			<span class="visually-hidden">Open event</span>
 		</button>
 	</header>
-	<section class="event__details">
-		<section class="event__section  event__section--offers">
-			<h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
-			<div class="event__available-offers">
-      ${offersTemplate}
-			</div>
-		</section>
-
-		<section class="event__section  event__section--destination">
-			<h3 class="event__section-title  event__section-title--destination">Destination</h3>
-			<p class="event__destination-description">${destination.description}</p>
-        ${picturesTemplate}
-		</section>
-	</section>
+		${detailsTemplate}
 </form>
 </li>`;
 };
-export default class EventEditPointView {
+
+export default class EventEditPointView extends AbstractView {
+  #event = null;
+  #eventInfo = null;
+  #allDestinations = null;
+  #availableOffers = null;
+
+  #handleFormSubmit = null;
+  #handleFormClose = null;
+
   constructor({
     event = NEW_EVENT,
     eventInfo = NEW_EVENT_INFO,
     allDestinations,
     availableOffers,
+    onFormSubmit,
+    onFormClose,
   }) {
-    this.event = event;
-    this.eventInfo = eventInfo;
-    this.allDestinations = allDestinations;
-    this.availableOffers = availableOffers;
+    super();
+    this.#event = event;
+    this.#eventInfo = eventInfo;
+    this.#allDestinations = allDestinations;
+    this.#availableOffers = availableOffers;
+    this.#handleFormSubmit = onFormSubmit;
+    this.#handleFormClose = onFormClose;
+
+    this.element
+      .querySelector('form')
+      .addEventListener('submit', this.#formSubmitHandler);
+    this.element
+      .querySelector('.event__rollup-btn')
+      .addEventListener('click', this.#formCloseHandler);
   }
 
-  getTemplate() {
+  get template() {
     return createEventEditPointTemplate(
-      this.event,
-      this.eventInfo,
-      this.allDestinations,
-      this.availableOffers
+      this.#event,
+      this.#eventInfo,
+      this.#allDestinations,
+      this.#availableOffers
     );
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormSubmit();
+  };
 
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
+  #formCloseHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormClose();
+  };
 }

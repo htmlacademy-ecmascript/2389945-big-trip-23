@@ -1,45 +1,53 @@
+import { Event } from '../const.js';
 import { getAllDestinations } from '../mock/destinations.js';
 import { getRandomEvent } from '../mock/events.js';
 import { getAllOffers } from '../mock/offers.js';
-import { Event } from '../const.js';
-
 
 export default class EventsModel {
-  events = Array.from({ length: Event.COUNT }, getRandomEvent);
-  destinations = getAllDestinations();
+  #events = Array.from({ length: Event.COUNT }, getRandomEvent);
+  #eventsInfo = new Map();
+  #destinations = getAllDestinations();
+  #offers = getAllOffers();
 
-  getAllDestinations() {
-    return this.destinations;
+  #getDestinationById(id) {
+    return this.#destinations.find((item) => item.id === id);
   }
 
-  getDestinationById(id) {
-    return this.destinations.find((item) => item.id === id);
-  }
-
-  getOffersByType(type) {
-    return getAllOffers().find((item) => item.type === type);
-  }
-
-  getOfferById(type, id) {
-    return getAllOffers()
+  #getOfferById(type, id) {
+    return this.#offers
       .find((item) => item.type === type)
       .offers.find((item) => item.id === id);
   }
 
-  getEvents() {
-    return this.events;
+  getAllDestinations() {
+    return this.#destinations;
   }
 
-  getEventsInfo() {
-    const eventsInfo = new Map();
-    this.events.forEach((item) => {
-      eventsInfo.set(item, {
-        destination: this.getDestinationById(item.destination),
-        selectedOffers: item.offers.map((offer) =>
-          this.getOfferById(item.type, offer)
-        ),
-      });
+  getOffersByType(type) {
+    return this.#offers.find((item) => item.type === type);
+  }
+
+  #getEventInfo(event) {
+    this.#eventsInfo.set(event, {
+      destination: this.#getDestinationById(event.destination),
+      selectedOffers: event.offers.map((offer) =>
+        this.#getOfferById(event.type, offer)
+      ),
     });
-    return eventsInfo;
+  }
+
+  #applyEventsInfo(events) {
+    events.forEach((event) => {
+      this.#getEventInfo(event);
+    });
+    return this.#eventsInfo;
+  }
+
+  get events() {
+    return this.#events;
+  }
+
+  get eventsInfo() {
+    return this.#applyEventsInfo(this.#events);
   }
 }
