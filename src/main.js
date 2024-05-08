@@ -17,11 +17,9 @@ const eventPresenter = new EventPresenter({
   eventsModel,
 });
 
-const filter = generateFilters(eventsModel.events);
-//console.log(filter);
+const filters = generateFilters(eventsModel.events);
 
 render(new TripInfoView(), tripMainElement, RenderPosition.AFTERBEGIN);
-//render(new TripFiltersView(), eventFiltersElement);
-render(new TripFilterView({ filter }), eventFiltersElement);
+render(new TripFilterView({ filters }), eventFiltersElement);
 
 eventPresenter.init();
