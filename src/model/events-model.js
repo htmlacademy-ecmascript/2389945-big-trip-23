@@ -7,14 +7,14 @@ export default class EventsModel {
   #events = Array.from({ length: Event.COUNT }, getRandomEvent);
   #eventsInfo = new Map();
   #destinations = getAllDestinations();
-
+  #offers = getAllOffers();
 
   #getDestinationById(id) {
     return this.#destinations.find((item) => item.id === id);
   }
 
   #getOfferById(type, id) {
-    return getAllOffers()
+    return this.#offers
       .find((item) => item.type === type)
       .offers.find((item) => item.id === id);
   }
@@ -24,7 +24,7 @@ export default class EventsModel {
   }
 
   getOffersByType(type) {
-    return getAllOffers().find((item) => item.type === type);
+    return this.#offers.find((item) => item.type === type);
   }
 
   #getEventInfo(event) {
@@ -50,5 +50,4 @@ export default class EventsModel {
   get eventsInfo() {
     return this.#applyEventsInfo(this.#events);
   }
-
 }

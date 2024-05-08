@@ -4,6 +4,18 @@ import EventsItemView from '../view/events-item-view.js';
 import EventsListView from '../view/events-list-view.js';
 import TripSortView from '../view/trip-sort-view.js';
 
+/*
+const eventState = {
+  eventState: 0,
+  get state() {
+    return this.eventState;
+  },
+  set state(value) {
+    this.eventState = value;
+  },
+};
+*/
+
 export default class EventPresenter {
   #eventsListElement = new EventsListView();
   #container = null;
@@ -34,14 +46,22 @@ export default class EventPresenter {
         document.addEventListener('keydown', escKeyDownHandler);
       },
     });
+
+    const applyFormClose = () => {
+      replaceFormToEvent();
+      document.removeEventListener('keydown', escKeyDownHandler);
+    };
+
     const eventEditComponent = new EventEditPointView({
       event: event,
       eventInfo: this.#tripEventsInfo.get(event),
       allDestinations: this.#eventsModel.getAllDestinations(),
       availableOffers: this.#eventsModel.getOffersByType(event.type).offers,
       onFormSubmit: () => {
-        replaceFormToEvent();
-        document.removeEventListener('keydown', escKeyDownHandler);
+        applyFormClose();
+      },
+      onFormClose: () => {
+        applyFormClose();
       },
     });
 

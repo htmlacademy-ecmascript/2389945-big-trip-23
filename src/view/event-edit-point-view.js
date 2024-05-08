@@ -222,6 +222,7 @@ export default class EventEditPointView extends AbstractView {
   #availableOffers = null;
 
   #handleFormSubmit = null;
+  #handleFormClose = null;
 
   constructor({
     event = NEW_EVENT,
@@ -229,6 +230,7 @@ export default class EventEditPointView extends AbstractView {
     allDestinations,
     availableOffers,
     onFormSubmit,
+    onFormClose,
   }) {
     super();
     this.#event = event;
@@ -236,10 +238,14 @@ export default class EventEditPointView extends AbstractView {
     this.#allDestinations = allDestinations;
     this.#availableOffers = availableOffers;
     this.#handleFormSubmit = onFormSubmit;
+    this.#handleFormClose = onFormClose;
 
     this.element
       .querySelector('form')
       .addEventListener('submit', this.#formSubmitHandler);
+    this.element
+      .querySelector('.event__rollup-btn')
+      .addEventListener('click', this.#formCloseHandler);
   }
 
   get template() {
@@ -254,5 +260,10 @@ export default class EventEditPointView extends AbstractView {
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
     this.#handleFormSubmit();
+  };
+
+  #formCloseHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormClose();
   };
 }
