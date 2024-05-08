@@ -4,10 +4,10 @@ import { DAY_HOURS, HOUR_MINUTES } from '../const.js';
 export const getRandomArrayElement = (items) =>
   items[Math.floor(Math.random() * items.length)];
 
-export const formatEventDate = (date, formatPattern) =>
+export const formatDate = (date, formatPattern) =>
   date ? dayjs(date).format(formatPattern) : '';
 
-export const getEventDurationTime = (dateStart, dateEnd) => {
+export const getDurationTime = (dateStart, dateEnd) => {
   const diff = dayjs(dateEnd).diff(dateStart, 'minute');
   let days = Math.floor(diff / (HOUR_MINUTES * DAY_HOURS));
   let hours = Math.floor(diff / HOUR_MINUTES);

@@ -1,6 +1,6 @@
 import { Event } from '../const.js';
 import AbstractView from '../framework/view/abstract-view.js';
-import { calcTotalPrice, formatEventDate } from '../utils/utils.js';
+import { calcTotalPrice, formatDate } from '../utils/common.js';
 
 const NEW_EVENT = {
   id: '',
@@ -31,10 +31,10 @@ const createEventOffersTemplate = (availableOffers, selectedOffers) => {
   for (let i = 0; i < availableOffers.length; i++) {
     offersTemplate += `<div class="event__offer-selector">
     <input class="event__offer-checkbox  visually-hidden" id="${
-      availableOffers[i].id
-    }" type="checkbox" name="${availableOffers[i].title}" ${
-      selectedOffers.includes(availableOffers[i]) ? 'checked' : ''
-    }>
+  availableOffers[i].id
+}" type="checkbox" name="${availableOffers[i].title}" ${
+  selectedOffers.includes(availableOffers[i]) ? 'checked' : ''
+}>
     <label class="event__offer-label" for="${availableOffers[i].id}">
       <span class="event__offer-title">${availableOffers[i].title}</span>
       &plus;&euro;&nbsp;
@@ -104,8 +104,8 @@ const createEventEditPointTemplate = (
   const { type, basePrice, dateFrom, dateTo } = event;
   const { destination, selectedOffers } = eventInfo;
 
-  const startDate = formatEventDate(dateFrom, Event.EDIT_DATE_FORMAT);
-  const endDate = formatEventDate(dateTo, Event.EDIT_DATE_FORMAT);
+  const startDate = formatDate(dateFrom, Event.EDIT_DATE_FORMAT);
+  const endDate = formatDate(dateTo, Event.EDIT_DATE_FORMAT);
 
   const totalPrice = calcTotalPrice(basePrice, selectedOffers);
   const destinationsTemplate = createEventDestinstionsTemplate(allDestinations);

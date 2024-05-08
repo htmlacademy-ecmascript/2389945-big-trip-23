@@ -5,3 +5,4 @@ export const generateFilters = (events) =>
     type: filterType,
     count: filterEvents(events).length,
   }));
+

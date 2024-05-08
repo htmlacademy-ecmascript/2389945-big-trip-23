@@ -6,10 +6,10 @@ export const Event = {
 };
 
 export const FilterType = {
-  EVERYTHING: 'filter-everything',
-  FUTURE: 'filter-future',
-  PRESENT: 'filter-present',
-  PAST: 'filter-past',
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+  PRESENT: 'present',
+  PAST: 'past',
 };
 
 export const EVENTS_LIST_EMPTY_MESSAGE =
