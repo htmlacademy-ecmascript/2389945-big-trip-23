@@ -1,9 +1,9 @@
 import AbstractView from '../framework/view/abstract-view.js';
 
-const createTripFiltersTemplate = () =>
+const createTripFiltersTemplate = (filters) =>
   `<form class="trip-filters" action="#" method="get">
 		<div class="trip-filters__filter">
-			<input id="filter-everything" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="everything">
+			<input id="filter-everything" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="everything" checked>
 			<label class="trip-filters__filter-label" for="filter-everything">Everything</label>
 		</div>
 
@@ -18,7 +18,7 @@ const createTripFiltersTemplate = () =>
 		</div>
 
 		<div class="trip-filters__filter">
-			<input id="filter-past" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="past" checked>
+			<input id="filter-past" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="past">
 			<label class="trip-filters__filter-label" for="filter-past">Past</label>
 		</div>
 
@@ -26,7 +26,14 @@ const createTripFiltersTemplate = () =>
 	</form>`;
 
 export default class TripFiltersView extends AbstractView {
+  #filters = null;
+
+  constructor({ filters }) {
+    super();
+    this.#filters = filters;
+  }
+
   get template() {
-    return createTripFiltersTemplate();
+    return createTripFiltersTemplate(this.#filters);
   }
 }

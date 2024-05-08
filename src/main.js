@@ -1,4 +1,5 @@
 import { RenderPosition, render } from './framework/render.js';
+import { generateFilters } from './mock/filters.js';
 import EventsModel from './model/events-model.js';
 import EventPresenter from './presenter/event-presenter.js';
 import TripFiltersView from './view/trip-filters-view.js';
@@ -16,7 +17,10 @@ const eventPresenter = new EventPresenter({
   eventsModel,
 });
 
+const filters = generateFilters(eventsModel.events);
+
 render(new TripInfoView(), tripMainElement, RenderPosition.AFTERBEGIN);
-render(new TripFiltersView(), eventFiltersElement);
+//render(new TripFiltersView(), eventFiltersElement);
+render(new TripFiltersView(filters), eventFiltersElement);
 
 eventPresenter.init();

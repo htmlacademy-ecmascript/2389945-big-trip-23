@@ -1,7 +1,9 @@
+import { EVENTS_LIST_EMPTY_MESSAGE } from '../const.js';
 import { render, replace } from '../framework/render.js';
 import EventEditPointView from '../view/event-edit-point-view.js';
 import EventsItemView from '../view/events-item-view.js';
 import EventsListView from '../view/events-list-view.js';
+import EventsMessageView from '../view/events-message-view.js';
 import TripSortView from '../view/trip-sort-view.js';
 
 /*
@@ -80,6 +82,14 @@ export default class EventPresenter {
     this.#tripEvents = [...this.#eventsModel.events];
     this.#tripEventsInfo = new Map([...this.#eventsModel.eventsInfo]);
 
+    this.#renderTrip();
+  }
+
+  #renderTrip() {
+    if (this.#tripEvents.length === 0) {
+      render(new EventsMessageView(EVENTS_LIST_EMPTY_MESSAGE), this.#container);
+      return;
+    }
     render(new TripSortView(), this.#container);
     render(this.#eventsListElement, this.#container);
 
