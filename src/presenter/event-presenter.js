@@ -6,18 +6,6 @@ import EventsListView from '../view/events-list-view.js';
 import EventsMessageView from '../view/events-message-view.js';
 import TripSortView from '../view/trip-sort-view.js';
 
-/*
-const eventState = {
-  eventState: 0,
-  get state() {
-    return this.eventState;
-  },
-  set state(value) {
-    this.eventState = value;
-  },
-};
-*/
-
 export default class EventPresenter {
   #eventsListElement = new EventsListView();
   #container = null;
@@ -25,9 +13,19 @@ export default class EventPresenter {
   #tripEvents = [];
   #tripEventsInfo = null;
 
+  #currentEventComponent = null;
+
   constructor({ container, eventsModel }) {
     this.#container = container;
     this.#eventsModel = eventsModel;
+  }
+
+  init() {
+    this.#eventsModel.eventsInfo = this.#eventsModel.events;
+    this.#tripEvents = [...this.#eventsModel.events];
+    this.#tripEventsInfo = new Map([...this.#eventsModel.eventsInfo]);
+
+    this.#renderTrip();
   }
 
   #renderEvent(event) {
@@ -39,13 +37,30 @@ export default class EventPresenter {
       }
     };
     const eventComponent = new EventsItemView({
-      event: event,
+      event,
       eventInfo: this.#tripEventsInfo.get(event),
       allDestinations: this.#eventsModel.getAllDestinations(),
       availableOffers: this.#eventsModel.getOffersByType(event.type).offers,
       onEditClick: () => {
+        /*
+        const editComponent = document.querySelector('.event--edit');
+        console.log(this.#currentEventComponent, eventComponent);
+        if (this.#currentEventComponent) {
+          console.log(this.#currentEventComponent.element.parentElement);
+        }
+        console.log(editComponent);
+
+        if (this.#currentEventComponent && editComponent) {
+          editComponent.parentElement.replaceChild(
+            this.#currentEventComponent.element.querySelector('.event'),
+            editComponent
+          );
+        }
+        */
+
         replaceEventToForm();
         document.addEventListener('keydown', escKeyDownHandler);
+        this.#currentEventComponent = eventComponent;
       },
     });
 
@@ -76,13 +91,6 @@ export default class EventPresenter {
     }
 
     render(eventComponent, this.#eventsListElement.element);
-  }
-
-  init() {
-    this.#tripEvents = [...this.#eventsModel.events];
-    this.#tripEventsInfo = new Map([...this.#eventsModel.eventsInfo]);
-
-    this.#renderTrip();
   }
 
   #renderTrip() {

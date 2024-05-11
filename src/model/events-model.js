@@ -9,14 +9,18 @@ export default class EventsModel {
   #destinations = getAllDestinations();
   #offers = getAllOffers();
 
-  #getDestinationById(id) {
-    return this.#destinations.find((item) => item.id === id);
+  get events() {
+    return this.#events;
   }
 
-  #getOfferById(type, id) {
-    return this.#offers
-      .find((item) => item.type === type)
-      .offers.find((item) => item.id === id);
+  get eventsInfo() {
+    return this.#eventsInfo;
+  }
+
+  set eventsInfo(events) {
+    events.forEach((event) => {
+      this.#applyEventInfo(event);
+    });
   }
 
   getAllDestinations() {
@@ -27,27 +31,22 @@ export default class EventsModel {
     return this.#offers.find((item) => item.type === type);
   }
 
-  #getEventInfo(event) {
+  #getDestinationById(id) {
+    return this.#destinations.find((item) => item.id === id);
+  }
+
+  #getOfferById(type, id) {
+    return this.#offers
+      .find((item) => item.type === type)
+      .offers.find((item) => item.id === id);
+  }
+
+  #applyEventInfo(event) {
     this.#eventsInfo.set(event, {
       destination: this.#getDestinationById(event.destination),
       selectedOffers: event.offers.map((offer) =>
         this.#getOfferById(event.type, offer)
       ),
     });
-  }
-
-  #applyEventsInfo(events) {
-    events.forEach((event) => {
-      this.#getEventInfo(event);
-    });
-    return this.#eventsInfo;
-  }
-
-  get events() {
-    return this.#events;
-  }
-
-  get eventsInfo() {
-    return this.#applyEventsInfo(this.#events);
   }
 }
