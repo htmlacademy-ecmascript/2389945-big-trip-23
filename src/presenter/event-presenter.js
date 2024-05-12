@@ -54,7 +54,7 @@ export default class EventPresenter {
     };
 
     const eventEditComponent = new EventEditPointView({
-      event: event,
+      event,
       eventInfo: this.#tripEventsInfo.get(event),
       allDestinations: this.#eventsModel.getAllDestinations(),
       availableOffers: this.#eventsModel.getOffersByType(event.type).offers,
