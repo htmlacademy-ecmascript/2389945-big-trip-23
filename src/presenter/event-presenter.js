@@ -42,22 +42,6 @@ export default class EventPresenter {
       allDestinations: this.#eventsModel.getAllDestinations(),
       availableOffers: this.#eventsModel.getOffersByType(event.type).offers,
       onEditClick: () => {
-        /*
-        const editComponent = document.querySelector('.event--edit');
-        console.log(this.#currentEventComponent, eventComponent);
-        if (this.#currentEventComponent) {
-          console.log(this.#currentEventComponent.element.parentElement);
-        }
-        console.log(editComponent);
-
-        if (this.#currentEventComponent && editComponent) {
-          editComponent.parentElement.replaceChild(
-            this.#currentEventComponent.element.querySelector('.event'),
-            editComponent
-          );
-        }
-        */
-
         replaceEventToForm();
         document.addEventListener('keydown', escKeyDownHandler);
         this.#currentEventComponent = eventComponent;
