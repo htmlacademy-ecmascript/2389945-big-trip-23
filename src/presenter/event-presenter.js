@@ -29,6 +29,12 @@ export default class EventPresenter {
   }
 
   #renderEvent(event) {
+    const eventInfo = this.#tripEventsInfo.get(event);
+    const allDestinations = this.#eventsModel.getAllDestinations();
+    const availableOffers = this.#eventsModel.getOffersByType(
+      event.type
+    ).offers;
+
     const escKeyDownHandler = (evt) => {
       if (evt.key === 'Escape') {
         evt.preventDefault();
@@ -38,9 +44,9 @@ export default class EventPresenter {
     };
     const eventComponent = new EventsItemView({
       event,
-      eventInfo: this.#tripEventsInfo.get(event),
-      allDestinations: this.#eventsModel.getAllDestinations(),
-      availableOffers: this.#eventsModel.getOffersByType(event.type).offers,
+      eventInfo,
+      allDestinations,
+      availableOffers,
       onEditClick: () => {
         replaceEventToForm();
         document.addEventListener('keydown', escKeyDownHandler);
@@ -55,7 +61,7 @@ export default class EventPresenter {
 
     const eventEditComponent = new EventEditPointView({
       event,
-      eventInfo: this.#tripEventsInfo.get(event),
+      eventInfo,
       allDestinations: this.#eventsModel.getAllDestinations(),
       availableOffers: this.#eventsModel.getOffersByType(event.type).offers,
       onFormSubmit: () => {

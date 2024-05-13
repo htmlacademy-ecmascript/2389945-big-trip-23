@@ -6,10 +6,13 @@ export const Event = {
 };
 
 export const FilterType = {
-  EVERYTHING: 'everything',
-  FUTURE: 'future',
-  PRESENT: 'present',
-  PAST: 'past',
+  EVERYTHING: {
+    name: 'everything',
+    message: 'Click New Event to create your first point',
+  },
+  FUTURE: { name: 'future', message: 'There are no future events now' },
+  PRESENT: { name: 'present', message: 'There are no present events now' },
+  PAST: { name: 'past', message: 'There are no past events now' },
 };
 
 export const EVENTS_LIST_EMPTY_MESSAGE =
