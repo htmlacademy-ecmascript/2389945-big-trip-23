@@ -15,7 +15,5 @@ export const FilterType = {
   PAST: { name: 'past', message: 'There are no past events now' },
 };
 
-export const EVENTS_LIST_EMPTY_MESSAGE =
-  'Click New Event to create your first point';
 export const DAY_HOURS = 24;
 export const HOUR_MINUTES = 60;

@@ -23,30 +23,24 @@ export default class EventsModel {
     });
   }
 
-  getAllDestinations() {
-    return this.#destinations;
-  }
+  getAllDestinations = () => this.#destinations;
 
-  getOffersByType(type) {
-    return this.#offers.find((item) => item.type === type);
-  }
+  getOffersByType = (type) => this.#offers.find((item) => item.type === type);
 
-  #getDestinationById(id) {
-    return this.#destinations.find((item) => item.id === id);
-  }
+  #getDestinationById = (id) =>
+    this.#destinations.find((item) => item.id === id);
 
-  #getOfferById(type, id) {
-    return this.#offers
+  #getOfferById = (type, id) =>
+    this.#offers
       .find((item) => item.type === type)
       .offers.find((item) => item.id === id);
-  }
 
-  #applyEventInfo(event) {
+  #applyEventInfo = (event) => {
     this.#eventsInfo.set(event, {
       destination: this.#getDestinationById(event.destination),
       selectedOffers: event.offers.map((offer) =>
         this.#getOfferById(event.type, offer)
       ),
     });
-  }
+  };
 }

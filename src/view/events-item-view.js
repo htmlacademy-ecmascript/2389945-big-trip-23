@@ -8,13 +8,14 @@ import {
 
 const createEventOffersTemplate = (offers) => {
   let offersTemplate = '';
-  for (let i = 0; i < offers.length; i++) {
+  offers.forEach((offer) => {
     offersTemplate += `<li class="event__offer">
-                         <span class="event__offer-title">${offers[i].title}</span>
-                           &plus;&euro;&nbsp;
-                         <span class="event__offer-price">${offers[i].price}</span>
-                       </li>`;
-  }
+  <span class="event__offer-title">${offer.title}</span>
+    &plus;&euro;&nbsp;
+  <span class="event__offer-price">${offer.price}</span>
+</li>`;
+  });
+
   return offersTemplate;
 };
 
