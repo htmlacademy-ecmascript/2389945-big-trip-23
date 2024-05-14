@@ -2,19 +2,20 @@ import { Event } from '../const.js';
 import AbstractView from '../framework/view/abstract-view.js';
 import {
   calcTotalPrice,
-  formatEventDate,
-  getEventDurationTime,
-} from '../utils.js';
+  formatDate,
+  getDurationTime,
+} from '../utils/common.js';
 
 const createEventOffersTemplate = (offers) => {
   let offersTemplate = '';
-  for (let i = 0; i < offers.length; i++) {
+  offers.forEach((offer) => {
     offersTemplate += `<li class="event__offer">
-                         <span class="event__offer-title">${offers[i].title}</span>
-                           &plus;&euro;&nbsp;
-                         <span class="event__offer-price">${offers[i].price}</span>
-                       </li>`;
-  }
+  <span class="event__offer-title">${offer.title}</span>
+    &plus;&euro;&nbsp;
+  <span class="event__offer-price">${offer.price}</span>
+</li>`;
+  });
+
   return offersTemplate;
 };
 
@@ -22,10 +23,10 @@ const createEventsItemTemplate = (event, eventInfo) => {
   const { type, basePrice, isFavorite, dateFrom, dateTo } = event;
   const { destination, selectedOffers } = eventInfo;
 
-  const startDate = formatEventDate(dateFrom, Event.LIST_DATE_FORMAT);
-  const startTime = formatEventDate(dateFrom, Event.LIST_TIME_FORMAT);
-  const endTime = formatEventDate(dateTo, Event.LIST_TIME_FORMAT);
-  const durationTime = getEventDurationTime(dateFrom, dateTo);
+  const startDate = formatDate(dateFrom, Event.LIST_DATE_FORMAT);
+  const startTime = formatDate(dateFrom, Event.LIST_TIME_FORMAT);
+  const endTime = formatDate(dateTo, Event.LIST_TIME_FORMAT);
+  const durationTime = getDurationTime(dateFrom, dateTo);
 
   const totalPrice = calcTotalPrice(basePrice, selectedOffers);
   const offersTemplate = createEventOffersTemplate(selectedOffers);

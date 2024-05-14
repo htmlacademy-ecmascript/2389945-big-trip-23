@@ -1,10 +1,10 @@
-import { getRandomArrayElement } from '../utils.js';
+import { getRandomArrayElement } from '../utils/common.js';
 
 export const events = [
   {
     id: '234f40ec-8c2f-4bca-90c2-80f0cf92177e',
     basePrice: 1051,
-    dateFrom: '2024-06-12T09:53:07.164Z',
+    dateFrom: '2024-04-12T09:53:07.164Z',
     dateTo: '2024-06-13T00:19:07.164Z',
     destination: '74e80ed9-a1eb-4fd0-bf83-df53d4a90ce9',
     isFavorite: true,
@@ -14,7 +14,7 @@ export const events = [
   {
     id: 'a9e591d1-c01d-4211-a72c-f864b782322e',
     basePrice: 8128,
-    dateFrom: '2024-06-13T08:02:07.164Z',
+    dateFrom: '2024-04-13T08:02:07.164Z',
     dateTo: '2024-06-14T01:18:07.164Z',
     destination: '48fb0649-12c0-44c7-ad79-a02c72716d1c',
     isFavorite: false,
@@ -79,8 +79,8 @@ export const events = [
   {
     id: 'b8615609-6775-48ef-897e-093f341006dd',
     basePrice: 3752,
-    dateFrom: '2024-06-23T03:33:07.164Z',
-    dateTo: '2024-06-24T18:40:07.164Z',
+    dateFrom: '2024-02-23T03:33:07.164Z',
+    dateTo: '2024-03-24T18:40:07.164Z',
     destination: 'a40ca73c-a954-425d-9152-28fd14a664ff',
     isFavorite: false,
     offers: [
@@ -106,8 +106,8 @@ export const events = [
   {
     id: 'ac588e15-ebd3-4e18-8b8a-ba44180cc57c',
     basePrice: 6237,
-    dateFrom: '2024-06-29T02:03:07.164Z',
-    dateTo: '2024-06-29T18:02:07.164Z',
+    dateFrom: '2024-01-29T02:03:07.164Z',
+    dateTo: '2024-02-29T18:02:07.164Z',
     destination: 'fc0aeb47-60b4-433a-a40b-80aa92969a48',
     isFavorite: true,
     offers: [

@@ -1,13 +1,13 @@
 import dayjs from 'dayjs';
-import {DAY_HOURS, HOUR_MINUTES } from './const';
+import { DAY_HOURS, HOUR_MINUTES } from '../const.js';
 
 export const getRandomArrayElement = (items) =>
   items[Math.floor(Math.random() * items.length)];
 
-export const formatEventDate = (date, formatPattern) =>
+export const formatDate = (date, formatPattern) =>
   date ? dayjs(date).format(formatPattern) : '';
 
-export const getEventDurationTime = (dateStart, dateEnd) => {
+export const getDurationTime = (dateStart, dateEnd) => {
   const diff = dayjs(dateEnd).diff(dateStart, 'minute');
   let days = Math.floor(diff / (HOUR_MINUTES * DAY_HOURS));
   let hours = Math.floor(diff / HOUR_MINUTES);
@@ -15,7 +15,9 @@ export const getEventDurationTime = (dateStart, dateEnd) => {
 
   days = days > 0 ? `${String(days).padStart(2, '0')}D` : '';
   hours =
-    hours % DAY_HOURS === 0 ? '00H' : `${String(hours % DAY_HOURS).padStart(2, '0')}H`;
+    hours % DAY_HOURS === 0
+      ? '00H'
+      : `${String(hours % DAY_HOURS).padStart(2, '0')}H`;
   minutes = `${String(minutes).padStart(2, '0')}M`;
 
   const durationTime = `${days} ${
