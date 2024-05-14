@@ -39,8 +39,8 @@ export default class EventPresenter {
     const eventEditComponent = new EventEditPointView({
       event,
       eventInfo,
-      allDestinations: this.#eventsModel.getAllDestinations(),
-      availableOffers: this.#eventsModel.getOffersByType(event.type).offers,
+      allDestinations,
+      availableOffers,
       onFormSubmit: this.#handleFormSubmit,
       onFormClose: this.#handleFormSubmit,
     });
