@@ -1,8 +1,9 @@
-export const Event = {
+export const DateTimeSettings = {
   LIST_TIME_FORMAT: 'HH:mm',
   LIST_DATE_FORMAT: 'MMM DD',
   EDIT_DATE_FORMAT: 'DD/MM/YY HH:mm',
-  COUNT: 5,
+  DAY_HOURS: 24,
+  HOUR_MINUTES: 60
 };
 
 export const FilterType = {
@@ -15,5 +16,5 @@ export const FilterType = {
   PAST: { name: 'past', message: 'There are no past events now' },
 };
 
-export const DAY_HOURS = 24;
-export const HOUR_MINUTES = 60;
+export const EVENTS_ITEM_COUNT = 5;
+

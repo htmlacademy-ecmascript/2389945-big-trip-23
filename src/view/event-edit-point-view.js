@@ -1,4 +1,4 @@
-import { Event } from '../const.js';
+import { DateTimeSettings } from '../const.js';
 import AbstractView from '../framework/view/abstract-view.js';
 import { calcTotalPrice, formatDate } from '../utils/common.js';
 
@@ -54,7 +54,7 @@ const createEventOffersTemplate = (availableOffers, selectedOffers) => {
 };
 
 const createEventPicturesTemplate = (description, pictures) => {
-  if (pictures.length === 0) {
+  if (!pictures.length) {
     return '';
   }
   let picturesTemplate = '';
@@ -107,8 +107,8 @@ const createEventEditPointTemplate = (
   const { type, basePrice, dateFrom, dateTo } = event;
   const { destination, selectedOffers } = eventInfo;
 
-  const startDate = formatDate(dateFrom, Event.EDIT_DATE_FORMAT);
-  const endDate = formatDate(dateTo, Event.EDIT_DATE_FORMAT);
+  const startDate = formatDate(dateFrom, DateTimeSettings.EDIT_DATE_FORMAT);
+  const endDate = formatDate(dateTo, DateTimeSettings.EDIT_DATE_FORMAT);
 
   const totalPrice = calcTotalPrice(basePrice, selectedOffers);
   const destinationsTemplate = createEventDestinstionsTemplate(allDestinations);

@@ -86,7 +86,7 @@ export default class EventPresenter {
   };
 
   #renderTrip = () => {
-    if (this.#tripEvents.length === 0) {
+    if (!this.#tripEvents.length) {
       render(new EventsMessageView(FilterType.EVERYTHING.message), this.#container);
       return;
     }

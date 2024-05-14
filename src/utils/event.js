@@ -3,10 +3,8 @@ import dayjs from 'dayjs';
 const now = dayjs();
 
 export const isEventPresent = (dateFrom, dateTo) =>
-  dayjs(dateFrom) <= now && dayjs(dateTo) >= now;
+  now.isAfter(dayjs(dateFrom)) && now.isBefore(dayjs(dateTo));
 
-export const isEventPast = (dateFrom, dateTo) =>
-  dayjs(dateFrom) < now && dayjs(dateTo) < now;
+export const isEventPast = (date) => now.isAfter(dayjs(date));
 
-export const isEventFuture = (dateFrom, dateTo) =>
-  dayjs(dateFrom) > now && dayjs(dateTo) > now;
+export const isEventFuture = (date) => now.isBefore(dayjs(date));

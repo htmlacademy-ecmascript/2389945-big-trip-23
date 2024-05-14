@@ -1,4 +1,4 @@
-import { Event } from '../const.js';
+import { DateTimeSettings } from '../const.js';
 import AbstractView from '../framework/view/abstract-view.js';
 import {
   calcTotalPrice,
@@ -23,9 +23,9 @@ const createEventsItemTemplate = (event, eventInfo) => {
   const { type, basePrice, isFavorite, dateFrom, dateTo } = event;
   const { destination, selectedOffers } = eventInfo;
 
-  const startDate = formatDate(dateFrom, Event.LIST_DATE_FORMAT);
-  const startTime = formatDate(dateFrom, Event.LIST_TIME_FORMAT);
-  const endTime = formatDate(dateTo, Event.LIST_TIME_FORMAT);
+  const startDate = formatDate(dateFrom, DateTimeSettings.LIST_DATE_FORMAT);
+  const startTime = formatDate(dateFrom, DateTimeSettings.LIST_TIME_FORMAT);
+  const endTime = formatDate(dateTo, DateTimeSettings.LIST_TIME_FORMAT);
   const durationTime = getDurationTime(dateFrom, dateTo);
 
   const totalPrice = calcTotalPrice(basePrice, selectedOffers);
