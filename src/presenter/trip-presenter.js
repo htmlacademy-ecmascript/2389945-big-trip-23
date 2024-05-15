@@ -1,7 +1,7 @@
 import { FilterType } from '../const.js';
 import { render, replace, RenderPosition } from '../framework/render.js';
-import EventEditPointView from '../view/event-edit-point-view.js';
-import EventsItemView from '../view/events-item-view.js';
+import EventEditPointView from '../view/event-edit-view.js';
+import EventsItemView from '../view/event-view.js';
 import EventsListView from '../view/events-list-view.js';
 import EventsMessageView from '../view/events-message-view.js';
 import TripSortView from '../view/trip-sort-view.js';
