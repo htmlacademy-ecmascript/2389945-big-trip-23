@@ -1,5 +1,5 @@
 import { FilterType } from '../const.js';
-import { render, replace } from '../framework/render.js';
+import { render, replace, RenderPosition } from '../framework/render.js';
 import EventEditPointView from '../view/event-edit-point-view.js';
 import EventsItemView from '../view/events-item-view.js';
 import EventsListView from '../view/events-list-view.js';
@@ -16,6 +16,9 @@ export default class EventPresenter {
   #eventComponent = null;
   #eventEditComponent = null;
 
+  #sortComponent = new TripSortView();
+  #messageComponent = new EventsMessageView();
+
   constructor({ container, eventsModel }) {
     this.#container = container;
     this.#eventsModel = eventsModel;
@@ -27,6 +30,16 @@ export default class EventPresenter {
     this.#tripEventsInfo = new Map([...this.#eventsModel.eventsInfo]);
 
     this.#renderTrip();
+  };
+
+  #renderSort = () => {
+    render(this.#sortComponent, this.#container, RenderPosition.AFTERBEGIN);
+  };
+
+  #renderEvents = (eventFrom, eventTo) => {
+    this.#tripEvents
+      .slice(eventFrom, eventTo)
+      .forEach((event) => this.#renderEvent(event));
   };
 
   #renderEvent = (event) => {
