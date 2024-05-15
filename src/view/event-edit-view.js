@@ -31,10 +31,10 @@ const createEventOffersTemplate = (availableOffers, selectedOffers) => {
   availableOffers.forEach((offer) => {
     offersTemplate += `<div class="event__offer-selector">
   <input class="event__offer-checkbox  visually-hidden" id="${
-    offer.id
-  }" type="checkbox" name="${offer.title}" ${
-      selectedOffers.includes(offer) ? 'checked' : ''
-    }>
+  offer.id
+}" type="checkbox" name="${offer.title}" ${
+  selectedOffers.includes(offer) ? 'checked' : ''
+}>
   <label class="event__offer-label" for="${offer.id}">
     <span class="event__offer-title">${offer.title}</span>
     &plus;&euro;&nbsp;
