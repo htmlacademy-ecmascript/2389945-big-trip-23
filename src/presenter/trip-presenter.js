@@ -1,23 +1,25 @@
 import { FilterType } from '../const.js';
-import { render, replace, RenderPosition } from '../framework/render.js';
-import EventEditPointView from '../view/event-edit-view.js';
-import EventsItemView from '../view/event-view.js';
+import { RenderPosition, render } from '../framework/render.js';
+import { updateItem } from '../utils/common.js';
 import EventsListView from '../view/events-list-view.js';
 import EventsMessageView from '../view/events-message-view.js';
 import TripSortView from '../view/trip-sort-view.js';
+import EventPresenter from './event-presenter.js';
 
-export default class EventPresenter {
-  #eventsListElement = new EventsListView();
+export default class TripPresenter {
+  #eventsListComponent = new EventsListView();
   #container = null;
   #eventsModel = null;
   #tripEvents = [];
   #tripEventsInfo = null;
 
-  #eventComponent = null;
-  #eventEditComponent = null;
+  #allDestinations = null;
+  #availableOffers = null;
 
   #sortComponent = new TripSortView();
   #messageComponent = new EventsMessageView();
+
+  #eventPresenters = new Map();
 
   constructor({ container, eventsModel }) {
     this.#container = container;
@@ -28,94 +30,67 @@ export default class EventPresenter {
     this.#eventsModel.eventsInfo = this.#eventsModel.events;
     this.#tripEvents = [...this.#eventsModel.events];
     this.#tripEventsInfo = new Map([...this.#eventsModel.eventsInfo]);
+    this.#allDestinations = this.#eventsModel.getAllDestinations();
 
     this.#renderTrip();
+  };
+
+  #handleModeChange = () => {
+    this.#eventPresenters.forEach((presenter) => presenter.resetView());
+  };
+
+  #handleEventChange = (updatedEvent) => {
+    this.#tripEvents = updateItem(this.#tripEvents, updatedEvent);
+    this.#eventPresenters.get(updatedEvent.id).init(updatedEvent);
   };
 
   #renderSort = () => {
     render(this.#sortComponent, this.#container, RenderPosition.AFTERBEGIN);
   };
 
-  #renderEvents = (eventFrom, eventTo) => {
-    this.#tripEvents
-      .slice(eventFrom, eventTo)
-      .forEach((event) => this.#renderEvent(event));
+  #renderNoEvents = (message) => {
+    render(
+      this.#messageComponent(message),
+      this.#container,
+      RenderPosition.AFTERBEGIN
+    );
   };
 
   #renderEvent = (event) => {
-    const eventInfo = this.#tripEventsInfo.get(event);
-    const allDestinations = this.#eventsModel.getAllDestinations();
-    const availableOffers = this.#eventsModel.getOffersByType(
+    this.#availableOffers = this.#eventsModel.getOffersByType(
       event.type
     ).offers;
-
-    const eventEditComponent = new EventEditPointView({
-      event,
-      eventInfo,
-      allDestinations,
-      availableOffers,
-      onFormSubmit: this.#handleFormSubmit,
-      onFormClose: this.#handleFormSubmit,
+    const eventInfo = this.#tripEventsInfo.get(event);
+    const eventPresenter = new EventPresenter({
+      eventsListContainer: this.#eventsListComponent.element,
+      eventInfo: eventInfo,
+      allDestinations: this.#allDestinations,
+      availableOffers: this.#availableOffers,
+      onDataChange: this.#handleEventChange,
+      onModeChange: this.#handleModeChange,
     });
-
-    const eventComponent = new EventsItemView({
-      event,
-      eventInfo,
-      allDestinations,
-      availableOffers,
-      onEditClick: () => {
-        this.#handleEditClick(eventComponent, eventEditComponent);
-      },
-    });
-
-    render(eventComponent, this.#eventsListElement.element);
+    eventPresenter.init(event);
+    this.#eventPresenters.set(event.id, eventPresenter);
   };
 
-  #replaceEventToForm = (eventComponent, eventEditComponent) => {
-    if (this.#eventComponent && this.#eventEditComponent) {
-      replace(this.#eventComponent, this.#eventEditComponent);
-    }
-
-    replace(eventEditComponent, eventComponent);
-    document.addEventListener('keydown', this.#escKeyDownHandler);
+  #renderEvents = () => {
+    this.#tripEvents.forEach((event) => this.#renderEvent(event));
   };
 
-  #replaceFormToEvent = (eventComponent, eventEditComponent) => {
-    replace(eventComponent, eventEditComponent);
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
-
-    this.#eventComponent = null;
-    this.#eventEditComponent = null;
-  };
-
-  #handleEditClick = (eventComponent, eventEditComponent) => {
-    this.#replaceEventToForm(eventComponent, eventEditComponent);
-    this.#eventComponent = eventComponent;
-    this.#eventEditComponent = eventEditComponent;
-  };
-
-  #handleFormSubmit = () => {
-    this.#replaceFormToEvent(this.#eventComponent, this.#eventEditComponent);
-  };
+  #clearEvents() {
+    this.#eventPresenters.forEach((presenter) => presenter.destroy());
+    this.#eventPresenters.clear();
+  }
 
   #renderTrip = () => {
+    render(this.#eventsListComponent, this.#container);
+
     if (!this.#tripEvents.length) {
-      render(new EventsMessageView(FilterType.EVERYTHING.message), this.#container);
+      this.#renderNoEvents(FilterType.EVERYTHING.message);
       return;
     }
-    render(new TripSortView(), this.#container);
-    render(this.#eventsListElement, this.#container);
 
-    this.#tripEvents.forEach((event) => {
-      this.#renderEvent(event);
-    });
-  };
-
-  #escKeyDownHandler = (evt) => {
-    if (evt.key === 'Escape') {
-      evt.preventDefault();
-      this.#replaceFormToEvent(this.#eventComponent, this.#eventEditComponent);
-      document.removeEventListener('keydown', this.#escKeyDownHandler);
-    }
+    this.#renderSort();
+    this.#renderEvents();
   };
 }

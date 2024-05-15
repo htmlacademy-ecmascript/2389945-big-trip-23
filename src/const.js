@@ -3,7 +3,13 @@ export const DateTimeSettings = {
   LIST_DATE_FORMAT: 'MMM DD',
   EDIT_DATE_FORMAT: 'DD/MM/YY HH:mm',
   DAY_HOURS: 24,
-  HOUR_MINUTES: 60
+  HOUR_MINUTES: 60,
+};
+
+export const EventSettings = {
+  DEFAULT_MODE: 'DEFAULT',
+  EDITING_MODE: 'EDITING',
+  ITEM_COUNT: 5,
 };
 
 export const FilterType = {
@@ -15,6 +21,3 @@ export const FilterType = {
   PRESENT: { name: 'present', message: 'There are no present events now' },
   PAST: { name: 'past', message: 'There are no past events now' },
 };
-
-export const EVENTS_ITEM_COUNT = 5;
-

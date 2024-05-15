@@ -1,10 +1,10 @@
+import { EventSettings } from '../const.js';
 import { getAllDestinations } from '../mock/destinations.js';
 import { getRandomEvent } from '../mock/events.js';
 import { getAllOffers } from '../mock/offers.js';
-import { EVENTS_ITEM_COUNT } from '../const.js';
 
 export default class EventsModel {
-  #events = Array.from({ length: EVENTS_ITEM_COUNT }, getRandomEvent);
+  #events = Array.from({ length: EventSettings.ITEM_COUNT }, getRandomEvent);
   #eventsInfo = new Map();
   #destinations = getAllDestinations();
   #offers = getAllOffers();

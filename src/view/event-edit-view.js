@@ -29,13 +29,12 @@ const createEventDestinstionsTemplate = (destinations) => {
 const createEventOffersTemplate = (availableOffers, selectedOffers) => {
   let offersTemplate = '';
   availableOffers.forEach((offer) => {
-    offersTemplate +=
-  `<div class="event__offer-selector">
+    offersTemplate += `<div class="event__offer-selector">
   <input class="event__offer-checkbox  visually-hidden" id="${
-  offer.id
-}" type="checkbox" name="${offer.title}" ${
-  selectedOffers.includes(offer) ? 'checked' : ''
-}>
+    offer.id
+  }" type="checkbox" name="${offer.title}" ${
+      selectedOffers.includes(offer) ? 'checked' : ''
+    }>
   <label class="event__offer-label" for="${offer.id}">
     <span class="event__offer-title">${offer.title}</span>
     &plus;&euro;&nbsp;
@@ -98,7 +97,7 @@ const createEventDetailsTemplate = (
     : '';
 };
 
-const createEventEditPointTemplate = (
+const createEventEditTemplate = (
   event,
   eventInfo,
   allDestinations,
@@ -218,7 +217,7 @@ const createEventEditPointTemplate = (
 </li>`;
 };
 
-export default class EventEditPointView extends AbstractView {
+export default class EventEditView extends AbstractView {
   #event = null;
   #eventInfo = null;
   #allDestinations = null;
@@ -243,16 +242,15 @@ export default class EventEditPointView extends AbstractView {
     this.#handleFormSubmit = onFormSubmit;
     this.#handleFormClose = onFormClose;
 
-    this.element
-      .querySelector('form')
-      .addEventListener('submit', this.#formSubmitHandler);
+    this.form = this.element.querySelector('form');
+    this.form.addEventListener('submit', this.#formSubmitHandler);
     this.element
       .querySelector('.event__rollup-btn')
-      .addEventListener('click', this.#formCloseHandler);
+      .addEventListener('click', this.formCloseHandler);
   }
 
   get template() {
-    return createEventEditPointTemplate(
+    return createEventEditTemplate(
       this.#event,
       this.#eventInfo,
       this.#allDestinations,
@@ -262,11 +260,12 @@ export default class EventEditPointView extends AbstractView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit();
+    this.#handleFormSubmit(this.#event);
   };
 
-  #formCloseHandler = (evt) => {
+  formCloseHandler = (evt) => {
     evt.preventDefault();
+    this.form.reset();
     this.#handleFormClose();
   };
 }
