@@ -1,6 +1,4 @@
-import { getRandomArrayElement } from '../utils/common.js';
-
-export const events = [
+export const tripEvents = [
   {
     id: '234f40ec-8c2f-4bca-90c2-80f0cf92177e',
     basePrice: 1051,
@@ -317,5 +315,3 @@ export const events = [
     type: 'drive',
   },
 ];
-
-export const getRandomEvent = () => getRandomArrayElement(events);

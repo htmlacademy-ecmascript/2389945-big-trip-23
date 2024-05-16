@@ -1,8 +1,23 @@
 import dayjs from 'dayjs';
 import { DateTimeSettings } from '../const.js';
 
-export const getRandomArrayElement = (items) =>
-  items[Math.floor(Math.random() * items.length)];
+const getRandomInteger = (min, max) => {
+  const lower = Math.ceil(Math.min(min, max));
+  const upper = Math.floor(Math.max(min, max));
+  const result = Math.random() * (upper - lower + 1) + lower;
+  return Math.floor(result);
+};
+
+export const getUniqueRandomArray = (sourceArray, resultArraySize) => {
+  const resultIndex = new Set();
+  while (resultIndex.size !== Math.min(resultArraySize, sourceArray.length)) {
+    resultIndex.add(getRandomInteger(0, sourceArray.length - 1));
+  }
+
+  const elements = [];
+  resultIndex.forEach((value) => elements.push(sourceArray[value]));
+  return elements;
+};
 
 export const updateItem = (items, update) =>
   items.map((item) => (item.id === update.id ? update : item));

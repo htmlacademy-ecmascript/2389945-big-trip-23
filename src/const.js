@@ -21,3 +21,10 @@ export const FilterType = {
   PRESENT: { name: 'present', message: 'There are no present events now' },
   PAST: { name: 'past', message: 'There are no past events now' },
 };
+
+export const SortType = {
+  DAY: 'day',
+  TIME: 'time',
+  PRICE: 'price'
+};
+
