@@ -14,8 +14,8 @@ export const events = [
   {
     id: 'a9e591d1-c01d-4211-a72c-f864b782322e',
     basePrice: 8128,
-    dateFrom: '2024-04-13T08:02:07.164Z',
-    dateTo: '2024-06-14T01:18:07.164Z',
+    dateFrom: '2024-04-14T08:02:07.164Z',
+    dateTo: '2024-06-14T08:18:07.164Z',
     destination: '48fb0649-12c0-44c7-ad79-a02c72716d1c',
     isFavorite: false,
     offers: [
@@ -29,8 +29,8 @@ export const events = [
   {
     id: '5576dbca-fffe-4fd1-9841-047dc19a2a11',
     basePrice: 2414,
-    dateFrom: '2024-06-14T08:16:07.164Z',
-    dateTo: '2024-06-15T05:42:07.164Z',
+    dateFrom: '2024-06-15T08:16:07.164Z',
+    dateTo: '2024-06-15T08:42:07.164Z',
     destination: '8dea8526-da47-436a-935a-5b87a85a66e7',
     isFavorite: false,
     offers: [],
@@ -39,8 +39,8 @@ export const events = [
   {
     id: '2e30c60d-447b-4abb-949c-5093bd051eab',
     basePrice: 8452,
-    dateFrom: '2024-06-15T23:32:07.164Z',
-    dateTo: '2024-06-16T22:58:07.164Z',
+    dateFrom: '2024-06-15T22:32:07.164Z',
+    dateTo: '2024-06-15T22:58:07.164Z',
     destination: 'fd57cf0e-28d0-448c-ad87-1dbe8fa35b1e',
     isFavorite: true,
     offers: [

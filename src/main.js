@@ -1,7 +1,7 @@
 import { RenderPosition, render } from './framework/render.js';
 import { generateFilters } from './mock/filters.js';
 import EventsModel from './model/events-model.js';
-import EventPresenter from './presenter/event-presenter.js';
+import TripPresenter from './presenter/trip-presenter.js';
 import TripFilterView from './view/trip-filter-view.js';
 import TripInfoView from './view/trip-info-view.js';
 
@@ -12,7 +12,7 @@ const treipControlsFiltersElement = tripMainElement.querySelector(
 );
 const eventsModel = new EventsModel();
 
-const eventPresenter = new EventPresenter({
+const tripPresenter = new TripPresenter({
   container: tripEventsElement,
   eventsModel,
 });
@@ -22,4 +22,4 @@ const filters = generateFilters(eventsModel.events);
 render(new TripInfoView(), tripMainElement, RenderPosition.AFTERBEGIN);
 render(new TripFilterView({ filters }), treipControlsFiltersElement);
 
-eventPresenter.init();
+tripPresenter.init();

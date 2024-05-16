@@ -1,4 +1,4 @@
-import { Event } from '../const.js';
+import { DateTimeSettings } from '../const.js';
 import AbstractView from '../framework/view/abstract-view.js';
 import {
   calcTotalPrice,
@@ -19,13 +19,13 @@ const createEventOffersTemplate = (offers) => {
   return offersTemplate;
 };
 
-const createEventsItemTemplate = (event, eventInfo) => {
+const createEventTemplate = (event, eventInfo) => {
   const { type, basePrice, isFavorite, dateFrom, dateTo } = event;
   const { destination, selectedOffers } = eventInfo;
 
-  const startDate = formatDate(dateFrom, Event.LIST_DATE_FORMAT);
-  const startTime = formatDate(dateFrom, Event.LIST_TIME_FORMAT);
-  const endTime = formatDate(dateTo, Event.LIST_TIME_FORMAT);
+  const startDate = formatDate(dateFrom, DateTimeSettings.LIST_DATE_FORMAT);
+  const startTime = formatDate(dateFrom, DateTimeSettings.LIST_TIME_FORMAT);
+  const endTime = formatDate(dateTo, DateTimeSettings.LIST_TIME_FORMAT);
   const durationTime = getDurationTime(dateFrom, dateTo);
 
   const totalPrice = calcTotalPrice(basePrice, selectedOffers);
@@ -68,28 +68,38 @@ const createEventsItemTemplate = (event, eventInfo) => {
 </li>`;
 };
 
-export default class EventsItemView extends AbstractView {
+export default class EventView extends AbstractView {
   #event = null;
   #eventInfo = null;
   #handleEditClick = null;
+  #handleFavoriteClick = null;
 
-  constructor({ event, eventInfo, onEditClick }) {
+  constructor({ event, eventInfo, onEditClick, onFavoriteClick }) {
     super();
     this.#event = event;
     this.#eventInfo = eventInfo;
     this.#handleEditClick = onEditClick;
+    this.#handleFavoriteClick = onFavoriteClick;
 
     this.element
       .querySelector('.event__rollup-btn')
       .addEventListener('click', this.#editClickHandler);
+    this.element
+      .querySelector('.event__favorite-btn')
+      .addEventListener('click', this.#favoriteClickHandler);
   }
 
   get template() {
-    return createEventsItemTemplate(this.#event, this.#eventInfo);
+    return createEventTemplate(this.#event, this.#eventInfo);
   }
 
   #editClickHandler = (evt) => {
     evt.preventDefault();
     this.#handleEditClick();
+  };
+
+  #favoriteClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFavoriteClick();
   };
 }

@@ -1,4 +1,4 @@
-import { Event } from '../const.js';
+import { DateTimeSettings } from '../const.js';
 import AbstractView from '../framework/view/abstract-view.js';
 import { calcTotalPrice, formatDate } from '../utils/common.js';
 
@@ -29,8 +29,7 @@ const createEventDestinstionsTemplate = (destinations) => {
 const createEventOffersTemplate = (availableOffers, selectedOffers) => {
   let offersTemplate = '';
   availableOffers.forEach((offer) => {
-    offersTemplate +=
-  `<div class="event__offer-selector">
+    offersTemplate += `<div class="event__offer-selector">
   <input class="event__offer-checkbox  visually-hidden" id="${
   offer.id
 }" type="checkbox" name="${offer.title}" ${
@@ -54,7 +53,7 @@ const createEventOffersTemplate = (availableOffers, selectedOffers) => {
 };
 
 const createEventPicturesTemplate = (description, pictures) => {
-  if (pictures.length === 0) {
+  if (!pictures.length) {
     return '';
   }
   let picturesTemplate = '';
@@ -98,7 +97,7 @@ const createEventDetailsTemplate = (
     : '';
 };
 
-const createEventEditPointTemplate = (
+const createEventEditTemplate = (
   event,
   eventInfo,
   allDestinations,
@@ -107,8 +106,8 @@ const createEventEditPointTemplate = (
   const { type, basePrice, dateFrom, dateTo } = event;
   const { destination, selectedOffers } = eventInfo;
 
-  const startDate = formatDate(dateFrom, Event.EDIT_DATE_FORMAT);
-  const endDate = formatDate(dateTo, Event.EDIT_DATE_FORMAT);
+  const startDate = formatDate(dateFrom, DateTimeSettings.EDIT_DATE_FORMAT);
+  const endDate = formatDate(dateTo, DateTimeSettings.EDIT_DATE_FORMAT);
 
   const totalPrice = calcTotalPrice(basePrice, selectedOffers);
   const destinationsTemplate = createEventDestinstionsTemplate(allDestinations);
@@ -218,7 +217,7 @@ const createEventEditPointTemplate = (
 </li>`;
 };
 
-export default class EventEditPointView extends AbstractView {
+export default class EventEditView extends AbstractView {
   #event = null;
   #eventInfo = null;
   #allDestinations = null;
@@ -243,16 +242,15 @@ export default class EventEditPointView extends AbstractView {
     this.#handleFormSubmit = onFormSubmit;
     this.#handleFormClose = onFormClose;
 
-    this.element
-      .querySelector('form')
-      .addEventListener('submit', this.#formSubmitHandler);
+    this.form = this.element.querySelector('form');
+    this.form.addEventListener('submit', this.#formSubmitHandler);
     this.element
       .querySelector('.event__rollup-btn')
-      .addEventListener('click', this.#formCloseHandler);
+      .addEventListener('click', this.formCloseHandler);
   }
 
   get template() {
-    return createEventEditPointTemplate(
+    return createEventEditTemplate(
       this.#event,
       this.#eventInfo,
       this.#allDestinations,
@@ -262,11 +260,12 @@ export default class EventEditPointView extends AbstractView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit();
+    this.#handleFormSubmit(this.#event);
   };
 
-  #formCloseHandler = (evt) => {
+  formCloseHandler = (evt) => {
     evt.preventDefault();
+    this.form.reset();
     this.#handleFormClose();
   };
 }
