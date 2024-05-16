@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 
-const compare = (valueOne, valueTwo) => {
+const compareValues = (valueOne, valueTwo) => {
   if (valueOne > valueTwo) {
     return 1;
   }
@@ -16,10 +16,10 @@ export const sortEventsByDay = (eventOne, eventTwo) =>
   dayjs(eventTwo.dateFrom).diff(dayjs(eventOne.dateFrom));
 
 export const sortEventsByTime = (eventOne, eventTwo) =>
-  compare(
+  compareValues(
     dayjs(eventOne.dateFrom).diff(dayjs(eventOne.dateTo)),
     dayjs(eventTwo.dateFrom).diff(dayjs(eventTwo.dateTo))
   );
 
 export const sortEventsByPrice = (eventOne, eventTwo) =>
-  compare(eventTwo.basePrice, eventOne.basePrice);
+  compareValues(eventTwo.basePrice, eventOne.basePrice);
