@@ -247,7 +247,7 @@ export default class EventEditView extends AbstractView {
     this.form.addEventListener('submit', this.#formSubmitHandler);
     this.element
       .querySelector('.event__rollup-btn')
-      .addEventListener('click', this.formCloseHandler);
+      .addEventListener('click', this.#formCloseHandler);
   }
 
   get template() {
@@ -259,14 +259,19 @@ export default class EventEditView extends AbstractView {
     );
   }
 
+  resetForm = () => {
+    this.form.reset();
+  };
+
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
     this.#handleFormSubmit(this.#event);
   };
 
-  formCloseHandler = (evt) => {
+  #formCloseHandler = (evt) => {
     evt.preventDefault();
-    this.form.reset();
+    //this.form.reset();
+    this.resetForm();
     this.#handleFormClose();
   };
 }
