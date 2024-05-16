@@ -1,6 +1,7 @@
 import { DateTimeSettings } from '../const.js';
 import AbstractView from '../framework/view/abstract-view.js';
-import { calcTotalPrice, formatDate } from '../utils/common.js';
+import { formatDate } from '../utils/common.js';
+import { calcTotalEventPrice } from '../utils/event.js';
 
 const NEW_EVENT = {
   id: '',
@@ -109,7 +110,7 @@ const createEventEditTemplate = (
   const startDate = formatDate(dateFrom, DateTimeSettings.EDIT_DATE_FORMAT);
   const endDate = formatDate(dateTo, DateTimeSettings.EDIT_DATE_FORMAT);
 
-  const totalPrice = calcTotalPrice(basePrice, selectedOffers);
+  const totalPrice = calcTotalEventPrice(basePrice, selectedOffers);
   const destinationsTemplate = createEventDestinstionsTemplate(allDestinations);
   const detailsTemplate = createEventDetailsTemplate(
     availableOffers,

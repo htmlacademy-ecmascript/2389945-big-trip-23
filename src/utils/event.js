@@ -1,10 +1,11 @@
 import dayjs from 'dayjs';
 
-const now = dayjs();
-
 export const isEventPresent = (dateFrom, dateTo) =>
-  now.isAfter(dayjs(dateFrom)) && now.isBefore(dayjs(dateTo));
+  dayjs().isAfter(dayjs(dateFrom)) && dayjs().isBefore(dayjs(dateTo));
 
-export const isEventPast = (date) => now.isAfter(dayjs(date));
+export const isEventPast = (date) => dayjs().isAfter(dayjs(date));
 
-export const isEventFuture = (date) => now.isBefore(dayjs(date));
+export const isEventFuture = (date) => dayjs().isBefore(dayjs(date));
+
+export const calcTotalEventPrice = (basePrice, offers) =>
+  basePrice + offers.reduce((sum, offer) => sum + offer.price, 0);

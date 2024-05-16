@@ -45,5 +45,4 @@ export const getDurationTime = (dateStart, dateEnd) => {
   return durationTime;
 };
 
-export const calcTotalPrice = (basePrice, offers) =>
-  basePrice + offers.reduce((sum, offer) => sum + offer.price, 0);
+
