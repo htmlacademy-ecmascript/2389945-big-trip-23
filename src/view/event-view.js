@@ -1,10 +1,7 @@
 import { DateTimeSettings } from '../const.js';
 import AbstractView from '../framework/view/abstract-view.js';
-import {
-  formatDate,
-  getDurationTime,
-} from '../utils/common.js';
-import { calcTotalEventPrice } from '../utils/event.js';
+import { formatDate, getDurationTime } from '../utils/common.js';
+import { getDestinationById, getOfferById } from '../utils/event.js';
 
 const createEventOffersTemplate = (offers) => {
   let offersTemplate = '';
@@ -19,16 +16,20 @@ const createEventOffersTemplate = (offers) => {
   return offersTemplate;
 };
 
-const createEventTemplate = (event, eventInfo) => {
-  const { type, basePrice, isFavorite, dateFrom, dateTo } = event;
-  const { destination, selectedOffers } = eventInfo;
+const createEventTemplate = (event, allDestinations, allOffers) => {
+  const { type, destination, basePrice, isFavorite, dateFrom, dateTo } = event;
+
+  const destinationPoint = getDestinationById(allDestinations, destination);
+  const selectedOffers = event.offers.map((offer) =>
+    getOfferById(allOffers, event.type, offer)
+  );
 
   const startDate = formatDate(dateFrom, DateTimeSettings.LIST_DATE_FORMAT);
   const startTime = formatDate(dateFrom, DateTimeSettings.LIST_TIME_FORMAT);
   const endTime = formatDate(dateTo, DateTimeSettings.LIST_TIME_FORMAT);
   const durationTime = getDurationTime(dateFrom, dateTo);
 
-  const totalPrice = calcTotalEventPrice(basePrice, selectedOffers);
+  const totalPrice = basePrice; //calcTotalEventPrice(basePrice, selectedOffers);
   const offersTemplate = createEventOffersTemplate(selectedOffers);
 
   return `<li class="trip-events__item">
@@ -37,7 +38,7 @@ const createEventTemplate = (event, eventInfo) => {
 		<div class="event__type">
 			<img class="event__type-icon" width="42" height="42" src="./img/icons/${type}.png" alt="Event type icon">
 		</div>
-		<h3 class="event__title">${type} ${destination.name}</h3>
+		<h3 class="event__title">${type} ${destinationPoint.name}</h3>
 		<div class="event__schedule">
 			<p class="event__time">
 				<time class="event__start-time" datetime="2019-03-18T12:25">${startTime}</time>
@@ -70,14 +71,22 @@ const createEventTemplate = (event, eventInfo) => {
 
 export default class EventView extends AbstractView {
   #event = null;
-  #eventInfo = null;
   #handleEditClick = null;
   #handleFavoriteClick = null;
+  #allDestinations = null;
+  #allOffers = null;
 
-  constructor({ event, eventInfo, onEditClick, onFavoriteClick }) {
+  constructor({
+    event,
+    allDestinations,
+    allOffers,
+    onEditClick,
+    onFavoriteClick,
+  }) {
     super();
     this.#event = event;
-    this.#eventInfo = eventInfo;
+    this.#allDestinations = allDestinations;
+    this.#allOffers = allOffers;
     this.#handleEditClick = onEditClick;
     this.#handleFavoriteClick = onFavoriteClick;
 
@@ -90,7 +99,11 @@ export default class EventView extends AbstractView {
   }
 
   get template() {
-    return createEventTemplate(this.#event, this.#eventInfo);
+    return createEventTemplate(
+      this.#event,
+      this.#allDestinations,
+      this.#allOffers
+    );
   }
 
   #editClickHandler = (evt) => {

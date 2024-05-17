@@ -12,23 +12,20 @@ export default class EventPresenter {
   #eventEditComponent = null;
 
   #event = null;
-  #eventInfo = null;
   #allDestinations = null;
-  #availableOffers = null;
+  #allOffers = null;
   #mode = EventSettings.DEFAULT_MODE;
 
   constructor({
     eventsListContainer,
-    eventInfo,
     allDestinations,
-    availableOffers,
+    allOffers,
     onDataChange,
     onModeChange,
   }) {
     this.#eventsListContainer = eventsListContainer;
-    this.#eventInfo = eventInfo;
     this.#allDestinations = allDestinations;
-    this.#availableOffers = availableOffers;
+    this.#allOffers = allOffers;
     this.#handleDataChange = onDataChange;
     this.#handleModeChange = onModeChange;
   }
@@ -41,18 +38,16 @@ export default class EventPresenter {
 
     this.#eventComponent = new EventView({
       event: this.#event,
-      eventInfo: this.#eventInfo,
       allDestinations: this.#allDestinations,
-      availableOffers: this.#availableOffers,
+      allOffers: this.#allOffers,
       onEditClick: this.#handleEditClick,
       onFavoriteClick: this.#handleFavoriteClick,
     });
 
     this.#eventEditComponent = new EventEditView({
       event: this.#event,
-      eventInfo: this.#eventInfo,
       allDestinations: this.#allDestinations,
-      availableOffers: this.#availableOffers,
+      allOffers: this.#allOffers,
       onFormSubmit: this.#handleFormSubmit,
       onFormClose: this.#handleFormClose,
     });
@@ -101,7 +96,7 @@ export default class EventPresenter {
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
-      this.#eventEditComponent.resetForm();
+      this.#eventEditComponent.reset(this.#event);
       this.#replaceFormToEvent();
     }
   };
@@ -123,6 +118,7 @@ export default class EventPresenter {
   };
 
   #handleFormClose = () => {
+    this.#eventEditComponent.reset(this.#event);
     this.#replaceFormToEvent();
   };
 }
