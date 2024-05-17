@@ -105,7 +105,7 @@ const createEventEditTemplate = (event, allDestinations, allOffers) => {
   const startDate = formatDate(dateFrom, DateTimeSettings.EDIT_DATE_FORMAT);
   const endDate = formatDate(dateTo, DateTimeSettings.EDIT_DATE_FORMAT);
 
-  const totalPrice = basePrice; //calcTotalEventPrice(basePrice, selectedOffers);
+  const totalPrice = basePrice;
   const destinationsTemplate = createEventDestinstionsTemplate(allDestinations);
   const detailsTemplate = createEventDetailsTemplate(
     availableOffers,

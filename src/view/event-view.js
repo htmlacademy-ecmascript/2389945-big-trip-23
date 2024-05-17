@@ -29,7 +29,7 @@ const createEventTemplate = (event, allDestinations, allOffers) => {
   const endTime = formatDate(dateTo, DateTimeSettings.LIST_TIME_FORMAT);
   const durationTime = getDurationTime(dateFrom, dateTo);
 
-  const totalPrice = basePrice; //calcTotalEventPrice(basePrice, selectedOffers);
+  const totalPrice = basePrice;
   const offersTemplate = createEventOffersTemplate(selectedOffers);
 
   return `<li class="trip-events__item">
