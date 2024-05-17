@@ -5,6 +5,12 @@ import EventsListView from '../view/events-list-view.js';
 import EventsMessageView from '../view/events-message-view.js';
 import TripSortView from '../view/trip-sort-view.js';
 import EventPresenter from './event-presenter.js';
+import {
+  sortEventsByDay,
+  sortEventsByTime,
+  sortEventsByPrice,
+} from '../utils/sort.js';
+import { SortType } from '../const.js';
 
 export default class TripPresenter {
   #eventsListComponent = new EventsListView();
@@ -16,10 +22,12 @@ export default class TripPresenter {
   #allDestinations = null;
   #availableOffers = null;
 
-  #sortComponent = new TripSortView();
+  #sortComponent = null;
   #messageComponent = new EventsMessageView();
 
   #eventPresenters = new Map();
+  #currentSortType = null;
+  #sourcedTripEvents = [];
 
   constructor({ container, eventsModel }) {
     this.#container = container;
@@ -32,6 +40,8 @@ export default class TripPresenter {
     this.#tripEventsInfo = new Map([...this.#eventsModel.eventsInfo]);
     this.#allDestinations = this.#eventsModel.getAllDestinations();
 
+    this.#sourcedTripEvents = [...this.#eventsModel.events];
+
     this.#renderTrip();
   };
 
@@ -41,10 +51,43 @@ export default class TripPresenter {
 
   #handleEventChange = (updatedEvent) => {
     this.#tripEvents = updateItem(this.#tripEvents, updatedEvent);
+    this.#sourcedTripEvents = updateItem(this.#sourcedTripEvents, updatedEvent);
     this.#eventPresenters.get(updatedEvent.id).init(updatedEvent);
   };
 
+  #sortEvents(sortType) {
+    switch (sortType) {
+      case SortType.DAY:
+        this.#tripEvents.sort(sortEventsByDay);
+        break;
+      case SortType.TIME:
+        this.#tripEvents.sort(sortEventsByTime);
+        break;
+      case SortType.PRICE:
+        this.#tripEvents.sort(sortEventsByPrice);
+        break;
+      default:
+        this.#tripEvents = [...this.#sourcedTripEvents];
+    }
+
+    this.#currentSortType = sortType;
+  }
+
+  #handleSortTypeChange = (sortType = SortType.DAY) => {
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+
+    this.#sortEvents(sortType);
+    this.#clearEvents();
+    this.#renderEvents();
+  };
+
   #renderSort = () => {
+    this.#sortComponent = new TripSortView({
+      onSortTypeChange: this.#handleSortTypeChange,
+    });
+
     render(this.#sortComponent, this.#container, RenderPosition.AFTERBEGIN);
   };
 
@@ -92,5 +135,6 @@ export default class TripPresenter {
 
     this.#renderSort();
     this.#renderEvents();
+    this.#handleSortTypeChange();
   };
 }

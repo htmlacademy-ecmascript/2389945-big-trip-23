@@ -1,6 +1,7 @@
 import { DateTimeSettings } from '../const.js';
 import AbstractView from '../framework/view/abstract-view.js';
-import { calcTotalPrice, formatDate } from '../utils/common.js';
+import { formatDate } from '../utils/common.js';
+import { calcTotalEventPrice } from '../utils/event.js';
 
 const NEW_EVENT = {
   id: '',
@@ -109,7 +110,7 @@ const createEventEditTemplate = (
   const startDate = formatDate(dateFrom, DateTimeSettings.EDIT_DATE_FORMAT);
   const endDate = formatDate(dateTo, DateTimeSettings.EDIT_DATE_FORMAT);
 
-  const totalPrice = calcTotalPrice(basePrice, selectedOffers);
+  const totalPrice = calcTotalEventPrice(basePrice, selectedOffers);
   const destinationsTemplate = createEventDestinstionsTemplate(allDestinations);
   const detailsTemplate = createEventDetailsTemplate(
     availableOffers,
@@ -246,7 +247,7 @@ export default class EventEditView extends AbstractView {
     this.form.addEventListener('submit', this.#formSubmitHandler);
     this.element
       .querySelector('.event__rollup-btn')
-      .addEventListener('click', this.formCloseHandler);
+      .addEventListener('click', this.#formCloseHandler);
   }
 
   get template() {
@@ -258,14 +259,19 @@ export default class EventEditView extends AbstractView {
     );
   }
 
+  resetForm = () => {
+    this.form.reset();
+  };
+
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
     this.#handleFormSubmit(this.#event);
   };
 
-  formCloseHandler = (evt) => {
+  #formCloseHandler = (evt) => {
     evt.preventDefault();
-    this.form.reset();
+    //this.form.reset();
+    this.resetForm();
     this.#handleFormClose();
   };
 }

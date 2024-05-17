@@ -1,10 +1,10 @@
 import { DateTimeSettings } from '../const.js';
 import AbstractView from '../framework/view/abstract-view.js';
 import {
-  calcTotalPrice,
   formatDate,
   getDurationTime,
 } from '../utils/common.js';
+import { calcTotalEventPrice } from '../utils/event.js';
 
 const createEventOffersTemplate = (offers) => {
   let offersTemplate = '';
@@ -28,7 +28,7 @@ const createEventTemplate = (event, eventInfo) => {
   const endTime = formatDate(dateTo, DateTimeSettings.LIST_TIME_FORMAT);
   const durationTime = getDurationTime(dateFrom, dateTo);
 
-  const totalPrice = calcTotalPrice(basePrice, selectedOffers);
+  const totalPrice = calcTotalEventPrice(basePrice, selectedOffers);
   const offersTemplate = createEventOffersTemplate(selectedOffers);
 
   return `<li class="trip-events__item">
