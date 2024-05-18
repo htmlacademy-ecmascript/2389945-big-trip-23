@@ -56,18 +56,18 @@ export default class TripPresenter {
   };
 
   #sortEvents(sortType) {
-    switch (sortType) {
-      case SortType.DAY:
-        this.#tripEvents.sort(sortEventsByDay);
-        break;
-      case SortType.TIME:
-        this.#tripEvents.sort(sortEventsByTime);
-        break;
-      case SortType.PRICE:
-        this.#tripEvents.sort(sortEventsByPrice);
-        break;
-      default:
-        this.#tripEvents = [...this.#sourcedTripEvents];
+    const sortFunctionMap = {
+      [SortType.DAY]: sortEventsByDay,
+      [SortType.TIME]: sortEventsByTime,
+      [SortType.PRICE]: sortEventsByPrice,
+    };
+
+    const sortFunction = sortFunctionMap[sortType];
+
+    if (sortFunction) {
+      this.#tripEvents.sort(sortFunction);
+    } else {
+      this.#tripEvents = [...this.#sourcedTripEvents];
     }
 
     this.#currentSortType = sortType;
