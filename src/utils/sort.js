@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 
 export const sortEventsByDay = (eventOne, eventTwo) =>
-  dayjs(eventTwo.dateFrom).diff(dayjs(eventOne.dateFrom));
+  dayjs(eventOne.dateFrom).diff(dayjs(eventTwo.dateFrom));
 
 export const sortEventsByTime = (eventOne, eventTwo) =>
   dayjs(eventOne.dateFrom).diff(dayjs(eventOne.dateTo)) -
