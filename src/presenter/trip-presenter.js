@@ -1,16 +1,15 @@
-import { FilterType } from '../const.js';
+import { FilterType, SortType } from '../const.js';
 import { RenderPosition, render } from '../framework/render.js';
 import { updateItem } from '../utils/common.js';
+import {
+  sortEventsByDay,
+  sortEventsByPrice,
+  sortEventsByTime,
+} from '../utils/sort.js';
 import EventsListView from '../view/events-list-view.js';
 import EventsMessageView from '../view/events-message-view.js';
 import TripSortView from '../view/trip-sort-view.js';
 import EventPresenter from './event-presenter.js';
-import {
-  sortEventsByDay,
-  sortEventsByTime,
-  sortEventsByPrice,
-} from '../utils/sort.js';
-import { SortType } from '../const.js';
 
 export default class TripPresenter {
   #eventsListComponent = new EventsListView();
@@ -20,7 +19,7 @@ export default class TripPresenter {
   #tripEventsInfo = null;
 
   #allDestinations = null;
-  #availableOffers = null;
+  #allOffers = null;
 
   #sortComponent = null;
   #messageComponent = new EventsMessageView();
@@ -39,6 +38,7 @@ export default class TripPresenter {
     this.#tripEvents = [...this.#eventsModel.events];
     this.#tripEventsInfo = new Map([...this.#eventsModel.eventsInfo]);
     this.#allDestinations = this.#eventsModel.getAllDestinations();
+    this.#allOffers = this.#eventsModel.getAllOffers();
 
     this.#sourcedTripEvents = [...this.#eventsModel.events];
 
@@ -56,18 +56,18 @@ export default class TripPresenter {
   };
 
   #sortEvents(sortType) {
-    switch (sortType) {
-      case SortType.DAY:
-        this.#tripEvents.sort(sortEventsByDay);
-        break;
-      case SortType.TIME:
-        this.#tripEvents.sort(sortEventsByTime);
-        break;
-      case SortType.PRICE:
-        this.#tripEvents.sort(sortEventsByPrice);
-        break;
-      default:
-        this.#tripEvents = [...this.#sourcedTripEvents];
+    const sortFunctionMap = {
+      [SortType.DAY]: sortEventsByDay,
+      [SortType.TIME]: sortEventsByTime,
+      [SortType.PRICE]: sortEventsByPrice,
+    };
+
+    const sortFunction = sortFunctionMap[sortType];
+
+    if (sortFunction) {
+      this.#tripEvents.sort(sortFunction);
+    } else {
+      this.#tripEvents = [...this.#sourcedTripEvents];
     }
 
     this.#currentSortType = sortType;
@@ -100,15 +100,10 @@ export default class TripPresenter {
   };
 
   #renderEvent = (event) => {
-    this.#availableOffers = this.#eventsModel.getOffersByType(
-      event.type
-    ).offers;
-    const eventInfo = this.#tripEventsInfo.get(event);
     const eventPresenter = new EventPresenter({
       eventsListContainer: this.#eventsListComponent.element,
-      eventInfo: eventInfo,
       allDestinations: this.#allDestinations,
-      availableOffers: this.#availableOffers,
+      allOffers: this.#allOffers,
       onDataChange: this.#handleEventChange,
       onModeChange: this.#handleModeChange,
     });

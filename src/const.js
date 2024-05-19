@@ -6,10 +6,14 @@ export const DateTimeSettings = {
   HOUR_MINUTES: 60,
 };
 
+export const EventMode = {
+  VIEW: 'VIEW',
+  EDIT: 'EDIT',
+};
+
 export const EventSettings = {
-  DEFAULT_MODE: 'DEFAULT',
-  EDITING_MODE: 'EDITING',
   ITEM_COUNT: 5,
+  PRICE_PATTERN: /^[\D0]+|\D/g
 };
 
 export const FilterType = {

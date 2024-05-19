@@ -1,4 +1,4 @@
-import { EventSettings } from '../const.js';
+import { EventMode } from '../const.js';
 import { remove, render, replace } from '../framework/render.js';
 import EventEditView from '../view/event-edit-view.js';
 import EventView from '../view/event-view.js';
@@ -12,23 +12,20 @@ export default class EventPresenter {
   #eventEditComponent = null;
 
   #event = null;
-  #eventInfo = null;
   #allDestinations = null;
-  #availableOffers = null;
-  #mode = EventSettings.DEFAULT_MODE;
+  #allOffers = null;
+  #mode = EventMode.VIEW;
 
   constructor({
     eventsListContainer,
-    eventInfo,
     allDestinations,
-    availableOffers,
+    allOffers,
     onDataChange,
     onModeChange,
   }) {
     this.#eventsListContainer = eventsListContainer;
-    this.#eventInfo = eventInfo;
     this.#allDestinations = allDestinations;
-    this.#availableOffers = availableOffers;
+    this.#allOffers = allOffers;
     this.#handleDataChange = onDataChange;
     this.#handleModeChange = onModeChange;
   }
@@ -41,18 +38,16 @@ export default class EventPresenter {
 
     this.#eventComponent = new EventView({
       event: this.#event,
-      eventInfo: this.#eventInfo,
       allDestinations: this.#allDestinations,
-      availableOffers: this.#availableOffers,
+      allOffers: this.#allOffers,
       onEditClick: this.#handleEditClick,
       onFavoriteClick: this.#handleFavoriteClick,
     });
 
     this.#eventEditComponent = new EventEditView({
       event: this.#event,
-      eventInfo: this.#eventInfo,
       allDestinations: this.#allDestinations,
-      availableOffers: this.#availableOffers,
+      allOffers: this.#allOffers,
       onFormSubmit: this.#handleFormSubmit,
       onFormClose: this.#handleFormClose,
     });
@@ -62,11 +57,11 @@ export default class EventPresenter {
       return;
     }
 
-    if (this.#mode === EventSettings.DEFAULT_MODE) {
+    if (this.#mode === EventMode.VIEW) {
       replace(this.#eventComponent, prevEventComponent);
     }
 
-    if (this.#mode === EventSettings.EDITING_MODE) {
+    if (this.#mode === EventMode.EDIT) {
       replace(this.#eventEditComponent, prevEventEditComponent);
     }
 
@@ -80,7 +75,7 @@ export default class EventPresenter {
   }
 
   resetView() {
-    if (this.#mode !== EventSettings.DEFAULT_MODE) {
+    if (this.#mode !== EventMode.VIEW) {
       this.#replaceFormToEvent();
     }
   }
@@ -89,19 +84,19 @@ export default class EventPresenter {
     replace(this.#eventEditComponent, this.#eventComponent);
     document.addEventListener('keydown', this.#escKeyDownHandler);
     this.#handleModeChange();
-    this.#mode = EventSettings.EDITING_MODE;
+    this.#mode = EventMode.EDIT;
   }
 
   #replaceFormToEvent() {
     replace(this.#eventComponent, this.#eventEditComponent);
     document.removeEventListener('keydown', this.#escKeyDownHandler);
-    this.#mode = EventSettings.DEFAULT_MODE;
+    this.#mode = EventMode.VIEW;
   }
 
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
-      this.#eventEditComponent.resetForm();
+      this.#eventEditComponent.reset(this.#event);
       this.#replaceFormToEvent();
     }
   };
@@ -123,6 +118,7 @@ export default class EventPresenter {
   };
 
   #handleFormClose = () => {
+    this.#eventEditComponent.reset(this.#event);
     this.#replaceFormToEvent();
   };
 }
