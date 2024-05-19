@@ -261,7 +261,7 @@ export default class EventEditView extends AbstractStatefulView {
       .querySelector('.event__field-group--price')
       .addEventListener('change', this.#priceChangeHandler);
 
-    if (this.element.querySelector('.event__section--offers') !== null) {
+    if (this.element.querySelector('.event__section--offers')) {
       this.element
         .querySelector('.event__section--offers')
         .addEventListener('change', this.#offerChangeHandler);
@@ -319,21 +319,19 @@ export default class EventEditView extends AbstractStatefulView {
 
   #offerChangeHandler = (evt) => {
     evt.preventDefault();
-    if (this.element.querySelector('.event__section--offers') !== null) {
-      const inputs = this.element
-        .querySelector('.event__available-offers')
-        .querySelectorAll('input');
-      const offers = [];
+    const inputs = this.element
+      .querySelector('.event__available-offers')
+      .querySelectorAll('input');
+    const offers = [];
 
-      for (const input of inputs) {
-        if (input.checked) {
-          offers.push(Number(input.dataset.offerId));
-        }
+    for (const input of inputs) {
+      if (input.checked) {
+        offers.push(input.id);
       }
-
-      this._state.offers = offers;
-      this._setState(this._state.offers);
     }
+
+    this._state.offers = offers;
+    this._setState(this._state.offers);
   };
 
   static parseEventToState = (event) => ({ ...event });
