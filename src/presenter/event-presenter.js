@@ -1,4 +1,4 @@
-import { EventSettings } from '../const.js';
+import { EventMode } from '../const.js';
 import { remove, render, replace } from '../framework/render.js';
 import EventEditView from '../view/event-edit-view.js';
 import EventView from '../view/event-view.js';
@@ -14,7 +14,7 @@ export default class EventPresenter {
   #event = null;
   #allDestinations = null;
   #allOffers = null;
-  #mode = EventSettings.DEFAULT_MODE;
+  #mode = EventMode.VIEW;
 
   constructor({
     eventsListContainer,
@@ -57,11 +57,11 @@ export default class EventPresenter {
       return;
     }
 
-    if (this.#mode === EventSettings.DEFAULT_MODE) {
+    if (this.#mode === EventMode.VIEW) {
       replace(this.#eventComponent, prevEventComponent);
     }
 
-    if (this.#mode === EventSettings.EDITING_MODE) {
+    if (this.#mode === EventMode.EDIT) {
       replace(this.#eventEditComponent, prevEventEditComponent);
     }
 
@@ -75,7 +75,7 @@ export default class EventPresenter {
   }
 
   resetView() {
-    if (this.#mode !== EventSettings.DEFAULT_MODE) {
+    if (this.#mode !== EventMode.VIEW) {
       this.#replaceFormToEvent();
     }
   }
@@ -84,13 +84,13 @@ export default class EventPresenter {
     replace(this.#eventEditComponent, this.#eventComponent);
     document.addEventListener('keydown', this.#escKeyDownHandler);
     this.#handleModeChange();
-    this.#mode = EventSettings.EDITING_MODE;
+    this.#mode = EventMode.EDIT;
   }
 
   #replaceFormToEvent() {
     replace(this.#eventComponent, this.#eventEditComponent);
     document.removeEventListener('keydown', this.#escKeyDownHandler);
-    this.#mode = EventSettings.DEFAULT_MODE;
+    this.#mode = EventMode.VIEW;
   }
 
   #escKeyDownHandler = (evt) => {

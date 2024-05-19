@@ -1,4 +1,4 @@
-import { DateTimeSettings } from '../const.js';
+import { DateTimeSettings, EventSettings } from '../const.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { formatDate } from '../utils/common.js';
 import { getDestinationById, getOfferById } from '../utils/event.js';
@@ -27,10 +27,10 @@ const createEventOffersTemplate = (availableOffers, selectedOffers) => {
   availableOffers.forEach((offer) => {
     offersTemplate += `<div class="event__offer-selector">
   <input class="event__offer-checkbox  visually-hidden" id="${
-  offer.id
-}" type="checkbox" name="${offer.title}" ${
-  selectedOffers.includes(offer) ? 'checked' : ''
-}>
+    offer.id
+  }" type="checkbox" name="${offer.title}" ${
+      selectedOffers.includes(offer) ? 'checked' : ''
+    }>
   <label class="event__offer-label" for="${offer.id}">
     <span class="event__offer-title">${offer.title}</span>
     &plus;&euro;&nbsp;
@@ -298,18 +298,19 @@ export default class EventEditView extends AbstractStatefulView {
       (destination) => destination.name === name
     );
 
-    if (newDestination) {
-      this.updateElement({
-        destination: newDestination.id,
-      });
+    if (!newDestination) {
+      return;
     }
+
+    this.updateElement({
+      destination: newDestination.id,
+    });
   };
 
   #priceChangeHandler = (evt) => {
     const newBasePrice = evt.target.value;
-    const PATTERN = /^[\D0]+|\D/g;
 
-    if (newBasePrice && !PATTERN.test(newBasePrice)) {
+    if (newBasePrice && !EventSettings.PRICE_PATTERN.test(newBasePrice)) {
       this.updateElement({
         basePrice: newBasePrice,
       });
