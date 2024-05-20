@@ -272,6 +272,33 @@ export default class EventEditView extends AbstractStatefulView {
     this.updateElement(EventEditView.parseEventToState(event));
   };
 
+  #setDatepickerFrom = () => {
+    this.#datepickerFrom = flatpickr(
+      this.element.querySelector('#event-start-time-1'),
+      {
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._state.dateFrom,
+        enableTime: true,
+        'time_24hr': true,
+        onClose: this.#dateFromCloseHandler,
+      }
+    );
+  };
+
+  #setDatepickerTo = () => {
+    this.#datepickerTo = flatpickr(
+      this.element.querySelector('#event-end-time-1'),
+      {
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._state.dateTo,
+        minDate: this.#datepickerFrom.selectedDates[0],
+        enableTime: true,
+        'time_24hr': true,
+        onClose: this.#dateToCloseHandler,
+      }
+    );
+  };
+
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
     this.#handleFormSubmit(EventEditView.parseStateToEvent(this._state));
@@ -344,33 +371,6 @@ export default class EventEditView extends AbstractStatefulView {
     this.updateElement({
       dateTo: userDate,
     });
-  };
-
-  #setDatepickerFrom = () => {
-    this.#datepickerFrom = flatpickr(
-      this.element.querySelector('#event-start-time-1'),
-      {
-        dateFormat: 'd/m/y H:i',
-        defaultDate: this._state.dateFrom,
-        enableTime: true,
-        'time_24hr': true,
-        onClose: this.#dateFromCloseHandler,
-      }
-    );
-  };
-
-  #setDatepickerTo = () => {
-    this.#datepickerTo = flatpickr(
-      this.element.querySelector('#event-end-time-1'),
-      {
-        dateFormat: 'd/m/y H:i',
-        defaultDate: this._state.dateTo,
-        minDate: this.#datepickerFrom.selectedDates[0],
-        enableTime: true,
-        'time_24hr': true,
-        onClose: this.#dateToCloseHandler,
-      }
-    );
   };
 
   static parseEventToState = (event) => ({ ...event });

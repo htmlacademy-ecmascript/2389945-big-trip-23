@@ -112,8 +112,8 @@ export default class EventPresenter {
     });
   };
 
-  #handleFormSubmit = () => {
-    //this.#handleDataChange(event);
+  #handleFormSubmit = (event) => {
+    this.#handleDataChange(event);
     this.#replaceFormToEvent();
   };
 
