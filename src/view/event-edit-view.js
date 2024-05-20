@@ -2,7 +2,7 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import { DateTimeSettings, EventSettings } from '../const.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import { formatDate } from '../utils/common.js';
+import { capitalizeFirstLetter, formatDate } from '../utils/common.js';
 import { getDestinationById, getOfferById } from '../utils/event.js';
 
 const NEW_EVENT = {
@@ -71,7 +71,7 @@ const createEventPicturesTemplate = (description, pictures) => {
   }
 
   if (picturesTemplate) {
-    picturesTemplate = `	<section class="event__section  event__section--destination">
+    picturesTemplate = `<section class="event__section  event__section--destination">
 		<h3 class="event__section-title  event__section-title--destination">Destination</h3>
 		${picturesTemplate}
 	</section>`;
@@ -95,6 +95,27 @@ const createEventDetailsTemplate = (
     : '';
 };
 
+const createEventTypesTemplate = (offers, eventType) => {
+  let typesTemplate = '';
+  offers.forEach((offer) => {
+    typesTemplate += `<div class="event__type-item">
+    <input
+      id="event-type-${offer.type}-1"
+      class="event__type-input visually-hidden"
+      type="radio"
+      name="event-type"
+      value="${offer.type}"
+      ${offer.type === eventType ? 'checked' : ''}
+    >
+    <label class="event__type-label event__type-label--${offer.type}"
+      for="event-type-${offer.type}-1">${capitalizeFirstLetter(offer.type)}
+    </label>
+  </div>`;
+  });
+
+  return typesTemplate;
+};
+
 const createEventEditTemplate = (event, allDestinations, allOffers) => {
   const { type, destination, basePrice, dateFrom, dateTo } = event;
 
@@ -108,6 +129,7 @@ const createEventEditTemplate = (event, allDestinations, allOffers) => {
   const endDate = formatDate(dateTo, DateTimeSettings.EDIT_DATE_FORMAT);
 
   const totalPrice = basePrice;
+  const typesTemplate = createEventTypesTemplate(allOffers, type);
   const destinationsTemplate = createEventDestinstionsTemplate(allDestinations);
   const detailsTemplate = createEventDetailsTemplate(
     availableOffers,
@@ -129,51 +151,7 @@ const createEventEditTemplate = (event, allDestinations, allOffers) => {
 			<div class="event__type-list">
 				<fieldset class="event__type-group">
 					<legend class="visually-hidden">Event type</legend>
-
-					<div class="event__type-item">
-						<input id="event-type-taxi-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="taxi">
-						<label class="event__type-label  event__type-label--taxi" for="event-type-taxi-1">Taxi</label>
-					</div>
-
-					<div class="event__type-item">
-						<input id="event-type-bus-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="bus">
-						<label class="event__type-label  event__type-label--bus" for="event-type-bus-1">Bus</label>
-					</div>
-
-					<div class="event__type-item">
-						<input id="event-type-train-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="train">
-						<label class="event__type-label  event__type-label--train" for="event-type-train-1">Train</label>
-					</div>
-
-					<div class="event__type-item">
-						<input id="event-type-ship-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="ship">
-						<label class="event__type-label  event__type-label--ship" for="event-type-ship-1">Ship</label>
-					</div>
-
-					<div class="event__type-item">
-						<input id="event-type-drive-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="drive">
-						<label class="event__type-label  event__type-label--drive" for="event-type-drive-1">Drive</label>
-					</div>
-
-					<div class="event__type-item">
-						<input id="event-type-flight-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="flight" checked>
-						<label class="event__type-label  event__type-label--flight" for="event-type-flight-1">Flight</label>
-					</div>
-
-					<div class="event__type-item">
-						<input id="event-type-check-in-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="check-in">
-						<label class="event__type-label  event__type-label--check-in" for="event-type-check-in-1">Check-in</label>
-					</div>
-
-					<div class="event__type-item">
-						<input id="event-type-sightseeing-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="sightseeing">
-						<label class="event__type-label  event__type-label--sightseeing" for="event-type-sightseeing-1">Sightseeing</label>
-					</div>
-
-					<div class="event__type-item">
-						<input id="event-type-restaurant-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="restaurant">
-						<label class="event__type-label  event__type-label--restaurant" for="event-type-restaurant-1">Restaurant</label>
-					</div>
+          ${typesTemplate}
 				</fieldset>
 			</div>
 		</div>
