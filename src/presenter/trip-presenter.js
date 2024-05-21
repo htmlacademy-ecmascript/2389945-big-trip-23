@@ -16,7 +16,6 @@ export default class TripPresenter {
   #container = null;
   #eventsModel = null;
   #tripEvents = [];
-  #tripEventsInfo = null;
 
   #allDestinations = null;
   #allOffers = null;
@@ -34,9 +33,7 @@ export default class TripPresenter {
   }
 
   init = () => {
-    this.#eventsModel.eventsInfo = this.#eventsModel.events;
     this.#tripEvents = [...this.#eventsModel.events];
-    this.#tripEventsInfo = new Map([...this.#eventsModel.eventsInfo]);
     this.#allDestinations = this.#eventsModel.getAllDestinations();
     this.#allOffers = this.#eventsModel.getAllOffers();
 
