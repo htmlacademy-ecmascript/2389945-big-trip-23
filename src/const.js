@@ -13,7 +13,7 @@ export const EventMode = {
 
 export const EventSettings = {
   ITEM_COUNT: 5,
-  PRICE_PATTERN: /^[\D0]+|\D/g
+  PRICE_PATTERN: /^[\D0]+|\D/g,
 };
 
 export const FilterType = {
@@ -28,7 +28,20 @@ export const FilterType = {
 
 export const SortType = {
   DAY: 'day',
+  EVENT: 'event',
   TIME: 'time',
-  PRICE: 'price'
+  PRICE: 'price',
+  OFFERS: 'offers',
 };
 
+export const UserAction = {
+  UPDATE_EVENT: 'UPDATE_EVENT',
+  ADD_EVENT: 'ADD_EVENT',
+  DELETE_EVENT: 'DELETE_EVENT',
+};
+
+export const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+};

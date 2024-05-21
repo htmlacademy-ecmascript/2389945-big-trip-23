@@ -7,7 +7,7 @@ import TripInfoView from './view/trip-info-view.js';
 
 const tripEventsElement = document.querySelector('.trip-events');
 const tripMainElement = document.querySelector('.trip-main');
-const treipControlsFiltersElement = tripMainElement.querySelector(
+const tripControlsFiltersElement = tripMainElement.querySelector(
   '.trip-controls__filters'
 );
 const eventsModel = new EventsModel();
@@ -20,6 +20,6 @@ const tripPresenter = new TripPresenter({
 const filters = generateFilters(eventsModel.events);
 
 render(new TripInfoView(), tripMainElement, RenderPosition.AFTERBEGIN);
-render(new TripFilterView({ filters }), treipControlsFiltersElement);
+render(new TripFilterView({ filters }), tripControlsFiltersElement);
 
 tripPresenter.init();

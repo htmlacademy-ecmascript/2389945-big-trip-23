@@ -19,9 +19,6 @@ export const getUniqueRandomArray = (sourceArray, resultArraySize) => {
   return elements;
 };
 
-export const updateItem = (items, update) =>
-  items.map((item) => (item.id === update.id ? update : item));
-
 export const formatDate = (date, formatPattern) =>
   date ? dayjs(date).format(formatPattern) : '';
 
