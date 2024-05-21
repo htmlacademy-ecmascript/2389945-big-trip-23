@@ -218,6 +218,7 @@ export default class EventEditView extends AbstractStatefulView {
   #allOffers = null;
 
   #handleFormSubmit = null;
+  #handleFormDelete = null;
   #handleFormClose = null;
 
   #datepickerFrom = null;
@@ -228,6 +229,7 @@ export default class EventEditView extends AbstractStatefulView {
     allDestinations,
     allOffers,
     onFormSubmit,
+    onFormDelete,
     onFormClose,
   }) {
     super();
@@ -235,6 +237,7 @@ export default class EventEditView extends AbstractStatefulView {
     this.#allDestinations = allDestinations;
     this.#allOffers = allOffers;
     this.#handleFormSubmit = onFormSubmit;
+    this.#handleFormDelete = onFormDelete;
     this.#handleFormClose = onFormClose;
     this._restoreHandlers();
   }
@@ -265,6 +268,9 @@ export default class EventEditView extends AbstractStatefulView {
     this.element
       .querySelector('form')
       .addEventListener('submit', this.#formSubmitHandler);
+    this.element
+      .querySelector('.event__reset-btn')
+      .addEventListener('click', this.#formDeleteHandler);
     this.element
       .querySelector('.event__rollup-btn')
       .addEventListener('click', this.#formCloseHandler);
@@ -299,7 +305,7 @@ export default class EventEditView extends AbstractStatefulView {
         dateFormat: 'd/m/y H:i',
         defaultDate: this._state.dateFrom,
         enableTime: true,
-        'time_24hr': true,
+        ['time_24hr']: true,
         onClose: this.#dateFromCloseHandler,
       }
     );
@@ -313,7 +319,7 @@ export default class EventEditView extends AbstractStatefulView {
         defaultDate: this._state.dateTo,
         minDate: this.#datepickerFrom.selectedDates[0],
         enableTime: true,
-        'time_24hr': true,
+        ['time_24hr']: true,
         onClose: this.#dateToCloseHandler,
       }
     );
@@ -322,6 +328,11 @@ export default class EventEditView extends AbstractStatefulView {
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
     this.#handleFormSubmit(EventEditView.parseStateToEvent(this._state));
+  };
+
+  #formDeleteHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormDelete(EventEditView.parseStateToEvent(this._state));
   };
 
   #formCloseHandler = (evt) => {

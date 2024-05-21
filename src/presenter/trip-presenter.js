@@ -19,7 +19,7 @@ export default class TripPresenter {
   #allOffers = null;
 
   #sortComponent = null;
-  #messageComponent = new EventsMessageView();
+  #messageComponent = null;
 
   #eventPresenters = new Map();
   #currentSortType = SortType.DAY;
@@ -112,8 +112,9 @@ export default class TripPresenter {
   };
 
   #renderNoEvents = (message) => {
+    this.#messageComponent = new EventsMessageView(message);
     render(
-      this.#messageComponent(message),
+      this.#messageComponent,
       this.#container,
       RenderPosition.AFTERBEGIN
     );
@@ -134,11 +135,6 @@ export default class TripPresenter {
   #renderEvents = (events) => {
     events.forEach((event) => this.#renderEvent(event));
   };
-
-  #clearEvents() {
-    this.#eventPresenters.forEach((presenter) => presenter.destroy());
-    this.#eventPresenters.clear();
-  }
 
   #clearTrip({ resetSortType = false } = {}) {
     this.#eventPresenters.forEach((presenter) => presenter.destroy());
