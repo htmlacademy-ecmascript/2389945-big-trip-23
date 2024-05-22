@@ -306,7 +306,7 @@ export default class EventEditView extends AbstractStatefulView {
         defaultDate: this._state.dateFrom,
         enableTime: true,
         ['time_24hr']: true,
-        onClose: this.#dateFromCloseHandler,
+        onChange: this.#dateFromCloseHandler,
       }
     );
   };
@@ -320,7 +320,7 @@ export default class EventEditView extends AbstractStatefulView {
         minDate: this.#datepickerFrom.selectedDates[0],
         enableTime: true,
         ['time_24hr']: true,
-        onClose: this.#dateToCloseHandler,
+        onChange: this.#dateToCloseHandler,
       }
     );
   };
@@ -388,20 +388,15 @@ export default class EventEditView extends AbstractStatefulView {
       }
     }
 
-    this._state.offers = selectedOffers;
-    this._setState(this._state.offers);
+    this._setState({ offers: selectedOffers });
   };
 
   #dateFromCloseHandler = ([userDate]) => {
-    this.updateElement({
-      dateFrom: userDate,
-    });
+    this._setState({ dateFrom: userDate });
   };
 
   #dateToCloseHandler = ([userDate]) => {
-    this.updateElement({
-      dateTo: userDate,
-    });
+    this._setState({ dateTo: userDate });
   };
 
   static parseEventToState = (event) => ({ ...event });
