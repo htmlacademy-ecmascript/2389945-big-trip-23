@@ -10,6 +10,14 @@ const tripMainElement = document.querySelector('.trip-main');
 const tripControlsFiltersElement = tripMainElement.querySelector(
   '.trip-controls__filters'
 );
+const tripMainNewEventButtonElement = tripMainElement.querySelector(
+  '.trip-main__event-add-btn'
+);
+tripMainNewEventButtonElement.addEventListener(
+  'click',
+  handleNewEventButtonClick
+);
+
 const eventsModel = new EventsModel();
 const filterModel = new FilterModel();
 
@@ -17,6 +25,7 @@ const tripPresenter = new TripPresenter({
   container: tripEventsElement,
   eventsModel,
   filterModel,
+  onNewEventDestroy: handleNewEventFormClose,
 });
 
 const filterPresenter = new FilterPresenter({
@@ -24,6 +33,15 @@ const filterPresenter = new FilterPresenter({
   filterModel,
   eventsModel,
 });
+
+function handleNewEventFormClose() {
+  tripMainNewEventButtonElement.disabled = false;
+}
+
+function handleNewEventButtonClick() {
+  tripPresenter.createEvent();
+  tripMainNewEventButtonElement.disabled = true;
+}
 
 render(new TripInfoView(), tripMainElement, RenderPosition.AFTERBEGIN);
 

@@ -4,6 +4,7 @@ import { DateTimeSettings, EventSettings } from '../const.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { capitalizeFirstLetter, formatDate } from '../utils/common.js';
 import { getDestinationById, getOfferById } from '../utils/event.js';
+import { UserAction } from '../const.js';
 
 const NEW_EVENT = {
   id: '',
@@ -102,13 +103,16 @@ const createEventPicturesTemplate = (description, pictures) => {
 const createEventDetailsTemplate = (
   availableOffers,
   selectedOffers,
-  description,
-  pictures
+  destinationPoint
 ) => {
   let detailsTemplate = '';
-  detailsTemplate =
-    createEventOffersTemplate(availableOffers, selectedOffers) +
-    createEventPicturesTemplate(description, pictures);
+  detailsTemplate = createEventOffersTemplate(availableOffers, selectedOffers);
+  if (destinationPoint) {
+    detailsTemplate += createEventPicturesTemplate(
+      destinationPoint.description,
+      destinationPoint.pictures
+    );
+  }
   return detailsTemplate
     ? `<section class="event__details">${detailsTemplate}</section>`
     : '';
@@ -136,7 +140,12 @@ const createEventTypesTemplate = (offers, eventType) => {
   return typesTemplate;
 };
 
-const createEventEditTemplate = (event, allDestinations, allOffers) => {
+const createEventEditTemplate = (
+  event,
+  allDestinations,
+  allOffers,
+  editMode
+) => {
   const { type, destination, basePrice, dateFrom, dateTo } = event;
 
   const destinationPoint = getDestinationById(allDestinations, destination);
@@ -154,8 +163,7 @@ const createEventEditTemplate = (event, allDestinations, allOffers) => {
   const detailsTemplate = createEventDetailsTemplate(
     availableOffers,
     selectedOffers,
-    destinationPoint.description,
-    destinationPoint.pictures
+    destinationPoint
   );
 
   return `
@@ -180,7 +188,8 @@ const createEventEditTemplate = (event, allDestinations, allOffers) => {
 			    <label class="event__label event__type-output" for="event-destination-1">
 				    ${type}
 			    </label>
-			    <input class="event__input event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destinationPoint.name}" list="destination-list-1">
+			    <input class="event__input event__input--destination" id="event-destination-1" type="text" name="event-destination" value="
+          ${destinationPoint?.name || ''}" list="destination-list-1">
 			    <datalist id="destination-list-1">
 				    ${destinationsTemplate}
 			    </datalist>
@@ -203,7 +212,8 @@ const createEventEditTemplate = (event, allDestinations, allOffers) => {
 		    </div>
 
 		    <button class="event__save-btn btn btn--blue" type="submit">Save</button>
-		    <button class="event__reset-btn" type="reset">Delete</button>
+		    <button class="event__reset-btn" type="reset">
+        ${editMode === UserAction.UPDATE_EVENT ? 'Delete' : 'Cancel'}</button>
 		    <button class="event__rollup-btn" type="button">
 			    <span class="visually-hidden">Open event</span>
 		    </button>
@@ -246,8 +256,13 @@ export default class EventEditView extends AbstractStatefulView {
     return createEventEditTemplate(
       this._state,
       this.#allDestinations,
-      this.#allOffers
+      this.#allOffers,
+      this.editMode
     );
+  }
+
+  get editMode() {
+    return this._state.id ? UserAction.UPDATE_EVENT : UserAction.ADD_EVENT;
   }
 
   removeElement() {

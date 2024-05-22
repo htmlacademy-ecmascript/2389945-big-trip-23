@@ -15,6 +15,7 @@ import EventsListView from '../view/events-list-view.js';
 import EventsMessageView from '../view/events-message-view.js';
 import TripSortView from '../view/trip-sort-view.js';
 import EventPresenter from './event-presenter.js';
+import NewEventPresenter from './new-event-presenter.js';
 import { filter } from '../utils/filter.js';
 import { getKeyByValue } from '../utils/common.js';
 
@@ -31,12 +32,19 @@ export default class TripPresenter {
   #messageComponent = null;
 
   #eventPresenters = new Map();
+  #newEventPresenter = null;
   #currentSortType = SortType.DAY;
 
-  constructor({ container, eventsModel, filterModel }) {
+  constructor({ container, eventsModel, filterModel, onNewEventDestroy }) {
     this.#container = container;
     this.#eventsModel = eventsModel;
     this.#filterModel = filterModel;
+
+    this.#newEventPresenter = new NewEventPresenter({
+      eventListContainer: this.#eventsListComponent.element,
+      onDataChange: this.#handleViewAction,
+      onDestroy: onNewEventDestroy,
+    });
 
     this.#eventsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
@@ -58,6 +66,12 @@ export default class TripPresenter {
     this.#renderTrip();
   };
 
+  createEvent() {
+    this.#currentSortType = SortType.DAY;
+    this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this.#newEventPresenter.init(this.#allDestinations, this.#allOffers);
+  }
+
   #sortEvents = (sortType, filteredEvents) => {
     const sortFunctionMap = {
       [SortType.DAY]: sortEventsByDay,
@@ -74,6 +88,7 @@ export default class TripPresenter {
   };
 
   #handleModeChange = () => {
+    this.#newEventPresenter.destroy();
     this.#eventPresenters.forEach((presenter) => presenter.resetView());
   };
 
@@ -150,11 +165,14 @@ export default class TripPresenter {
   };
 
   #clearTrip({ resetSortType = false } = {}) {
+    this.#newEventPresenter.destroy();
     this.#eventPresenters.forEach((presenter) => presenter.destroy());
     this.#eventPresenters.clear();
 
     remove(this.#sortComponent);
-    remove(this.#messageComponent);
+    if (this.#messageComponent) {
+      remove(this.#messageComponent);
+    }
 
     if (resetSortType) {
       this.#currentSortType = SortType.DAY;
