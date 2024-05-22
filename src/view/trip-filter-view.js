@@ -20,9 +20,11 @@ function createTripFilterItemTemplate(filter, currentFilterType) {
     ></div>`;
 }
 
-function createTripFilterTemplate(filterItems) {
-  const filterItemsTemplate = filterItems
-    .map((filter, index) => createTripFilterItemTemplate(filter, index === 0))
+function createTripFilterTemplate(filter, currentFilterType) {
+  const filterItemsTemplate = filter
+    .map((filterItem) =>
+      createTripFilterItemTemplate(filterItem, currentFilterType)
+    )
     .join('');
 
   return `
