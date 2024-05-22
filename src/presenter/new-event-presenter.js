@@ -52,13 +52,10 @@ export default class NewEventPresenter {
   }
 
   #handleFormSubmit = (event) => {
-    this.#handleDataChange(
-      UserAction.ADD_EVENT,
-      UpdateType.MINOR,
-      // Пока у нас нет сервера, который бы после сохранения
-      // выдывал честный id задачи, нам нужно позаботиться об этом самим
-      { id: nanoid(), ...event }
-    );
+    this.#handleDataChange(UserAction.ADD_EVENT, UpdateType.MINOR, {
+      ...event,
+      id: nanoid(),
+    });
     this.destroy();
   };
 

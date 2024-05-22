@@ -4,6 +4,7 @@ import FilterModel from './model/filter-model.js';
 import TripPresenter from './presenter/trip-presenter.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import TripInfoView from './view/trip-info-view.js';
+import { calcTotalPrice } from './utils/event.js';
 
 const tripEventsElement = document.querySelector('.trip-events');
 const tripMainElement = document.querySelector('.trip-main');
@@ -43,7 +44,11 @@ function handleNewEventButtonClick() {
   tripMainNewEventButtonElement.disabled = true;
 }
 
-render(new TripInfoView(), tripMainElement, RenderPosition.AFTERBEGIN);
+render(
+  new TripInfoView({ totalPrice: calcTotalPrice(eventsModel.events) }),
+  tripMainElement,
+  RenderPosition.AFTERBEGIN
+);
 
 filterPresenter.init();
 tripPresenter.init();
