@@ -44,3 +44,6 @@ export const getDurationTime = (dateStart, dateEnd) => {
 
 export const capitalizeFirstLetter = (string) =>
   string.charAt(0).toUpperCase() + string.slice(1);
+
+export const getKeyByValue = (object, value) =>
+  Object.keys(object).find((key) => object[key] === value);

@@ -1,4 +1,10 @@
-import { FilterType, SortType, UpdateType, UserAction } from '../const.js';
+import {
+  FilterType,
+  FilterTypeMessage,
+  SortType,
+  UpdateType,
+  UserAction,
+} from '../const.js';
 import { RenderPosition, render, remove } from '../framework/render.js';
 import {
   sortEventsByDay,
@@ -9,11 +15,14 @@ import EventsListView from '../view/events-list-view.js';
 import EventsMessageView from '../view/events-message-view.js';
 import TripSortView from '../view/trip-sort-view.js';
 import EventPresenter from './event-presenter.js';
+import { filter } from '../utils/filter.js';
+import { getKeyByValue } from '../utils/common.js';
 
 export default class TripPresenter {
   #eventsListComponent = new EventsListView();
   #container = null;
   #eventsModel = null;
+  #filterModel = null;
 
   #allDestinations = null;
   #allOffers = null;
@@ -24,15 +33,22 @@ export default class TripPresenter {
   #eventPresenters = new Map();
   #currentSortType = SortType.DAY;
 
-  constructor({ container, eventsModel }) {
+  constructor({ container, eventsModel, filterModel }) {
     this.#container = container;
     this.#eventsModel = eventsModel;
+    this.#filterModel = filterModel;
+
     this.#eventsModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   get events() {
-    this.#sortEvents(this.#currentSortType);
-    return this.#eventsModel.events;
+    const filterType = this.#filterModel.filter;
+    const events = this.#eventsModel.events;
+    let filteredEvents = filter[filterType](events);
+
+    filteredEvents = this.#sortEvents(this.#currentSortType, filteredEvents);
+    return filteredEvents;
   }
 
   init = () => {
@@ -42,7 +58,7 @@ export default class TripPresenter {
     this.#renderTrip();
   };
 
-  #sortEvents = (sortType) => {
+  #sortEvents = (sortType, filteredEvents) => {
     const sortFunctionMap = {
       [SortType.DAY]: sortEventsByDay,
       [SortType.TIME]: sortEventsByTime,
@@ -52,8 +68,9 @@ export default class TripPresenter {
     const sortFunction = sortFunctionMap[sortType];
 
     if (sortFunction) {
-      this.#eventsModel.events.sort(sortFunction);
+      filteredEvents.sort(sortFunction);
     }
+    return filteredEvents;
   };
 
   #handleModeChange = () => {
@@ -113,11 +130,7 @@ export default class TripPresenter {
 
   #renderNoEvents = (message) => {
     this.#messageComponent = new EventsMessageView(message);
-    render(
-      this.#messageComponent,
-      this.#container,
-      RenderPosition.AFTERBEGIN
-    );
+    render(this.#messageComponent, this.#container, RenderPosition.AFTERBEGIN);
   };
 
   #renderEvent = (event) => {
@@ -155,7 +168,9 @@ export default class TripPresenter {
     const eventCount = events.length;
 
     if (eventCount === 0) {
-      this.#renderNoEvents(FilterType.EVERYTHING.message);
+      this.#renderNoEvents(
+        FilterTypeMessage[getKeyByValue(FilterType, this.#filterModel.filter)]
+      );
       return;
     }
 

@@ -120,15 +120,15 @@ const createEventTypesTemplate = (offers, eventType) => {
     typesTemplate += `
       <div class="event__type-item">
         <input
-        id="event-type-${offer.type}-1"
-        class="event__type-input visually-hidden"
-        type="radio"
-        name="event-type"
-        value="${offer.type}"
-        ${offer.type === eventType ? 'checked' : ''}
-        >
+          id="event-type-${offer.type}-1"
+          class="event__type-input visually-hidden"
+          type="radio"
+          name="event-type"
+          value="${offer.type}"
+          ${offer.type === eventType ? 'checked' : ''}>
         <label class="event__type-label event__type-label--${offer.type}"
-        for="event-type-${offer.type}-1">${capitalizeFirstLetter(offer.type)}
+          for="event-type-${offer.type}-1">
+          ${capitalizeFirstLetter(offer.type)}
         </label>
       </div>`;
   });
@@ -178,18 +178,18 @@ const createEventEditTemplate = (event, allDestinations, allOffers) => {
 
 		    <div class="event__field-group event__field-group--destination">
 			    <label class="event__label event__type-output" for="event-destination-1">
-				  ${type}
+				    ${type}
 			    </label>
 			    <input class="event__input event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destinationPoint.name}" list="destination-list-1">
 			    <datalist id="destination-list-1">
-				  ${destinationsTemplate}
+				    ${destinationsTemplate}
 			    </datalist>
 		    </div>
 
 		    <div class="event__field-group event__field-group--time">
 			    <label class="visually-hidden" for="event-start-time-1">From</label>
 			    <input class="event__input event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${startDate}">
-			    &mdash;
+			      &mdash;
 			    <label class="visually-hidden" for="event-end-time-1">To</label>
 			    <input class="event__input event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${endDate}">
 		    </div>

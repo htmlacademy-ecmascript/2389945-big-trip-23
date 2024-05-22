@@ -17,13 +17,17 @@ export const EventSettings = {
 };
 
 export const FilterType = {
-  EVERYTHING: {
-    name: 'everything',
-    message: 'Click New Event to create your first point',
-  },
-  FUTURE: { name: 'future', message: 'There are no future events now' },
-  PRESENT: { name: 'present', message: 'There are no present events now' },
-  PAST: { name: 'past', message: 'There are no past events now' },
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+  PRESENT: 'present',
+  PAST: 'past',
+};
+
+export const FilterTypeMessage = {
+  EVERYTHING: 'Click New Event to create your first point',
+  FUTURE: 'There are no future events now',
+  PRESENT: 'There are no present events now',
+  PAST: 'There are no past events now',
 };
 
 export const SortType = {
