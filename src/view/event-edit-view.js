@@ -1,3 +1,4 @@
+import he from 'he';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import { DateTimeSettings, EventSettings } from '../const.js';
@@ -32,7 +33,7 @@ const createEventOffersTemplate = (availableOffers, selectedOffers) => {
       <div class="event__offer-selector">
         <input class="event__offer-checkbox
         visually-hidden" id="${offer.id}"
-        type="checkbox" name="${offer.title}"
+        type="checkbox" name="${he.encode(offer.title)}"
         ${selectedOffers.includes(offer) ? 'checked' : ''}>
         <label class="event__offer-label" for="${offer.id}">
           <span class="event__offer-title">
@@ -128,7 +129,7 @@ const createEventTypesTemplate = (offers, eventType) => {
           class="event__type-input visually-hidden"
           type="radio"
           name="event-type"
-          value="${offer.type}"
+          value="${he.encode(offer.type)}"
           ${offer.type === eventType ? 'checked' : ''}>
         <label class="event__type-label event__type-label--${offer.type}"
           for="event-type-${offer.type}-1">
@@ -189,7 +190,7 @@ const createEventEditTemplate = (
 				    ${type}
 			    </label>
 			    <input class="event__input event__input--destination" id="event-destination-1" type="text" name="event-destination" value="
-          ${destinationPoint?.name || ''}" list="destination-list-1">
+          ${he.encode(destinationPoint?.name || '')}" list="destination-list-1">
 			    <datalist id="destination-list-1">
 				    ${destinationsTemplate}
 			    </datalist>
@@ -197,10 +198,13 @@ const createEventEditTemplate = (
 
 		    <div class="event__field-group event__field-group--time">
 			    <label class="visually-hidden" for="event-start-time-1">From</label>
-			    <input class="event__input event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${startDate}">
+			    <input class="event__input event__input--time"                        id="event-start-time-1" type="text"
+          name="event-start-time" value="
+          ${he.encode(startDate)}">
 			      &mdash;
 			    <label class="visually-hidden" for="event-end-time-1">To</label>
-			    <input class="event__input event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${endDate}">
+			    <input class="event__input event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="
+          ${he.encode(endDate)}">
 		    </div>
 
 		    <div class="event__field-group event__field-group--price">
@@ -208,7 +212,8 @@ const createEventEditTemplate = (
 				    <span class="visually-hidden">Price</span>
 				    &euro;
 			    </label>
-			    <input class="event__input event__input--price" id="event-price-1" type="text" name="event-price" value="${totalPrice}">
+			    <input class="event__input event__input--price" id="event-price-1" type="text" name="event-price" value="
+          ${he.encode(String(totalPrice))}">
 		    </div>
 
 		    <button class="event__save-btn btn btn--blue" type="submit">Save</button>
