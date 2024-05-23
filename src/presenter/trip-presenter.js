@@ -146,11 +146,11 @@ export default class TripPresenter {
   };
 
   #renderInfo = () => {
-    const route = getRoute(this.events);
+    const route = getRoute(this.#eventsModel.events);
     this.#infoComponent = new TripInfoView({
       route: route.route,
       routeDates: route.routeDates,
-      totalPrice: calcTotalPrice(this.events),
+      totalPrice: calcTotalPrice(this.#eventsModel.events),
     });
 
     render(this.#infoComponent, this.#mainContainer, RenderPosition.AFTERBEGIN);
