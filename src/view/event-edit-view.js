@@ -212,8 +212,8 @@ const createEventEditTemplate = (
 				    <span class="visually-hidden">Price</span>
 				    &euro;
 			    </label>
-			    <input class="event__input event__input--price" id="event-price-1" type="text" name="event-price" value="
-          ${he.encode(String(totalPrice))}">
+			    <input class="event__input event__input--price" id="event-price-1" type="text" name="event-price"
+          value="${he.encode(String(totalPrice))}">
 		    </div>
 
 		    <button class="event__save-btn btn btn--blue" type="submit">Save</button>
@@ -301,8 +301,11 @@ export default class EventEditView extends AbstractStatefulView {
       .querySelector('.event__input--destination')
       .addEventListener('change', this.#destinationChangeHandler);
     this.element
-      .querySelector('.event__field-group--price')
+      .querySelector('.event__input--price')
       .addEventListener('change', this.#priceChangeHandler);
+    this.element
+      .querySelector('.event__input--price')
+      .addEventListener('keypress', this.#priceKeypressHandler);
 
     if (this.element.querySelector('.event__section--offers')) {
       this.element
@@ -385,14 +388,34 @@ export default class EventEditView extends AbstractStatefulView {
     });
   };
 
-  #priceChangeHandler = (evt) => {
-    const newBasePrice = evt.target.value;
+  #priceKeypressHandler = (evt) => {
+    if (!EventSettings.PRICE_PATTERN.test(evt.key)) {
+      evt.preventDefault();
+    }
+  };
 
-    if (newBasePrice && !EventSettings.PRICE_PATTERN.test(newBasePrice)) {
+  #priceChangeHandler = (evt) => {
+    const newBasePrice = Number(evt.target.value);
+
+    if (newBasePrice) {
+      this._setState({
+        basePrice: newBasePrice,
+      });
+    }
+
+    /*
+    if (EventSettings.PRICE_PATTERN.test(newBasePrice)) {
+      evt.preventDefault();
+    }
+    */
+
+    /*
+    if (newBasePrice) {
       this.updateElement({
         basePrice: newBasePrice,
       });
     }
+    */
   };
 
   #offerChangeHandler = (evt) => {
