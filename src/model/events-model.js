@@ -6,9 +6,23 @@ import { getAllOffers } from '../mock/offers.js';
 import { getUniqueRandomArray } from '../utils/common.js';
 
 export default class EventsModel extends Observable {
+  #eventsApiService = null;
   #events = getUniqueRandomArray(tripEvents, EventSettings.ITEM_COUNT);
   #destinations = getAllDestinations();
   #offers = getAllOffers();
+
+  constructor({ eventsApiService }) {
+    super();
+    this.#eventsApiService = eventsApiService;
+
+    this.#eventsApiService.events.then((events) => {
+      console.log(events);
+      // Есть проблема: cтруктура объекта похожа, но некоторые ключи называются иначе,
+      // а ещё на сервере используется snake_case, а у нас camelCase.
+      // Можно, конечно, переписать часть нашего клиентского приложения, но зачем?
+      // Есть вариант получше - паттерн "Адаптер"
+    });
+  }
 
   get events() {
     return this.#events;
@@ -18,7 +32,7 @@ export default class EventsModel extends Observable {
     const index = this.#events.findIndex((event) => event.id === update.id);
 
     if (index === -1) {
-      throw new Error('Can\'t update unexisting task');
+      throw new Error('Can\'t update unexisting event');
     }
 
     this.#events = [
@@ -31,10 +45,7 @@ export default class EventsModel extends Observable {
   }
 
   addEvent(updateType, update) {
-    this.#events = [
-      update,
-      ...this.#events,
-    ];
+    this.#events = [update, ...this.#events];
 
     this._notify(updateType, update);
   }
@@ -43,7 +54,7 @@ export default class EventsModel extends Observable {
     const index = this.#events.findIndex((task) => task.id === update.id);
 
     if (index === -1) {
-      throw new Error('Can\'t delete unexisting task');
+      throw new Error('Can\'t delete unexisting event');
     }
 
     this.#events = [
