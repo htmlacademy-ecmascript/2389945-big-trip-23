@@ -2,6 +2,7 @@ export const DateTimeSettings = {
   LIST_TIME_FORMAT: 'HH:mm',
   LIST_DATE_FORMAT: 'MMM DD',
   EDIT_DATE_FORMAT: 'DD/MM/YY HH:mm',
+  ROUTE_DATE_FORMAT: 'DD MMM',
   DAY_HOURS: 24,
   HOUR_MINUTES: 60,
 };

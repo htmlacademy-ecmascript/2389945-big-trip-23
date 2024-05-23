@@ -1,10 +1,7 @@
-import { RenderPosition, render } from './framework/render.js';
 import EventsModel from './model/events-model.js';
 import FilterModel from './model/filter-model.js';
 import TripPresenter from './presenter/trip-presenter.js';
 import FilterPresenter from './presenter/filter-presenter.js';
-import TripInfoView from './view/trip-info-view.js';
-import { calcTotalPrice } from './utils/event.js';
 
 const tripEventsElement = document.querySelector('.trip-events');
 const tripMainElement = document.querySelector('.trip-main');
@@ -23,7 +20,8 @@ const eventsModel = new EventsModel();
 const filterModel = new FilterModel();
 
 const tripPresenter = new TripPresenter({
-  container: tripEventsElement,
+  mainContainer: tripMainElement,
+  eventsContainer: tripEventsElement,
   eventsModel,
   filterModel,
   onNewEventDestroy: handleNewEventFormClose,
@@ -43,12 +41,6 @@ function handleNewEventButtonClick() {
   tripPresenter.createEvent();
   tripMainNewEventButtonElement.disabled = true;
 }
-
-render(
-  new TripInfoView({ totalPrice: calcTotalPrice(eventsModel.events) }),
-  tripMainElement,
-  RenderPosition.AFTERBEGIN
-);
 
 filterPresenter.init();
 tripPresenter.init();

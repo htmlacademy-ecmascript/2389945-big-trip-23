@@ -1,13 +1,13 @@
 import AbstractView from '../framework/view/abstract-view.js';
 
-const createTripInfoTemplate = (totalPrice) => `
+const createTripInfoTemplate = (route, routeDates, totalPrice) => `
   <section class="trip-main__trip-info  trip-info">
 	  <div class="trip-info__main">
 		  <h1 class="trip-info__title">
-      Amsterdam &mdash; Chamonix &mdash; Geneva
+      ${route}
       </h1>
 		  <p class="trip-info__dates">
-      18&nbsp;&mdash;&nbsp;20 Mar
+      ${routeDates}
       </p>
 	  </div>
 
@@ -17,13 +17,21 @@ const createTripInfoTemplate = (totalPrice) => `
   </section>`;
 
 export default class TripInfoView extends AbstractView {
+  #route = null;
+  #routeDates = null;
   #totalPrice = null;
-  constructor({ totalPrice }) {
+  constructor({ route, routeDates, totalPrice }) {
     super();
+    this.#route = route;
+    this.#routeDates = routeDates;
     this.#totalPrice = totalPrice;
   }
 
   get template() {
-    return createTripInfoTemplate(this.#totalPrice);
+    return createTripInfoTemplate(
+      this.#route,
+      this.#routeDates,
+      this.#totalPrice
+    );
   }
 }

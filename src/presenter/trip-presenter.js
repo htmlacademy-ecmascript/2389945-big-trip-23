@@ -13,21 +13,25 @@ import {
 } from '../utils/sort.js';
 import EventsListView from '../view/events-list-view.js';
 import EventsMessageView from '../view/events-message-view.js';
+import TripInfoView from '../view/trip-info-view.js';
 import TripSortView from '../view/trip-sort-view.js';
 import EventPresenter from './event-presenter.js';
 import NewEventPresenter from './new-event-presenter.js';
 import { filter } from '../utils/filter.js';
 import { getKeyByValue } from '../utils/common.js';
+import { calcTotalPrice, getRoute } from '../utils/event.js';
 
 export default class TripPresenter {
   #eventsListComponent = new EventsListView();
-  #container = null;
+  #mainContainer = null;
+  #eventsContainer = null;
   #eventsModel = null;
   #filterModel = null;
 
   #allDestinations = null;
   #allOffers = null;
 
+  #infoComponent = null;
   #sortComponent = null;
   #messageComponent = null;
 
@@ -35,8 +39,15 @@ export default class TripPresenter {
   #newEventPresenter = null;
   #currentSortType = SortType.DAY;
 
-  constructor({ container, eventsModel, filterModel, onNewEventDestroy }) {
-    this.#container = container;
+  constructor({
+    mainContainer,
+    eventsContainer,
+    eventsModel,
+    filterModel,
+    onNewEventDestroy,
+  }) {
+    this.#mainContainer = mainContainer;
+    this.#eventsContainer = eventsContainer;
     this.#eventsModel = eventsModel;
     this.#filterModel = filterModel;
 
@@ -134,18 +145,37 @@ export default class TripPresenter {
     this.#renderTrip();
   };
 
+  #renderInfo = () => {
+    const route = getRoute(this.events);
+    this.#infoComponent = new TripInfoView({
+      route: route.route,
+      routeDates: route.routeDates,
+      totalPrice: calcTotalPrice(this.events),
+    });
+
+    render(this.#infoComponent, this.#mainContainer, RenderPosition.AFTERBEGIN);
+  };
+
   #renderSort = () => {
     this.#sortComponent = new TripSortView({
       currentSortType: this.#currentSortType,
       onSortTypeChange: this.#handleSortTypeChange,
     });
 
-    render(this.#sortComponent, this.#container, RenderPosition.AFTERBEGIN);
+    render(
+      this.#sortComponent,
+      this.#eventsContainer,
+      RenderPosition.AFTERBEGIN
+    );
   };
 
   #renderNoEvents = (message) => {
     this.#messageComponent = new EventsMessageView(message);
-    render(this.#messageComponent, this.#container, RenderPosition.AFTERBEGIN);
+    render(
+      this.#messageComponent,
+      this.#eventsContainer,
+      RenderPosition.AFTERBEGIN
+    );
   };
 
   #renderEvent = (event) => {
@@ -169,6 +199,7 @@ export default class TripPresenter {
     this.#eventPresenters.forEach((presenter) => presenter.destroy());
     this.#eventPresenters.clear();
 
+    remove(this.#infoComponent);
     remove(this.#sortComponent);
     if (this.#messageComponent) {
       remove(this.#messageComponent);
@@ -180,7 +211,7 @@ export default class TripPresenter {
   }
 
   #renderTrip = () => {
-    render(this.#eventsListComponent, this.#container);
+    render(this.#eventsListComponent, this.#eventsContainer);
 
     const events = this.events;
     const eventCount = events.length;
@@ -192,6 +223,7 @@ export default class TripPresenter {
       return;
     }
 
+    this.#renderInfo();
     this.#renderSort();
     this.#renderEvents(this.events);
   };
