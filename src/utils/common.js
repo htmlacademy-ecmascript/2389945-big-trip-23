@@ -19,9 +19,6 @@ export const getUniqueRandomArray = (sourceArray, resultArraySize) => {
   return elements;
 };
 
-export const updateItem = (items, update) =>
-  items.map((item) => (item.id === update.id ? update : item));
-
 export const formatDate = (date, formatPattern) =>
   date ? dayjs(date).format(formatPattern) : '';
 
@@ -47,3 +44,6 @@ export const getDurationTime = (dateStart, dateEnd) => {
 
 export const capitalizeFirstLetter = (string) =>
   string.charAt(0).toUpperCase() + string.slice(1);
+
+export const getKeyByValue = (object, value) =>
+  Object.keys(object).find((key) => object[key] === value);
