@@ -402,20 +402,6 @@ export default class EventEditView extends AbstractStatefulView {
         basePrice: newBasePrice,
       });
     }
-
-    /*
-    if (EventSettings.PRICE_PATTERN.test(newBasePrice)) {
-      evt.preventDefault();
-    }
-    */
-
-    /*
-    if (newBasePrice) {
-      this.updateElement({
-        basePrice: newBasePrice,
-      });
-    }
-    */
   };
 
   #offerChangeHandler = (evt) => {
