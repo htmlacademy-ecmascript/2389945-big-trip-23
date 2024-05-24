@@ -20,9 +20,9 @@ export default class EventsApiService extends ApiService {
 
   async updateEvent(event) {
     const response = await this._load({
-      url: `events/${event.id}`,
+      url: `points/${event.id}`,
       method: Method.PUT,
-      body: JSON.stringify(event),
+      body: JSON.stringify(this.#adaptToServer(event)),
       headers: new Headers({ 'Content-Type': 'application/json' }),
     });
 
@@ -39,19 +39,13 @@ export default class EventsApiService extends ApiService {
         event.dateFrom instanceof Date ? event.dateFrom.toISOString() : null,
       ['date_to']:
         event.dateTo instanceof Date ? event.dateTo.toISOString() : null,
-      ['destination']: event.destination,
       ['is_favorite']: event.isFavorite,
-      ['offers']: event.offers,
-      ['type']: event.type,
     };
 
     delete adaptedEvent.basePrice;
     delete adaptedEvent.dateFrom;
     delete adaptedEvent.dateTo;
-    delete adaptedEvent.destination;
     delete adaptedEvent.isFavorite;
-    delete adaptedEvent.offers;
-    delete adaptedEvent.type;
 
     return adaptedEvent;
   }
