@@ -16,14 +16,14 @@ export default class NewEventPresenter {
     this.#handleDestroy = onDestroy;
   }
 
-  init(allDestinations, allOffers) {
+  init(destinations, offers) {
     if (this.#eventEditComponent !== null) {
       return;
     }
 
     this.#eventEditComponent = new EventEditView({
-      allDestinations: allDestinations,
-      allOffers: allOffers,
+      destinations,
+      offers,
       onFormSubmit: this.#handleFormSubmit,
       onFormDelete: this.#handleFormClose,
       onFormClose: this.#handleFormClose,

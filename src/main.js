@@ -4,8 +4,8 @@ import TripPresenter from './presenter/trip-presenter.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import EventsApiService from './events-api-service.js';
 
-const AUTHORIZATION = 'Basic xS2ddgg56hgg78k';
-const END_POINT = 'https://23.objects.htmlacademy.pro/spec/big-trip';
+const AUTHORIZATION = 'Basic xS2d557gsds55656hgg78k';
+const END_POINT = 'https://23.objects.htmlacademy.pro/big-trip';
 
 const tripEventsElement = document.querySelector('.trip-events');
 const tripMainElement = document.querySelector('.trip-main');
@@ -48,5 +48,7 @@ function handleNewEventButtonClick() {
   tripMainNewEventButtonElement.disabled = true;
 }
 
+
 filterPresenter.init();
 tripPresenter.init();
+eventsModel.init();

@@ -7,6 +7,7 @@ export default class FilterPresenter {
   #filterContainer = null;
   #filterModel = null;
   #eventsModel = null;
+  #events = null;
 
   #filterComponent = null;
 
@@ -20,15 +21,16 @@ export default class FilterPresenter {
   }
 
   get filters() {
-    const events = this.#eventsModel.events;
+    //const events = [...this.#eventsModel.events];
 
     return Object.values(FilterType).map((type) => ({
       type,
-      count: filter[type](events).length,
+      count: filter[type](this.#events).length,
     }));
   }
 
   init() {
+    this.#events = [...this.#eventsModel.events];
     const filters = this.filters;
     const prevFilterComponent = this.#filterComponent;
 

@@ -143,24 +143,24 @@ const createEventTypesTemplate = (offers, eventType) => {
 
 const createEventEditTemplate = (
   event,
-  allDestinations,
-  allOffers,
+  destinations,
+  offers,
   editMode
 ) => {
   const { type, destination, basePrice, dateFrom, dateTo } = event;
 
-  const destinationPoint = getDestinationById(allDestinations, destination);
+  const destinationPoint = getDestinationById(destinations, destination);
   const selectedOffers = event.offers.map((offer) =>
-    getOfferById(allOffers, event.type, offer)
+    getOfferById(offers, event.type, offer)
   );
-  const availableOffers = allOffers.find((item) => item.type === type).offers;
+  const availableOffers = offers.find((item) => item.type === type).offers;
 
   const startDate = formatDate(dateFrom, DateTimeSettings.EDIT_DATE_FORMAT);
   const endDate = formatDate(dateTo, DateTimeSettings.EDIT_DATE_FORMAT);
 
   const totalPrice = basePrice;
-  const typesTemplate = createEventTypesTemplate(allOffers, type);
-  const destinationsTemplate = createEventDestinstionsTemplate(allDestinations);
+  const typesTemplate = createEventTypesTemplate(offers, type);
+  const destinationsTemplate = createEventDestinstionsTemplate(destinations);
   const detailsTemplate = createEventDetailsTemplate(
     availableOffers,
     selectedOffers,
@@ -229,8 +229,8 @@ const createEventEditTemplate = (
 };
 
 export default class EventEditView extends AbstractStatefulView {
-  #allDestinations = null;
-  #allOffers = null;
+  #destinations = null;
+  #offers = null;
 
   #handleFormSubmit = null;
   #handleFormDelete = null;
@@ -241,16 +241,16 @@ export default class EventEditView extends AbstractStatefulView {
 
   constructor({
     event = NEW_EVENT,
-    allDestinations,
-    allOffers,
+    destinations,
+    offers,
     onFormSubmit,
     onFormDelete,
     onFormClose,
   }) {
     super();
     this._setState(EventEditView.parseEventToState(event));
-    this.#allDestinations = allDestinations;
-    this.#allOffers = allOffers;
+    this.#destinations = destinations;
+    this.#offers = offers;
     this.#handleFormSubmit = onFormSubmit;
     this.#handleFormDelete = onFormDelete;
     this.#handleFormClose = onFormClose;
@@ -260,8 +260,8 @@ export default class EventEditView extends AbstractStatefulView {
   get template() {
     return createEventEditTemplate(
       this._state,
-      this.#allDestinations,
-      this.#allOffers,
+      this.#destinations,
+      this.#offers,
       this.editMode
     );
   }
@@ -375,7 +375,7 @@ export default class EventEditView extends AbstractStatefulView {
 
   #destinationChangeHandler = (evt) => {
     const name = evt.target.value;
-    const newDestination = this.#allDestinations.find(
+    const newDestination = this.#destinations.find(
       (destination) => destination.name === name
     );
 

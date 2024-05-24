@@ -1,31 +1,41 @@
 import Observable from '../framework/observable.js';
-import { EventSettings } from '../const.js';
-import { getAllDestinations } from '../mock/destinations.js';
-import { tripEvents } from '../mock/events.js';
-import { getAllOffers } from '../mock/offers.js';
-import { getUniqueRandomArray } from '../utils/common.js';
+import { UpdateType } from '../const.js';
 
 export default class EventsModel extends Observable {
   #eventsApiService = null;
-  #events = getUniqueRandomArray(tripEvents, EventSettings.ITEM_COUNT);
-  #destinations = getAllDestinations();
-  #offers = getAllOffers();
+  //#events = getUniqueRandomArray(tripEvents, EventSettings.ITEM_COUNT);
+  #events = [];
+  #destinations = [];
+  #offers = [];
 
   constructor({ eventsApiService }) {
     super();
     this.#eventsApiService = eventsApiService;
-
-    this.#eventsApiService.events.then((events) => {
-      console.log(events);
-      // Есть проблема: cтруктура объекта похожа, но некоторые ключи называются иначе,
-      // а ещё на сервере используется snake_case, а у нас camelCase.
-      // Можно, конечно, переписать часть нашего клиентского приложения, но зачем?
-      // Есть вариант получше - паттерн "Адаптер"
-    });
   }
 
   get events() {
     return this.#events;
+  }
+
+  get destinations() {
+    return this.#destinations;
+  }
+
+  get offers() {
+    return this.#offers;
+  }
+
+  async init() {
+    try {
+      const events = await this.#eventsApiService.events;
+      this.#events = events.map(this.#adaptToClient);
+      this.#destinations = await this.#eventsApiService.destinations;
+      this.#offers = await this.#eventsApiService.offers;
+    } catch (err) {
+      this.#events = [];
+    }
+
+    this._notify(UpdateType.INIT);
   }
 
   updateEvent(updateType, update) {
@@ -63,6 +73,29 @@ export default class EventsModel extends Observable {
     ];
 
     this._notify(updateType);
+  }
+
+  #adaptToClient(event) {
+    const adaptedEvent = {
+      ...event,
+      basePrice: event['base_price'],
+      dateFrom:
+        event['date_from'] !== null
+          ? new Date(event['date_from'])
+          : event['date_from'],
+      dateTo:
+        event['date_to'] !== null
+          ? new Date(event['date_to'])
+          : event['date_to'],
+      isFavorite: event['is_favorite'],
+    };
+
+    delete adaptedEvent['base_price'];
+    delete adaptedEvent['date_from'];
+    delete adaptedEvent['date_to'];
+    delete adaptedEvent['is_favorite'];
+
+    return adaptedEvent;
   }
 
   getAllDestinations = () => this.#destinations;

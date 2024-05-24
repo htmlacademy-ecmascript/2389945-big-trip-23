@@ -21,12 +21,12 @@ const createEventOffersTemplate = (offers) => {
   return offersTemplate;
 };
 
-const createEventTemplate = (event, allDestinations, allOffers) => {
+const createEventTemplate = (event, destinations, offers) => {
   const { type, destination, basePrice, isFavorite, dateFrom, dateTo } = event;
 
-  const destinationPoint = getDestinationById(allDestinations, destination);
+  const destinationPoint = getDestinationById(destinations, destination);
   const selectedOffers = event.offers.map((offer) =>
-    getOfferById(allOffers, event.type, offer)
+    getOfferById(offers, event.type, offer)
   );
 
   const startDate = formatDate(dateFrom, DateTimeSettings.LIST_DATE_FORMAT);
@@ -89,20 +89,20 @@ export default class EventView extends AbstractView {
   #event = null;
   #handleEditClick = null;
   #handleFavoriteClick = null;
-  #allDestinations = null;
-  #allOffers = null;
+  #destinations = null;
+  #offers = null;
 
   constructor({
     event,
-    allDestinations,
-    allOffers,
+    destinations,
+    offers,
     onEditClick,
     onFavoriteClick,
   }) {
     super();
     this.#event = event;
-    this.#allDestinations = allDestinations;
-    this.#allOffers = allOffers;
+    this.#destinations = destinations;
+    this.#offers = offers;
     this.#handleEditClick = onEditClick;
     this.#handleFavoriteClick = onFavoriteClick;
 
@@ -117,8 +117,8 @@ export default class EventView extends AbstractView {
   get template() {
     return createEventTemplate(
       this.#event,
-      this.#allDestinations,
-      this.#allOffers
+      this.#destinations,
+      this.#offers
     );
   }
 
