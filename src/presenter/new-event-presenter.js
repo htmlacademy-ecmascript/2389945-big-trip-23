@@ -1,6 +1,5 @@
 import { remove, render, RenderPosition } from '../framework/render.js';
 import EventEditView from '../view/event-edit-view.js';
-import { nanoid } from 'nanoid';
 import { UserAction, UpdateType } from '../const.js';
 
 export default class NewEventPresenter {
@@ -52,10 +51,7 @@ export default class NewEventPresenter {
   }
 
   #handleFormSubmit = (event) => {
-    this.#handleDataChange(UserAction.ADD_EVENT, UpdateType.MINOR, {
-      ...event,
-      id: nanoid(),
-    });
+    this.#handleDataChange(UserAction.ADD_EVENT, UpdateType.MINOR, event);
     this.destroy();
   };
 

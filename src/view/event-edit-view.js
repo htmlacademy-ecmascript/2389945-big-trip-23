@@ -8,7 +8,6 @@ import { getDestinationById, getOfferById } from '../utils/event.js';
 import { UserAction } from '../const.js';
 
 const NEW_EVENT = {
-  id: '',
   basePrice: 0,
   dateFrom: '',
   dateTo: '',
