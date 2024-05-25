@@ -13,7 +13,7 @@ export const EventMode = {
 };
 
 export const EventSettings = {
-  ITEM_COUNT: 5,
+  ITEM_COUNT: 0,
   PRICE_PATTERN: /[0-9]/,
 };
 

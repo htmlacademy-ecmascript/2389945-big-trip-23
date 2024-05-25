@@ -78,7 +78,7 @@ export default class TripPresenter {
 
   createEvent() {
     this.#currentSortType = SortType.DAY;
-    this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this.#filterModel.setFilter(FilterType.EVERYTHING);
     this.#newEventPresenter.init(this.#destinations, this.#offers);
   }
 
@@ -105,12 +105,15 @@ export default class TripPresenter {
   #handleViewAction = (actionType, updateType, update) => {
     switch (actionType) {
       case UserAction.UPDATE_EVENT:
+        this.#eventPresenters.get(update.id).setSaving();
         this.#eventsModel.updateEvent(updateType, update);
         break;
       case UserAction.ADD_EVENT:
+        this.#newEventPresenter.setSaving();
         this.#eventsModel.addEvent(updateType, update);
         break;
       case UserAction.DELETE_EVENT:
+        this.#eventPresenters.get(update.id).setDeleting();
         this.#eventsModel.deleteEvent(updateType, update);
         break;
     }
@@ -150,11 +153,17 @@ export default class TripPresenter {
   };
 
   #renderInfo = () => {
-    const route = getRoute(this.#eventsModel.events, this.#eventsModel.destinations);
+    const route = getRoute(
+      this.#eventsModel.events,
+      this.#eventsModel.destinations
+    );
     this.#infoComponent = new TripInfoView({
       route: route.route,
       routeDates: route.routeDates,
-      totalPrice: calcTotalPrice(this.#eventsModel.events, this.#eventsModel.offers),
+      totalPrice: calcTotalPrice(
+        this.#eventsModel.events,
+        this.#eventsModel.offers
+      ),
     });
 
     render(this.#infoComponent, this.#mainContainer, RenderPosition.AFTERBEGIN);
@@ -218,7 +227,6 @@ export default class TripPresenter {
     render(this.#eventsListComponent, this.#eventsContainer);
 
     if (this.#isLoading) {
-      //this.#renderLoading();
       this.#renderNoEvents('Loading...');
       return;
     }

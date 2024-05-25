@@ -48,7 +48,6 @@ function handleNewEventButtonClick() {
   tripMainNewEventButtonElement.disabled = true;
 }
 
-
 filterPresenter.init();
 tripPresenter.init();
 eventsModel.init();

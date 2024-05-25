@@ -64,7 +64,8 @@ export default class EventPresenter {
     }
 
     if (this.#mode === EventMode.EDIT) {
-      replace(this.#eventEditComponent, prevEventEditComponent);
+      this.#mode = EventMode.VIEW;
+      replace(this.#eventComponent, prevEventEditComponent);
     }
 
     remove(prevEventComponent);
@@ -79,6 +80,22 @@ export default class EventPresenter {
   resetView() {
     if (this.#mode !== EventMode.VIEW) {
       this.#replaceFormToEvent();
+    }
+  }
+
+  setSaving() {
+    if (this.#mode === EventMode.EDIT) {
+      this.#eventEditComponent.updateElement({
+        isSaving: true,
+      });
+    }
+  }
+
+  setDeleting() {
+    if (this.#mode === EventMode.EDIT) {
+      this.#eventEditComponent.updateElement({
+        isDeleting: true,
+      });
     }
   }
 
@@ -116,7 +133,6 @@ export default class EventPresenter {
 
   #handleFormSubmit = (update) => {
     this.#handleDataChange(UserAction.UPDATE_EVENT, UpdateType.MINOR, update);
-    this.#replaceFormToEvent();
   };
 
   #handleFormDelete = (event) => {

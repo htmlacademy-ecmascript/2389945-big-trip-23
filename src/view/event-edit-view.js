@@ -60,8 +60,11 @@ const createEventOffersTemplate = (availableOffers, selectedOffers) => {
   return offersTemplate;
 };
 
-const createEventPicturesTemplate = (description, pictures) => {
-  if (!pictures.length) {
+const createEventDescriptionTemplate = (description) =>
+  `<p class="event__destination-description">${description}</p>`;
+
+const createEventPicturesTemplate = (pictures) => {
+  if (!pictures) {
     return '';
   }
   let picturesTemplate = '';
@@ -80,25 +83,18 @@ const createEventPicturesTemplate = (description, pictures) => {
 		  </div>`;
   }
 
-  if (description) {
-    picturesTemplate = `
-      <p class="event__destination-description">
-        ${description}
-      </p>${picturesTemplate}`;
-  }
+  return picturesTemplate;
+};
 
-  if (picturesTemplate) {
-    picturesTemplate = `
-      <section class="event__section event__section--destination">
+const createDestinationInfoTemplate = (description, pictures) =>
+  description
+    ? `<section class="event__section event__section--destination">
 		    <h3 class="event__section-title
         event__section-title--destination">
           Destination
-        </h3>${picturesTemplate}
-	    </section>`;
-  }
-
-  return picturesTemplate;
-};
+        </h3>${createEventDescriptionTemplate(description)}${createEventPicturesTemplate(pictures)}
+	    </section>`
+    : '';
 
 const createEventDetailsTemplate = (
   availableOffers,
@@ -107,11 +103,14 @@ const createEventDetailsTemplate = (
 ) => {
   let detailsTemplate = '';
   detailsTemplate = createEventOffersTemplate(availableOffers, selectedOffers);
+
   if (destinationPoint) {
-    detailsTemplate += createEventPicturesTemplate(
-      destinationPoint.description,
-      destinationPoint.pictures
-    );
+    detailsTemplate =
+      detailsTemplate +
+      createDestinationInfoTemplate(
+        destinationPoint.description,
+        destinationPoint.pictures
+      );
   }
   return detailsTemplate
     ? `<section class="event__details">${detailsTemplate}</section>`
@@ -146,7 +145,7 @@ const createEventEditTemplate = (
   offers,
   editMode
 ) => {
-  const { type, destination, basePrice, dateFrom, dateTo } = event;
+  const { type, destination, basePrice, dateFrom, dateTo, isSaving, isDeleting } = event;
 
   const destinationPoint = getDestinationById(destinations, destination);
   const selectedOffers = event.offers.map((offer) =>
@@ -165,6 +164,19 @@ const createEventEditTemplate = (
     selectedOffers,
     destinationPoint
   );
+  const deleteButtonLabel = () => {
+    let label = '';
+    if (editMode === UserAction.UPDATE_EVENT) {
+      if (isDeleting) {
+        label = 'Deleting...';
+      } else {
+        label = 'Delete';
+      }
+    } else {
+      label = 'Cancel';
+    }
+    return label;
+  };
 
   return `
     <li class="trip-events__item">
@@ -215,9 +227,10 @@ const createEventEditTemplate = (
           value="${he.encode(String(totalPrice))}">
 		    </div>
 
-		    <button class="event__save-btn btn btn--blue" type="submit">Save</button>
+		    <button class="event__save-btn btn btn--blue"
+        type="submit">${isSaving ? 'Saving...' : 'Save'}</button>
 		    <button class="event__reset-btn" type="reset">
-        ${editMode === UserAction.UPDATE_EVENT ? 'Delete' : 'Cancel'}</button>
+        ${deleteButtonLabel()}</button>
 		    <button class="event__rollup-btn" type="button">
 			    <span class="visually-hidden">Open event</span>
 		    </button>
@@ -261,7 +274,7 @@ export default class EventEditView extends AbstractStatefulView {
       this._state,
       this.#destinations,
       this.#offers,
-      this.editMode
+      this.editMode,
     );
   }
 
@@ -427,10 +440,14 @@ export default class EventEditView extends AbstractStatefulView {
     this._setState({ dateTo: userDate });
   };
 
-  static parseEventToState = (event) => ({ ...event });
+  static parseEventToState = (event) => ({ ...event, isSaving: false,
+    isDeleting: false, });
 
   static parseStateToEvent = (state) => {
     const event = { ...state };
+    delete event.isSaving;
+    delete event.isDeleting;
     return event;
   };
+
 }
