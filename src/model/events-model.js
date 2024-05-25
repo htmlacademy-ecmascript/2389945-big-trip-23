@@ -3,7 +3,6 @@ import { UpdateType } from '../const.js';
 
 export default class EventsModel extends Observable {
   #eventsApiService = null;
-  //#events = getUniqueRandomArray(tripEvents, EventSettings.ITEM_COUNT);
   #events = [];
   #destinations = [];
   #offers = [];
@@ -93,14 +92,8 @@ export default class EventsModel extends Observable {
     const adaptedEvent = {
       ...event,
       basePrice: event['base_price'],
-      dateFrom:
-        event['date_from'] !== null
-          ? new Date(event['date_from'])
-          : event['date_from'],
-      dateTo:
-        event['date_to'] !== null
-          ? new Date(event['date_to'])
-          : event['date_to'],
+      dateFrom: event['date_from'],
+      dateTo: event['date_to'],
       isFavorite: event['is_favorite'],
     };
 
