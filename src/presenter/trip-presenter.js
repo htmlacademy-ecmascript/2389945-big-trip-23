@@ -1,16 +1,4 @@
-import {
-  FilterType,
-  FilterTypeMessage,
-  SortType,
-  UpdateType,
-  UserAction,
-} from '../const.js';
-import { RenderPosition, render, remove } from '../framework/render.js';
-import {
-  sortEventsByDay,
-  sortEventsByPrice,
-  sortEventsByTime,
-} from '../utils/sort.js';
+import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 import EventsListView from '../view/events-list-view.js';
 import EventsMessageView from '../view/events-message-view.js';
 import TripInfoView from '../view/trip-info-view.js';
@@ -20,6 +8,20 @@ import NewEventPresenter from './new-event-presenter.js';
 import { filter } from '../utils/filter.js';
 import { getKeyByValue } from '../utils/common.js';
 import { calcTotalPrice, getRoute } from '../utils/event.js';
+import {
+  FilterType,
+  FilterTypeMessage,
+  SortType,
+  UpdateType,
+  UserAction,
+  TimeLimit
+} from '../const.js';
+import { RenderPosition, render, remove } from '../framework/render.js';
+import {
+  sortEventsByDay,
+  sortEventsByPrice,
+  sortEventsByTime,
+} from '../utils/sort.js';
 
 export default class TripPresenter {
   #eventsListComponent = new EventsListView();
@@ -40,6 +42,11 @@ export default class TripPresenter {
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
   #isLoading = true;
+
+  #uiBlocker = new UiBlocker({
+    lowerLimit: TimeLimit.LOWER_LIMIT,
+    upperLimit: TimeLimit.UPPER_LIMIT
+  });
 
   constructor({
     mainContainer,
@@ -103,10 +110,11 @@ export default class TripPresenter {
   };
 
   #handleViewAction = async (actionType, updateType, update) => {
+    this.#uiBlocker.block();
+
     switch (actionType) {
       case UserAction.UPDATE_EVENT:
         this.#eventPresenters.get(update.id).setSaving();
-        //this.#eventsModel.updateEvent(updateType, update);
         try {
           await this.#eventsModel.updateEvent(updateType, update);
         } catch(err) {
@@ -115,7 +123,6 @@ export default class TripPresenter {
         break;
       case UserAction.ADD_EVENT:
         this.#newEventPresenter.setSaving();
-        //this.#eventsModel.addEvent(updateType, update);
         try {
           await this.#eventsModel.addEvent(updateType, update);
         } catch(err) {
@@ -124,7 +131,6 @@ export default class TripPresenter {
         break;
       case UserAction.DELETE_EVENT:
         this.#eventPresenters.get(update.id).setDeleting();
-        //this.#eventsModel.deleteEvent(updateType, update);
         try {
           await this.#eventsModel.deleteEvent(updateType, update);
         } catch(err) {
@@ -132,6 +138,8 @@ export default class TripPresenter {
         }
         break;
     }
+
+    this.#uiBlocker.unblock();
   };
 
   #handleModelEvent = (updateType, data) => {

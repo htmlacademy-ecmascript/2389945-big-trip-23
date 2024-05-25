@@ -51,3 +51,8 @@ export const UpdateType = {
   MAJOR: 'MAJOR',
   INIT: 'INIT',
 };
+
+export const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
