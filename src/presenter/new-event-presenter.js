@@ -52,9 +52,19 @@ export default class NewEventPresenter {
 
   setSaving() {
     this.#eventEditComponent.updateElement({
-      isDisabled: true,
       isSaving: true,
     });
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this.#eventEditComponent.updateElement({
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this.#eventEditComponent.shake(resetFormState);
   }
 
   #handleFormSubmit = (event) => {

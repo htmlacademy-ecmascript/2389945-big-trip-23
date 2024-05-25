@@ -70,7 +70,7 @@ export default class EventsModel extends Observable {
   }
 
   async deleteEvent(updateType, update) {
-    const index = this.#events.findIndex((task) => task.id === update.id);
+    const index = this.#events.findIndex((event) => event.id === update.id);
 
     if (index === -1) {
       throw new Error('Can\'t delete unexisting event');
