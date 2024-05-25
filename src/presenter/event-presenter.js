@@ -13,20 +13,20 @@ export default class EventPresenter {
   #eventEditComponent = null;
 
   #event = null;
-  #allDestinations = null;
-  #allOffers = null;
+  #destinations = null;
+  #offers = null;
   #mode = EventMode.VIEW;
 
   constructor({
     eventsListContainer,
-    allDestinations,
-    allOffers,
+    destinations,
+    offers,
     onDataChange,
     onModeChange,
   }) {
     this.#eventsListContainer = eventsListContainer;
-    this.#allDestinations = allDestinations;
-    this.#allOffers = allOffers;
+    this.#destinations = destinations;
+    this.#offers = offers;
     this.#handleDataChange = onDataChange;
     this.#handleModeChange = onModeChange;
   }
@@ -39,16 +39,16 @@ export default class EventPresenter {
 
     this.#eventComponent = new EventView({
       event: this.#event,
-      allDestinations: this.#allDestinations,
-      allOffers: this.#allOffers,
+      destinations: this.#destinations,
+      offers: this.#offers,
       onEditClick: this.#handleEditClick,
       onFavoriteClick: this.#handleFavoriteClick,
     });
 
     this.#eventEditComponent = new EventEditView({
       event: this.#event,
-      allDestinations: this.#allDestinations,
-      allOffers: this.#allOffers,
+      destinations: this.#destinations,
+      offers: this.#offers,
       onFormSubmit: this.#handleFormSubmit,
       onFormDelete: this.#handleFormDelete,
       onFormClose: this.#handleFormClose,
@@ -64,7 +64,8 @@ export default class EventPresenter {
     }
 
     if (this.#mode === EventMode.EDIT) {
-      replace(this.#eventEditComponent, prevEventEditComponent);
+      this.#mode = EventMode.VIEW;
+      replace(this.#eventComponent, prevEventEditComponent);
     }
 
     remove(prevEventComponent);
@@ -82,6 +83,22 @@ export default class EventPresenter {
     }
   }
 
+  setSaving() {
+    if (this.#mode === EventMode.EDIT) {
+      this.#eventEditComponent.updateElement({
+        isSaving: true,
+      });
+    }
+  }
+
+  setDeleting() {
+    if (this.#mode === EventMode.EDIT) {
+      this.#eventEditComponent.updateElement({
+        isDeleting: true,
+      });
+    }
+  }
+
   #replaceEventToForm() {
     replace(this.#eventEditComponent, this.#eventComponent);
     document.addEventListener('keydown', this.#escKeyDownHandler);
@@ -96,7 +113,7 @@ export default class EventPresenter {
   }
 
   #escKeyDownHandler = (evt) => {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
+    if (evt.key === 'Escape') {
       evt.preventDefault();
       this.#eventEditComponent.reset(this.#event);
       this.#replaceFormToEvent();
@@ -116,7 +133,6 @@ export default class EventPresenter {
 
   #handleFormSubmit = (update) => {
     this.#handleDataChange(UserAction.UPDATE_EVENT, UpdateType.MINOR, update);
-    this.#replaceFormToEvent();
   };
 
   #handleFormDelete = (event) => {

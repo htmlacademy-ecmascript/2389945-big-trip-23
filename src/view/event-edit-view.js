@@ -8,7 +8,6 @@ import { getDestinationById, getOfferById } from '../utils/event.js';
 import { UserAction } from '../const.js';
 
 const NEW_EVENT = {
-  id: '',
   basePrice: 0,
   dateFrom: '',
   dateTo: '',
@@ -61,8 +60,11 @@ const createEventOffersTemplate = (availableOffers, selectedOffers) => {
   return offersTemplate;
 };
 
-const createEventPicturesTemplate = (description, pictures) => {
-  if (!pictures.length) {
+const createEventDescriptionTemplate = (description) =>
+  `<p class="event__destination-description">${description}</p>`;
+
+const createEventPicturesTemplate = (pictures) => {
+  if (!pictures) {
     return '';
   }
   let picturesTemplate = '';
@@ -81,25 +83,18 @@ const createEventPicturesTemplate = (description, pictures) => {
 		  </div>`;
   }
 
-  if (description) {
-    picturesTemplate = `
-      <p class="event__destination-description">
-        ${description}
-      </p>${picturesTemplate}`;
-  }
+  return picturesTemplate;
+};
 
-  if (picturesTemplate) {
-    picturesTemplate = `
-      <section class="event__section event__section--destination">
+const createDestinationInfoTemplate = (description, pictures) =>
+  description
+    ? `<section class="event__section event__section--destination">
 		    <h3 class="event__section-title
         event__section-title--destination">
           Destination
-        </h3>${picturesTemplate}
-	    </section>`;
-  }
-
-  return picturesTemplate;
-};
+        </h3>${createEventDescriptionTemplate(description)}${createEventPicturesTemplate(pictures)}
+	    </section>`
+    : '';
 
 const createEventDetailsTemplate = (
   availableOffers,
@@ -108,11 +103,14 @@ const createEventDetailsTemplate = (
 ) => {
   let detailsTemplate = '';
   detailsTemplate = createEventOffersTemplate(availableOffers, selectedOffers);
+
   if (destinationPoint) {
-    detailsTemplate += createEventPicturesTemplate(
-      destinationPoint.description,
-      destinationPoint.pictures
-    );
+    detailsTemplate =
+      detailsTemplate +
+      createDestinationInfoTemplate(
+        destinationPoint.description,
+        destinationPoint.pictures
+      );
   }
   return detailsTemplate
     ? `<section class="event__details">${detailsTemplate}</section>`
@@ -143,29 +141,42 @@ const createEventTypesTemplate = (offers, eventType) => {
 
 const createEventEditTemplate = (
   event,
-  allDestinations,
-  allOffers,
+  destinations,
+  offers,
   editMode
 ) => {
-  const { type, destination, basePrice, dateFrom, dateTo } = event;
+  const { type, destination, basePrice, dateFrom, dateTo, isSaving, isDeleting } = event;
 
-  const destinationPoint = getDestinationById(allDestinations, destination);
+  const destinationPoint = getDestinationById(destinations, destination);
   const selectedOffers = event.offers.map((offer) =>
-    getOfferById(allOffers, event.type, offer)
+    getOfferById(offers, event.type, offer)
   );
-  const availableOffers = allOffers.find((item) => item.type === type).offers;
+  const availableOffers = offers.find((item) => item.type === type).offers;
 
   const startDate = formatDate(dateFrom, DateTimeSettings.EDIT_DATE_FORMAT);
   const endDate = formatDate(dateTo, DateTimeSettings.EDIT_DATE_FORMAT);
 
   const totalPrice = basePrice;
-  const typesTemplate = createEventTypesTemplate(allOffers, type);
-  const destinationsTemplate = createEventDestinstionsTemplate(allDestinations);
+  const typesTemplate = createEventTypesTemplate(offers, type);
+  const destinationsTemplate = createEventDestinstionsTemplate(destinations);
   const detailsTemplate = createEventDetailsTemplate(
     availableOffers,
     selectedOffers,
     destinationPoint
   );
+  const deleteButtonLabel = () => {
+    let label = '';
+    if (editMode === UserAction.UPDATE_EVENT) {
+      if (isDeleting) {
+        label = 'Deleting...';
+      } else {
+        label = 'Delete';
+      }
+    } else {
+      label = 'Cancel';
+    }
+    return label;
+  };
 
   return `
     <li class="trip-events__item">
@@ -189,8 +200,8 @@ const createEventEditTemplate = (
 			    <label class="event__label event__type-output" for="event-destination-1">
 				    ${type}
 			    </label>
-			    <input class="event__input event__input--destination" id="event-destination-1" type="text" name="event-destination" value="
-          ${he.encode(destinationPoint?.name || '')}" list="destination-list-1">
+			    <input class="event__input event__input--destination" id="event-destination-1" type="text" name="event-destination"
+          value="${he.encode(destinationPoint?.name || '')}" list="destination-list-1">
 			    <datalist id="destination-list-1">
 				    ${destinationsTemplate}
 			    </datalist>
@@ -212,13 +223,14 @@ const createEventEditTemplate = (
 				    <span class="visually-hidden">Price</span>
 				    &euro;
 			    </label>
-			    <input class="event__input event__input--price" id="event-price-1" type="text" name="event-price" value="
-          ${he.encode(String(totalPrice))}">
+			    <input class="event__input event__input--price" id="event-price-1" type="text" name="event-price"
+          value="${he.encode(String(totalPrice))}">
 		    </div>
 
-		    <button class="event__save-btn btn btn--blue" type="submit">Save</button>
+		    <button class="event__save-btn btn btn--blue"
+        type="submit">${isSaving ? 'Saving...' : 'Save'}</button>
 		    <button class="event__reset-btn" type="reset">
-        ${editMode === UserAction.UPDATE_EVENT ? 'Delete' : 'Cancel'}</button>
+        ${deleteButtonLabel()}</button>
 		    <button class="event__rollup-btn" type="button">
 			    <span class="visually-hidden">Open event</span>
 		    </button>
@@ -229,8 +241,8 @@ const createEventEditTemplate = (
 };
 
 export default class EventEditView extends AbstractStatefulView {
-  #allDestinations = null;
-  #allOffers = null;
+  #destinations = null;
+  #offers = null;
 
   #handleFormSubmit = null;
   #handleFormDelete = null;
@@ -241,16 +253,16 @@ export default class EventEditView extends AbstractStatefulView {
 
   constructor({
     event = NEW_EVENT,
-    allDestinations,
-    allOffers,
+    destinations,
+    offers,
     onFormSubmit,
     onFormDelete,
     onFormClose,
   }) {
     super();
     this._setState(EventEditView.parseEventToState(event));
-    this.#allDestinations = allDestinations;
-    this.#allOffers = allOffers;
+    this.#destinations = destinations;
+    this.#offers = offers;
     this.#handleFormSubmit = onFormSubmit;
     this.#handleFormDelete = onFormDelete;
     this.#handleFormClose = onFormClose;
@@ -260,9 +272,9 @@ export default class EventEditView extends AbstractStatefulView {
   get template() {
     return createEventEditTemplate(
       this._state,
-      this.#allDestinations,
-      this.#allOffers,
-      this.editMode
+      this.#destinations,
+      this.#offers,
+      this.editMode,
     );
   }
 
@@ -301,8 +313,11 @@ export default class EventEditView extends AbstractStatefulView {
       .querySelector('.event__input--destination')
       .addEventListener('change', this.#destinationChangeHandler);
     this.element
-      .querySelector('.event__field-group--price')
+      .querySelector('.event__input--price')
       .addEventListener('change', this.#priceChangeHandler);
+    this.element
+      .querySelector('.event__input--price')
+      .addEventListener('keypress', this.#priceKeypressHandler);
 
     if (this.element.querySelector('.event__section--offers')) {
       this.element
@@ -372,7 +387,7 @@ export default class EventEditView extends AbstractStatefulView {
 
   #destinationChangeHandler = (evt) => {
     const name = evt.target.value;
-    const newDestination = this.#allDestinations.find(
+    const newDestination = this.#destinations.find(
       (destination) => destination.name === name
     );
 
@@ -385,11 +400,17 @@ export default class EventEditView extends AbstractStatefulView {
     });
   };
 
-  #priceChangeHandler = (evt) => {
-    const newBasePrice = evt.target.value;
+  #priceKeypressHandler = (evt) => {
+    if (!EventSettings.PRICE_PATTERN.test(evt.key)) {
+      evt.preventDefault();
+    }
+  };
 
-    if (newBasePrice && !EventSettings.PRICE_PATTERN.test(newBasePrice)) {
-      this.updateElement({
+  #priceChangeHandler = (evt) => {
+    const newBasePrice = Number(evt.target.value);
+
+    if (newBasePrice) {
+      this._setState({
         basePrice: newBasePrice,
       });
     }
@@ -419,10 +440,14 @@ export default class EventEditView extends AbstractStatefulView {
     this._setState({ dateTo: userDate });
   };
 
-  static parseEventToState = (event) => ({ ...event });
+  static parseEventToState = (event) => ({ ...event, isSaving: false,
+    isDeleting: false, });
 
   static parseStateToEvent = (state) => {
     const event = { ...state };
+    delete event.isSaving;
+    delete event.isDeleting;
     return event;
   };
+
 }

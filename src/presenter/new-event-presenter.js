@@ -1,6 +1,5 @@
 import { remove, render, RenderPosition } from '../framework/render.js';
 import EventEditView from '../view/event-edit-view.js';
-import { nanoid } from 'nanoid';
 import { UserAction, UpdateType } from '../const.js';
 
 export default class NewEventPresenter {
@@ -16,14 +15,14 @@ export default class NewEventPresenter {
     this.#handleDestroy = onDestroy;
   }
 
-  init(allDestinations, allOffers) {
+  init(destinations, offers) {
     if (this.#eventEditComponent !== null) {
       return;
     }
 
     this.#eventEditComponent = new EventEditView({
-      allDestinations: allDestinations,
-      allOffers: allOffers,
+      destinations,
+      offers,
       onFormSubmit: this.#handleFormSubmit,
       onFormDelete: this.#handleFormClose,
       onFormClose: this.#handleFormClose,
@@ -51,12 +50,15 @@ export default class NewEventPresenter {
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 
-  #handleFormSubmit = (event) => {
-    this.#handleDataChange(UserAction.ADD_EVENT, UpdateType.MINOR, {
-      ...event,
-      id: nanoid(),
+  setSaving() {
+    this.#eventEditComponent.updateElement({
+      isDisabled: true,
+      isSaving: true,
     });
-    this.destroy();
+  }
+
+  #handleFormSubmit = (event) => {
+    this.#handleDataChange(UserAction.ADD_EVENT, UpdateType.MINOR, event);
   };
 
   #handleFormClose = () => {
@@ -64,7 +66,7 @@ export default class NewEventPresenter {
   };
 
   #escKeyDownHandler = (evt) => {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
+    if (evt.key === 'Escape') {
       evt.preventDefault();
       this.destroy();
     }

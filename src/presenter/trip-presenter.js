@@ -28,8 +28,8 @@ export default class TripPresenter {
   #eventsModel = null;
   #filterModel = null;
 
-  #allDestinations = null;
-  #allOffers = null;
+  #destinations = null;
+  #offers = null;
 
   #infoComponent = null;
   #sortComponent = null;
@@ -38,6 +38,8 @@ export default class TripPresenter {
   #eventPresenters = new Map();
   #newEventPresenter = null;
   #currentSortType = SortType.DAY;
+  #filterType = FilterType.EVERYTHING;
+  #isLoading = true;
 
   constructor({
     mainContainer,
@@ -62,25 +64,22 @@ export default class TripPresenter {
   }
 
   get events() {
-    const filterType = this.#filterModel.filter;
+    this.#filterType = this.#filterModel.filter;
     const events = this.#eventsModel.events;
-    let filteredEvents = filter[filterType](events);
+    let filteredEvents = filter[this.#filterType](events);
 
     filteredEvents = this.#sortEvents(this.#currentSortType, filteredEvents);
     return filteredEvents;
   }
 
   init = () => {
-    this.#allDestinations = this.#eventsModel.getAllDestinations();
-    this.#allOffers = this.#eventsModel.getAllOffers();
-
     this.#renderTrip();
   };
 
   createEvent() {
     this.#currentSortType = SortType.DAY;
-    this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this.#newEventPresenter.init(this.#allDestinations, this.#allOffers);
+    this.#filterModel.setFilter(FilterType.EVERYTHING);
+    this.#newEventPresenter.init(this.#destinations, this.#offers);
   }
 
   #sortEvents = (sortType, filteredEvents) => {
@@ -106,12 +105,15 @@ export default class TripPresenter {
   #handleViewAction = (actionType, updateType, update) => {
     switch (actionType) {
       case UserAction.UPDATE_EVENT:
+        this.#eventPresenters.get(update.id).setSaving();
         this.#eventsModel.updateEvent(updateType, update);
         break;
       case UserAction.ADD_EVENT:
+        this.#newEventPresenter.setSaving();
         this.#eventsModel.addEvent(updateType, update);
         break;
       case UserAction.DELETE_EVENT:
+        this.#eventPresenters.get(update.id).setDeleting();
         this.#eventsModel.deleteEvent(updateType, update);
         break;
     }
@@ -132,6 +134,11 @@ export default class TripPresenter {
         });
         this.#renderTrip();
         break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#messageComponent);
+        this.#renderTrip();
+        break;
     }
   };
 
@@ -146,11 +153,17 @@ export default class TripPresenter {
   };
 
   #renderInfo = () => {
-    const route = getRoute(this.events);
+    const route = getRoute(
+      this.#eventsModel.events,
+      this.#eventsModel.destinations
+    );
     this.#infoComponent = new TripInfoView({
       route: route.route,
       routeDates: route.routeDates,
-      totalPrice: calcTotalPrice(this.events),
+      totalPrice: calcTotalPrice(
+        this.#eventsModel.events,
+        this.#eventsModel.offers
+      ),
     });
 
     render(this.#infoComponent, this.#mainContainer, RenderPosition.AFTERBEGIN);
@@ -181,8 +194,8 @@ export default class TripPresenter {
   #renderEvent = (event) => {
     const eventPresenter = new EventPresenter({
       eventsListContainer: this.#eventsListComponent.element,
-      allDestinations: this.#allDestinations,
-      allOffers: this.#allOffers,
+      destinations: this.#destinations,
+      offers: this.#offers,
       onDataChange: this.#handleViewAction,
       onModeChange: this.#handleModeChange,
     });
@@ -213,8 +226,16 @@ export default class TripPresenter {
   #renderTrip = () => {
     render(this.#eventsListComponent, this.#eventsContainer);
 
+    if (this.#isLoading) {
+      this.#renderNoEvents('Loading...');
+      return;
+    }
+
     const events = this.events;
     const eventCount = events.length;
+
+    this.#destinations = this.#eventsModel.destinations;
+    this.#offers = this.#eventsModel.offers;
 
     if (eventCount === 0) {
       this.#renderNoEvents(

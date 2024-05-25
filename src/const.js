@@ -13,8 +13,8 @@ export const EventMode = {
 };
 
 export const EventSettings = {
-  ITEM_COUNT: 5,
-  PRICE_PATTERN: /^[\D0]+|\D/g,
+  ITEM_COUNT: 0,
+  PRICE_PATTERN: /[0-9]/,
 };
 
 export const FilterType = {
@@ -49,4 +49,5 @@ export const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
+  INIT: 'INIT',
 };

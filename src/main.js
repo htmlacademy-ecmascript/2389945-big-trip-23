@@ -2,6 +2,10 @@ import EventsModel from './model/events-model.js';
 import FilterModel from './model/filter-model.js';
 import TripPresenter from './presenter/trip-presenter.js';
 import FilterPresenter from './presenter/filter-presenter.js';
+import EventsApiService from './events-api-service.js';
+
+const AUTHORIZATION = 'Basic xS2d557gsds55656hgg78k';
+const END_POINT = 'https://23.objects.htmlacademy.pro/big-trip';
 
 const tripEventsElement = document.querySelector('.trip-events');
 const tripMainElement = document.querySelector('.trip-main');
@@ -16,7 +20,9 @@ tripMainNewEventButtonElement.addEventListener(
   handleNewEventButtonClick
 );
 
-const eventsModel = new EventsModel();
+const eventsModel = new EventsModel({
+  eventsApiService: new EventsApiService(END_POINT, AUTHORIZATION),
+});
 const filterModel = new FilterModel();
 
 const tripPresenter = new TripPresenter({
@@ -44,3 +50,4 @@ function handleNewEventButtonClick() {
 
 filterPresenter.init();
 tripPresenter.init();
+eventsModel.init();
