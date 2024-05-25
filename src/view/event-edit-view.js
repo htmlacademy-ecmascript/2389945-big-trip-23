@@ -1,8 +1,8 @@
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import he from 'he';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import { DateTimeSettings, EventSettings } from '../const.js';
-import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { capitalizeFirstLetter, formatDate } from '../utils/common.js';
 import { getDestinationById, getOfferById } from '../utils/event.js';
 import { UserAction } from '../const.js';
@@ -139,13 +139,16 @@ const createEventTypesTemplate = (offers, eventType) => {
   return typesTemplate;
 };
 
-const createEventEditTemplate = (
-  event,
-  destinations,
-  offers,
-  editMode
-) => {
-  const { type, destination, basePrice, dateFrom, dateTo, isSaving, isDeleting } = event;
+const createEventEditTemplate = (event, destinations, offers, editMode) => {
+  const {
+    type,
+    destination,
+    basePrice,
+    dateFrom,
+    dateTo,
+    isSaving,
+    isDeleting,
+  } = event;
 
   const destinationPoint = getDestinationById(destinations, destination);
   const selectedOffers = event.offers.map((offer) =>
@@ -190,32 +193,22 @@ const createEventEditTemplate = (
 			    <input class="event__type-toggle visually-hidden" id="event-type-toggle-1" type="checkbox">
 			    <div class="event__type-list">
 				    <fieldset class="event__type-group">
-					    <legend class="visually-hidden">Event type</legend>
-              ${typesTemplate}
-				    </fieldset>
+					    <legend class="visually-hidden">Event type</legend>${typesTemplate}</fieldset>
 			    </div>
 		    </div>
 
 		    <div class="event__field-group event__field-group--destination">
-			    <label class="event__label event__type-output" for="event-destination-1">
-				    ${type}
-			    </label>
+			    <label class="event__label event__type-output" for="event-destination-1">${type}</label>
 			    <input class="event__input event__input--destination" id="event-destination-1" type="text" name="event-destination"
           value="${he.encode(destinationPoint?.name || '')}" list="destination-list-1">
-			    <datalist id="destination-list-1">
-				    ${destinationsTemplate}
-			    </datalist>
+			    <datalist id="destination-list-1">${destinationsTemplate}</datalist>
 		    </div>
 
 		    <div class="event__field-group event__field-group--time">
 			    <label class="visually-hidden" for="event-start-time-1">From</label>
 			    <input class="event__input event__input--time"                        id="event-start-time-1" type="text"
-          name="event-start-time" value="
-          ${he.encode(startDate)}">
-			      &mdash;
-			    <label class="visually-hidden" for="event-end-time-1">To</label>
-			    <input class="event__input event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="
-          ${he.encode(endDate)}">
+          name="event-start-time" value="${he.encode(startDate)}">&mdash;   <label class="visually-hidden" for="event-end-time-1">To</label>
+			    <input class="event__input event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${he.encode(endDate)}">
 		    </div>
 
 		    <div class="event__field-group event__field-group--price">
@@ -274,7 +267,7 @@ export default class EventEditView extends AbstractStatefulView {
       this._state,
       this.#destinations,
       this.#offers,
-      this.editMode,
+      this.editMode
     );
   }
 
@@ -440,8 +433,11 @@ export default class EventEditView extends AbstractStatefulView {
     this._setState({ dateTo: userDate });
   };
 
-  static parseEventToState = (event) => ({ ...event, isSaving: false,
-    isDeleting: false, });
+  static parseEventToState = (event) => ({
+    ...event,
+    isSaving: false,
+    isDeleting: false,
+  });
 
   static parseStateToEvent = (state) => {
     const event = { ...state };
@@ -449,5 +445,4 @@ export default class EventEditView extends AbstractStatefulView {
     delete event.isDeleting;
     return event;
   };
-
 }

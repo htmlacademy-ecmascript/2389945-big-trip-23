@@ -58,8 +58,7 @@ export const getRoute = (events, destinations) => {
     eventLast.destination
   );
 
-  route = `${firstRoutePoint.name} &mdash; ... &mdash;
-      ${lastRoutePoint.name}`;
+  route = `${firstRoutePoint.name} &mdash; ... &mdash;${lastRoutePoint.name}`;
 
   return { route, routeDates };
 };
