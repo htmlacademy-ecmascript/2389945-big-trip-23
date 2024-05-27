@@ -50,13 +50,13 @@ export default class NewEventPresenter {
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   };
 
-  setSaving = () => {
+  setSaving() {
     this.#eventEditComponent.updateElement({
       isSaving: true,
     });
-  };
+  }
 
-  setAborting = () => {
+  setAborting() {
     const resetFormState = () => {
       this.#eventEditComponent.updateElement({
         isSaving: false,
@@ -65,7 +65,7 @@ export default class NewEventPresenter {
     };
 
     this.#eventEditComponent.shake(resetFormState);
-  };
+  }
 
   #handleFormSubmit = (event) => {
     this.#handleDataChange(UserAction.ADD_EVENT, UpdateType.MINOR, event);
