@@ -181,16 +181,16 @@ export default class TripPresenter {
     this.#renderTrip();
   };
 
-  #renderInfo = () => {
+  #renderInfo = (events) => {
     const route = getRoute(
-      this.#eventsModel.events,
+      this.#sortEvents(SortType.DAY, [...events]),
       this.#eventsModel.destinations
     );
     this.#infoComponent = new TripInfoView({
       route: route.route,
       routeDates: route.routeDates,
       totalPrice: calcTotalPrice(
-        this.#eventsModel.events,
+        events,
         this.#eventsModel.offers
       ),
     });
@@ -265,21 +265,19 @@ export default class TripPresenter {
       return;
     }
 
-    const events = this.events;
-    const eventCount = events.length;
-
     this.#destinations = this.#eventsModel.destinations;
     this.#offers = this.#eventsModel.offers;
 
-    if (eventCount === 0) {
+    if (this.events.length === 0) {
       this.#renderNoEvents(
         FilterTypeMessage[getKeyByValue(FilterType, this.#filterModel.filter)]
       );
       return;
     }
 
-    this.#renderInfo();
+    this.#renderInfo(this.#eventsModel.events);
     this.#renderSort();
     this.#renderEvents(this.events);
+
   };
 }
