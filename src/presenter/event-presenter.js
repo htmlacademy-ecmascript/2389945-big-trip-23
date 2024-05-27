@@ -31,7 +31,7 @@ export default class EventPresenter {
     this.#handleModeChange = onModeChange;
   }
 
-  init(event) {
+  init = (event) => {
     this.#event = event;
 
     const prevEventComponent = this.#eventComponent;
@@ -70,36 +70,37 @@ export default class EventPresenter {
 
     remove(prevEventComponent);
     remove(prevEventEditComponent);
-  }
+  };
 
-  destroy() {
+  destroy = () => {
     remove(this.#eventComponent);
     remove(this.#eventEditComponent);
-  }
+  };
 
-  resetView() {
+  resetView = () => {
     if (this.#mode !== EventMode.VIEW) {
+      this.#eventEditComponent.reset(this.#event);
       this.#replaceFormToEvent();
     }
-  }
+  };
 
-  setSaving() {
+  setSaving = () => {
     if (this.#mode === EventMode.EDIT) {
       this.#eventEditComponent.updateElement({
         isSaving: true,
       });
     }
-  }
+  };
 
-  setDeleting() {
+  setDeleting = () => {
     if (this.#mode === EventMode.EDIT) {
       this.#eventEditComponent.updateElement({
         isDeleting: true,
       });
     }
-  }
+  };
 
-  setAborting() {
+  setAborting = () => {
     if (this.#mode === EventMode.VIEW) {
       this.#eventComponent.shake();
       return;
@@ -113,20 +114,20 @@ export default class EventPresenter {
     };
 
     this.#eventEditComponent.shake(resetFormState);
-  }
+  };
 
-  #replaceEventToForm() {
+  #replaceEventToForm = () => {
     replace(this.#eventEditComponent, this.#eventComponent);
     document.addEventListener('keydown', this.#escKeyDownHandler);
     this.#handleModeChange();
     this.#mode = EventMode.EDIT;
-  }
+  };
 
-  #replaceFormToEvent() {
+  #replaceFormToEvent = () => {
     replace(this.#eventComponent, this.#eventEditComponent);
     document.removeEventListener('keydown', this.#escKeyDownHandler);
     this.#mode = EventMode.VIEW;
-  }
+  };
 
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape') {

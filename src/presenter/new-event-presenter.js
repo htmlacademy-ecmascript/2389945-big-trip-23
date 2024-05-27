@@ -15,7 +15,7 @@ export default class NewEventPresenter {
     this.#handleDestroy = onDestroy;
   }
 
-  init(destinations, offers) {
+  init = (destinations, offers) => {
     if (this.#eventEditComponent !== null) {
       return;
     }
@@ -35,9 +35,9 @@ export default class NewEventPresenter {
     );
 
     document.addEventListener('keydown', this.#escKeyDownHandler);
-  }
+  };
 
-  destroy() {
+  destroy = () => {
     if (this.#eventEditComponent === null) {
       return;
     }
@@ -48,15 +48,15 @@ export default class NewEventPresenter {
     this.#eventEditComponent = null;
 
     document.removeEventListener('keydown', this.#escKeyDownHandler);
-  }
+  };
 
-  setSaving() {
+  setSaving = () => {
     this.#eventEditComponent.updateElement({
       isSaving: true,
     });
-  }
+  };
 
-  setAborting() {
+  setAborting = () => {
     const resetFormState = () => {
       this.#eventEditComponent.updateElement({
         isSaving: false,
@@ -65,7 +65,7 @@ export default class NewEventPresenter {
     };
 
     this.#eventEditComponent.shake(resetFormState);
-  }
+  };
 
   #handleFormSubmit = (event) => {
     this.#handleDataChange(UserAction.ADD_EVENT, UpdateType.MINOR, event);

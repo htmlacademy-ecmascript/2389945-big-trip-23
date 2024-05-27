@@ -83,11 +83,11 @@ export default class TripPresenter {
     this.#renderTrip();
   };
 
-  createEvent() {
+  createEvent = () => {
     this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(FilterType.EVERYTHING);
     this.#newEventPresenter.init(this.#destinations, this.#offers);
-  }
+  };
 
   #sortEvents = (sortType, filteredEvents) => {
     const sortFunctionMap = {
@@ -230,7 +230,7 @@ export default class TripPresenter {
     events.forEach((event) => this.#renderEvent(event));
   };
 
-  #clearTrip({ resetSortType = false } = {}) {
+  #clearTrip = ({ resetSortType = false } = {}) => {
     this.#newEventPresenter.destroy();
     this.#eventPresenters.forEach((presenter) => presenter.destroy());
     this.#eventPresenters.clear();
@@ -244,7 +244,7 @@ export default class TripPresenter {
     if (resetSortType) {
       this.#currentSortType = SortType.DAY;
     }
-  }
+  };
 
   #renderTrip = () => {
     render(this.#eventsListComponent, this.#eventsContainer);

@@ -27,7 +27,7 @@ export default class FilterPresenter {
     }));
   }
 
-  init() {
+  init = () => {
     this.#events = [...this.#eventsModel.events];
     const filters = this.filters;
     const prevFilterComponent = this.#filterComponent;
@@ -45,7 +45,7 @@ export default class FilterPresenter {
 
     replace(this.#filterComponent, prevFilterComponent);
     remove(prevFilterComponent);
-  }
+  };
 
   #handleModelEvent = () => {
     this.init();
