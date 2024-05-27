@@ -162,7 +162,7 @@ export default class TripPresenter {
       case UpdateType.INIT:
         this.#isLoading = false;
         remove(this.#messageComponent);
-        this.#renderTrip();
+        this.init();
         break;
       case UpdateType.ERROR:
         this.#isError = true;
