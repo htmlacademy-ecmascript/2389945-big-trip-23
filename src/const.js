@@ -31,6 +31,11 @@ export const FilterTypeMessage = {
   PAST: 'There are no past events now',
 };
 
+export const EventsMessage = {
+  LOADING: 'Loading...',
+  ERROR: 'Failed to load latest route information'
+};
+
 export const SortType = {
   DAY: 'day',
   EVENT: 'event',
@@ -50,6 +55,7 @@ export const UpdateType = {
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
   INIT: 'INIT',
+  ERROR: 'ERROR'
 };
 
 export const TimeLimit = {

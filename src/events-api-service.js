@@ -9,15 +9,21 @@ const Method = {
 
 export default class EventsApiService extends ApiService {
   get events() {
-    return this._load({ url: 'points' }).then(ApiService.parseResponse);
+    return this._load({ url: 'points' }).then(ApiService.parseResponse).catch(() => {
+      throw new Error();
+    });
   }
 
   get destinations () {
-    return this._load({ url: 'destinations' }).then(ApiService.parseResponse);
+    return this._load({ url: 'destinations' }).then(ApiService.parseResponse).catch(() => {
+      throw new Error();
+    });
   }
 
   get offers () {
-    return this._load({ url: 'offers' }).then(ApiService.parseResponse);
+    return this._load({ url: 'offers' }).then(ApiService.parseResponse).catch(() => {
+      throw new Error();
+    });
   }
 
   async updateEvent(event) {

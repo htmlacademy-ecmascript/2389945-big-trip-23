@@ -10,6 +10,7 @@ import { getKeyByValue } from '../utils/common.js';
 import { calcTotalPrice, getRoute } from '../utils/event.js';
 import {
   FilterType,
+  EventsMessage,
   FilterTypeMessage,
   SortType,
   UpdateType,
@@ -42,6 +43,7 @@ export default class TripPresenter {
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
   #isLoading = true;
+  #isError = false;
 
   #uiBlocker = new UiBlocker({
     lowerLimit: TimeLimit.LOWER_LIMIT,
@@ -162,6 +164,10 @@ export default class TripPresenter {
         remove(this.#messageComponent);
         this.#renderTrip();
         break;
+      case UpdateType.ERROR:
+        this.#isError = true;
+        remove(this.#messageComponent);
+        break;
     }
   };
 
@@ -249,8 +255,13 @@ export default class TripPresenter {
   #renderTrip = () => {
     render(this.#eventsListComponent, this.#eventsContainer);
 
+    if (this.#isError) {
+      this.#renderNoEvents(EventsMessage.ERROR);
+      return;
+    }
+
     if (this.#isLoading) {
-      this.#renderNoEvents('Loading...');
+      this.#renderNoEvents(EventsMessage.LOADING);
       return;
     }
 
