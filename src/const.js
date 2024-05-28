@@ -1,3 +1,10 @@
+export const Method = {
+  GET: 'GET',
+  PUT: 'PUT',
+  POST: 'POST',
+  DELETE: 'DELETE',
+};
+
 export const DateTimeSettings = {
   LIST_TIME_FORMAT: 'HH:mm',
   LIST_DATE_FORMAT: 'MMM DD',

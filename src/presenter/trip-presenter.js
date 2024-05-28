@@ -14,7 +14,7 @@ import {
   SortType,
   UpdateType,
   UserAction,
-  TimeLimit
+  TimeLimit,
 } from '../const.js';
 import { RenderPosition, render, remove } from '../framework/render.js';
 import {
@@ -36,6 +36,7 @@ export default class TripPresenter {
   #infoComponent = null;
   #sortComponent = null;
   #messageComponent = null;
+  #newEventButtonComponent = null;
 
   #eventPresenters = new Map();
   #newEventPresenter = null;
@@ -43,10 +44,11 @@ export default class TripPresenter {
   #filterType = FilterType.EVERYTHING;
   #isLoading = true;
   #isError = false;
+  #isNewEvent = false;
 
   #uiBlocker = new UiBlocker({
     lowerLimit: TimeLimit.LOWER_LIMIT,
-    upperLimit: TimeLimit.UPPER_LIMIT
+    upperLimit: TimeLimit.UPPER_LIMIT,
   });
 
   constructor({
@@ -54,21 +56,27 @@ export default class TripPresenter {
     eventsContainer,
     eventsModel,
     filterModel,
-    onNewEventDestroy,
+    newEventButtonComponent,
   }) {
     this.#mainContainer = mainContainer;
     this.#eventsContainer = eventsContainer;
     this.#eventsModel = eventsModel;
     this.#filterModel = filterModel;
+    this.#newEventButtonComponent = newEventButtonComponent;
 
     this.#newEventPresenter = new NewEventPresenter({
       eventListContainer: this.#eventsListComponent.element,
       onDataChange: this.#handleViewAction,
-      onDestroy: onNewEventDestroy,
+      onDestroy: this.#handleNewEventFormClose,
     });
 
     this.#eventsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
+
+    this.#newEventButtonComponent.addEventListener(
+      'click',
+      this.#handleNewEventButtonClick
+    );
   }
 
   get events() {
@@ -81,6 +89,8 @@ export default class TripPresenter {
   }
 
   init = () => {
+    this.#destinations = this.#eventsModel.destinations;
+    this.#offers = this.#eventsModel.offers;
     this.#renderTrip();
   };
 
@@ -118,7 +128,7 @@ export default class TripPresenter {
         this.#eventPresenters.get(update.id).setSaving();
         try {
           await this.#eventsModel.updateEvent(updateType, update);
-        } catch(err) {
+        } catch (err) {
           this.#eventPresenters.get(update.id).setAborting();
         }
         break;
@@ -126,7 +136,7 @@ export default class TripPresenter {
         this.#newEventPresenter.setSaving();
         try {
           await this.#eventsModel.addEvent(updateType, update);
-        } catch(err) {
+        } catch (err) {
           this.#newEventPresenter.setAborting();
         }
         break;
@@ -134,7 +144,7 @@ export default class TripPresenter {
         this.#eventPresenters.get(update.id).setDeleting();
         try {
           await this.#eventsModel.deleteEvent(updateType, update);
-        } catch(err) {
+        } catch (err) {
           this.#eventPresenters.get(update.id).setAborting();
         }
         break;
@@ -188,10 +198,7 @@ export default class TripPresenter {
     this.#infoComponent = new TripInfoView({
       route: route.route,
       routeDates: route.routeDates,
-      totalPrice: calcTotalPrice(
-        events,
-        this.#eventsModel.offers
-      ),
+      totalPrice: calcTotalPrice(events, this.#eventsModel.offers),
     });
 
     render(this.#infoComponent, this.#mainContainer, RenderPosition.AFTERBEGIN);
@@ -210,13 +217,37 @@ export default class TripPresenter {
     );
   };
 
-  #renderNoEvents = (message) => {
-    this.#messageComponent = new EventsMessageView(message);
-    render(
-      this.#messageComponent,
-      this.#eventsContainer,
-      RenderPosition.AFTERBEGIN
-    );
+  #renderNoEvents = () => {
+    let message = null;
+
+    if (this.#isError && !message) {
+      this.#setNewButtonDisabled(true);
+      message = EventsMessage.ERROR;
+    }
+
+    if (this.#isLoading && !message) {
+      message = EventsMessage.LOADING;
+    }
+
+    if (this.events.length === 0 && !message) {
+      message = filterTypeMessage[this.#filterModel.filter];
+    }
+
+    if (message) {
+      if (this.#isNewEvent) {
+        return true;
+      } else {
+        this.#messageComponent = new EventsMessageView(message);
+        render(
+          this.#messageComponent,
+          this.#eventsContainer,
+          RenderPosition.AFTERBEGIN
+        );
+        return true;
+      }
+    }
+
+    return false;
   };
 
   #renderEvent = (event) => {
@@ -251,32 +282,31 @@ export default class TripPresenter {
     }
   };
 
+  #setNewButtonDisabled = (disabled) => {
+    this.#newEventButtonComponent.disabled = disabled;
+  };
+
+  #handleNewEventButtonClick = () => {
+    this.#isNewEvent = true;
+    this.createEvent();
+    this.#setNewButtonDisabled(true);
+  };
+
+  #handleNewEventFormClose = () => {
+    this.#isNewEvent = false;
+    this.#setNewButtonDisabled(false);
+    this.#renderNoEvents();
+  };
+
   #renderTrip = () => {
     render(this.#eventsListComponent, this.#eventsContainer);
 
-    if (this.#isError) {
-      this.#renderNoEvents(EventsMessage.ERROR);
-      return;
-    }
-
-    if (this.#isLoading) {
-      this.#renderNoEvents(EventsMessage.LOADING);
-      return;
-    }
-
-    this.#destinations = this.#eventsModel.destinations;
-    this.#offers = this.#eventsModel.offers;
-
-    if (this.events.length === 0) {
-      this.#renderNoEvents(
-        filterTypeMessage[this.#filterModel.filter]
-      );
+    if (this.#renderNoEvents()) {
       return;
     }
 
     this.#renderInfo(this.#eventsModel.events);
     this.#renderSort();
     this.#renderEvents(this.events);
-
   };
 }
