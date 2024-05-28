@@ -84,23 +84,23 @@ export default class EventPresenter {
     }
   };
 
-  setSaving() {
+  setSaving = () => {
     if (this.#mode === EventMode.EDIT) {
       this.#eventEditComponent.updateElement({
         isSaving: true,
       });
     }
-  }
+  };
 
-  setDeleting() {
+  setDeleting = () => {
     if (this.#mode === EventMode.EDIT) {
       this.#eventEditComponent.updateElement({
         isDeleting: true,
       });
     }
-  }
+  };
 
-  setAborting () {
+  setAborting = () => {
     if (this.#mode === EventMode.VIEW) {
       this.#eventComponent.shake();
       return;
@@ -114,7 +114,7 @@ export default class EventPresenter {
     };
 
     this.#eventEditComponent.shake(resetFormState);
-  }
+  };
 
   #replaceEventToForm = () => {
     replace(this.#eventEditComponent, this.#eventComponent);
