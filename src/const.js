@@ -1,3 +1,10 @@
+export const Method = {
+  GET: 'GET',
+  PUT: 'PUT',
+  POST: 'POST',
+  DELETE: 'DELETE',
+};
+
 export const DateTimeSettings = {
   LIST_TIME_FORMAT: 'HH:mm',
   LIST_DATE_FORMAT: 'MMM DD',
@@ -24,11 +31,16 @@ export const FilterType = {
   PAST: 'past',
 };
 
-export const FilterTypeMessage = {
-  EVERYTHING: 'Click New Event to create your first point',
-  FUTURE: 'There are no future events now',
-  PRESENT: 'There are no present events now',
-  PAST: 'There are no past events now',
+export const filterTypeMessage = {
+  [FilterType.EVERYTHING]: 'Click New Event to create your first point',
+  [FilterType.FUTURE]: 'There are no future events now',
+  [FilterType.PRESENT]: 'There are no present events now',
+  [FilterType.PAST]: 'There are no past events now',
+};
+
+export const EventsMessage = {
+  LOADING: 'Loading...',
+  ERROR: 'Failed to load latest route information'
 };
 
 export const SortType = {
@@ -50,4 +62,10 @@ export const UpdateType = {
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
   INIT: 'INIT',
+  ERROR: 'ERROR'
+};
+
+export const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
 };

@@ -1,5 +1,5 @@
-import { DateTimeSettings } from '../const.js';
 import AbstractView from '../framework/view/abstract-view.js';
+import { DateTimeSettings } from '../const.js';
 import { formatDate, getDurationTime } from '../utils/common.js';
 import { getDestinationById, getOfferById } from '../utils/event.js';
 

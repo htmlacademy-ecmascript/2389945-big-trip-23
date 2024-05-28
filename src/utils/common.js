@@ -1,24 +1,6 @@
 import dayjs from 'dayjs';
 import { DateTimeSettings } from '../const.js';
 
-const getRandomInteger = (min, max) => {
-  const lower = Math.ceil(Math.min(min, max));
-  const upper = Math.floor(Math.max(min, max));
-  const result = Math.random() * (upper - lower + 1) + lower;
-  return Math.floor(result);
-};
-
-export const getUniqueRandomArray = (sourceArray, resultArraySize) => {
-  const resultIndex = new Set();
-  while (resultIndex.size !== Math.min(resultArraySize, sourceArray.length)) {
-    resultIndex.add(getRandomInteger(0, sourceArray.length - 1));
-  }
-
-  const elements = [];
-  resultIndex.forEach((value) => elements.push(sourceArray[value]));
-  return elements;
-};
-
 export const formatDate = (date, formatPattern) =>
   date ? dayjs(date).format(formatPattern) : '';
 
@@ -45,5 +27,3 @@ export const getDurationTime = (dateStart, dateEnd) => {
 export const capitalizeFirstLetter = (string) =>
   string.charAt(0).toUpperCase() + string.slice(1);
 
-export const getKeyByValue = (object, value) =>
-  Object.keys(object).find((key) => object[key] === value);

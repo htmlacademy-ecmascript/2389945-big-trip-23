@@ -15,10 +15,6 @@ const tripControlsFiltersElement = tripMainElement.querySelector(
 const tripMainNewEventButtonElement = tripMainElement.querySelector(
   '.trip-main__event-add-btn'
 );
-tripMainNewEventButtonElement.addEventListener(
-  'click',
-  handleNewEventButtonClick
-);
 
 const eventsModel = new EventsModel({
   eventsApiService: new EventsApiService(END_POINT, AUTHORIZATION),
@@ -30,7 +26,7 @@ const tripPresenter = new TripPresenter({
   eventsContainer: tripEventsElement,
   eventsModel,
   filterModel,
-  onNewEventDestroy: handleNewEventFormClose,
+  newEventButtonComponent: tripMainNewEventButtonElement,
 });
 
 const filterPresenter = new FilterPresenter({
@@ -38,15 +34,6 @@ const filterPresenter = new FilterPresenter({
   filterModel,
   eventsModel,
 });
-
-function handleNewEventFormClose() {
-  tripMainNewEventButtonElement.disabled = false;
-}
-
-function handleNewEventButtonClick() {
-  tripPresenter.createEvent();
-  tripMainNewEventButtonElement.disabled = true;
-}
 
 filterPresenter.init();
 tripPresenter.init();

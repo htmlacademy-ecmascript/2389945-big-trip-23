@@ -1,26 +1,26 @@
 import ApiService from './framework/api-service.js';
-
-const Method = {
-  GET: 'GET',
-  PUT: 'PUT',
-  POST: 'POST',
-  DELETE: 'DELETE',
-};
+import { Method } from './const.js';
 
 export default class EventsApiService extends ApiService {
   get events() {
-    return this._load({ url: 'points' }).then(ApiService.parseResponse);
+    return this._load({ url: 'points' }).then(ApiService.parseResponse).catch(() => {
+      throw new Error();
+    });
   }
 
   get destinations () {
-    return this._load({ url: 'destinations' }).then(ApiService.parseResponse);
+    return this._load({ url: 'destinations' }).then(ApiService.parseResponse).catch(() => {
+      throw new Error();
+    });
   }
 
   get offers () {
-    return this._load({ url: 'offers' }).then(ApiService.parseResponse);
+    return this._load({ url: 'offers' }).then(ApiService.parseResponse).catch(() => {
+      throw new Error();
+    });
   }
 
-  async updateEvent(event) {
+  updateEvent = async (event) => {
     const response = await this._load({
       url: `points/${event.id}`,
       method: Method.PUT,
@@ -31,9 +31,9 @@ export default class EventsApiService extends ApiService {
     const parsedResponse = await ApiService.parseResponse(response);
 
     return parsedResponse;
-  }
+  };
 
-  async addEvent(event) {
+  addEvent = async (event) => {
     const response = await this._load({
       url: 'points',
       method: Method.POST,
@@ -44,18 +44,18 @@ export default class EventsApiService extends ApiService {
     const parsedResponse = await ApiService.parseResponse(response);
 
     return parsedResponse;
-  }
+  };
 
-  async deleteEvent(event) {
+  deleteEvent = async (event) => {
     const response = await this._load({
       url: `points/${event.id}`,
       method: Method.DELETE,
     });
 
     return response;
-  }
+  };
 
-  #adaptToServer(event) {
+  #adaptToServer = (event) => {
     const adaptedEvent = {
       ...event,
       ['base_price']: event.basePrice,
@@ -70,5 +70,5 @@ export default class EventsApiService extends ApiService {
     delete adaptedEvent.isFavorite;
 
     return adaptedEvent;
-  }
+  };
 }
