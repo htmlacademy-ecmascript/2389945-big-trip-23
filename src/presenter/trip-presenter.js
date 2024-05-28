@@ -6,12 +6,11 @@ import TripSortView from '../view/trip-sort-view.js';
 import EventPresenter from './event-presenter.js';
 import NewEventPresenter from './new-event-presenter.js';
 import { filter } from '../utils/filter.js';
-import { getKeyByValue } from '../utils/common.js';
 import { calcTotalPrice, getRoute } from '../utils/event.js';
 import {
   FilterType,
   EventsMessage,
-  FilterTypeMessage,
+  filterTypeMessage,
   SortType,
   UpdateType,
   UserAction,
@@ -270,7 +269,7 @@ export default class TripPresenter {
 
     if (this.events.length === 0) {
       this.#renderNoEvents(
-        FilterTypeMessage[getKeyByValue(FilterType, this.#filterModel.filter)]
+        filterTypeMessage[this.#filterModel.filter]
       );
       return;
     }

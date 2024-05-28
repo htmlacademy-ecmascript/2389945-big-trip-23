@@ -14,11 +14,12 @@ export const getOfferById = (offers, type, id) =>
     .find((offer) => offer.type === type)
     .offers.find((item) => item.id === id);
 
-export const calcTotalEventPrice = (event, offers) => event.basePrice +
+const calcTotalEventPrice = (event, offers) => event.basePrice +
   event.offers.reduce(
     (sum, offer) => sum + getOfferById(offers, event.type, offer).price,
     0
   );
+
 export const calcTotalPrice = (events, offers) =>
   events.reduce((sum, event) => sum + calcTotalEventPrice(event, offers), 0);
 
