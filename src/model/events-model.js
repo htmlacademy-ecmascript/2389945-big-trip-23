@@ -24,7 +24,7 @@ export default class EventsModel extends Observable {
     return this.#offers;
   }
 
-  async init() {
+  init = async () => {
     try {
       const events = await this.#eventsApiService.events;
       this.#events = events.map(this.#adaptToClient);
@@ -33,12 +33,14 @@ export default class EventsModel extends Observable {
     } catch (err) {
       this._notify(UpdateType.ERROR);
       this.#events = [];
+      this.#destinations = [];
+      this.#offers = [];
     }
 
     this._notify(UpdateType.INIT);
-  }
+  };
 
-  async updateEvent(updateType, update) {
+  updateEvent = async (updateType, update) => {
     const index = this.#events.findIndex((event) => event.id === update.id);
 
     if (index === -1) {
@@ -57,9 +59,9 @@ export default class EventsModel extends Observable {
     } catch (err) {
       throw new Error('Can\'t update event');
     }
-  }
+  };
 
-  async addEvent(updateType, update) {
+  addEvent = async (updateType, update) => {
     try {
       const response = await this.#eventsApiService.addEvent(update);
       const newEvent = this.#adaptToClient(response);
@@ -68,9 +70,9 @@ export default class EventsModel extends Observable {
     } catch (err) {
       throw new Error('Can\'t add event');
     }
-  }
+  };
 
-  async deleteEvent(updateType, update) {
+  deleteEvent = async (updateType, update) => {
     const index = this.#events.findIndex((event) => event.id === update.id);
 
     if (index === -1) {
@@ -87,9 +89,9 @@ export default class EventsModel extends Observable {
     } catch (err) {
       throw new Error('Can\'t delete event');
     }
-  }
+  };
 
-  #adaptToClient(event) {
+  #adaptToClient = (event) => {
     const adaptedEvent = {
       ...event,
       basePrice: event['base_price'],
@@ -104,7 +106,7 @@ export default class EventsModel extends Observable {
     delete adaptedEvent['is_favorite'];
 
     return adaptedEvent;
-  }
+  };
 
   getAllDestinations = () => this.#destinations;
   getAllOffers = () => this.#offers;

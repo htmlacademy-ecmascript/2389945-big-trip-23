@@ -122,30 +122,30 @@ export default class TripPresenter {
 
   #handleViewAction = async (actionType, updateType, update) => {
     this.#uiBlocker.block();
-
+    const activeForm = UserAction.ADD_EVENT === actionType ? this.#newEventPresenter : this.#eventPresenters.get(update.id);
     switch (actionType) {
       case UserAction.UPDATE_EVENT:
-        this.#eventPresenters.get(update.id).setSaving();
+        activeForm.setSaving();
         try {
           await this.#eventsModel.updateEvent(updateType, update);
         } catch (err) {
-          this.#eventPresenters.get(update.id).setAborting();
+          activeForm.setAborting();
         }
         break;
       case UserAction.ADD_EVENT:
-        this.#newEventPresenter.setSaving();
+        activeForm.setSaving();
         try {
           await this.#eventsModel.addEvent(updateType, update);
         } catch (err) {
-          this.#newEventPresenter.setAborting();
+          activeForm.setAborting();
         }
         break;
       case UserAction.DELETE_EVENT:
-        this.#eventPresenters.get(update.id).setDeleting();
+        activeForm.setDeleting();
         try {
           await this.#eventsModel.deleteEvent(updateType, update);
         } catch (err) {
-          this.#eventPresenters.get(update.id).setAborting();
+          activeForm.setAborting();
         }
         break;
     }

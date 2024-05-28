@@ -20,7 +20,7 @@ export default class EventsApiService extends ApiService {
     });
   }
 
-  async updateEvent(event) {
+  updateEvent = async (event) => {
     const response = await this._load({
       url: `points/${event.id}`,
       method: Method.PUT,
@@ -31,9 +31,9 @@ export default class EventsApiService extends ApiService {
     const parsedResponse = await ApiService.parseResponse(response);
 
     return parsedResponse;
-  }
+  };
 
-  async addEvent(event) {
+  addEvent = async (event) => {
     const response = await this._load({
       url: 'points',
       method: Method.POST,
@@ -44,18 +44,18 @@ export default class EventsApiService extends ApiService {
     const parsedResponse = await ApiService.parseResponse(response);
 
     return parsedResponse;
-  }
+  };
 
-  async deleteEvent(event) {
+  deleteEvent = async (event) => {
     const response = await this._load({
       url: `points/${event.id}`,
       method: Method.DELETE,
     });
 
     return response;
-  }
+  };
 
-  #adaptToServer(event) {
+  #adaptToServer = (event) => {
     const adaptedEvent = {
       ...event,
       ['base_price']: event.basePrice,
@@ -70,5 +70,5 @@ export default class EventsApiService extends ApiService {
     delete adaptedEvent.isFavorite;
 
     return adaptedEvent;
-  }
+  };
 }

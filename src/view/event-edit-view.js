@@ -275,7 +275,7 @@ export default class EventEditView extends AbstractStatefulView {
     return this._state.id ? UserAction.UPDATE_EVENT : UserAction.ADD_EVENT;
   }
 
-  removeElement() {
+  removeElement = () => {
     super.removeElement();
 
     if (this.#datepickerFrom) {
@@ -287,9 +287,9 @@ export default class EventEditView extends AbstractStatefulView {
       this.#datepickerTo.destroy();
       this.#datepickerTo = null;
     }
-  }
+  };
 
-  _restoreHandlers() {
+  _restoreHandlers = () => {
     this.element
       .querySelector('form')
       .addEventListener('submit', this.#formSubmitHandler);
@@ -320,7 +320,7 @@ export default class EventEditView extends AbstractStatefulView {
 
     this.#setDatepickerFrom();
     this.#setDatepickerTo();
-  }
+  };
 
   reset = (event) => {
     this.updateElement(EventEditView.parseEventToState(event));
