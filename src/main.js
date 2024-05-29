@@ -12,9 +12,6 @@ const tripMainElement = document.querySelector('.trip-main');
 const tripControlsFiltersElement = tripMainElement.querySelector(
   '.trip-controls__filters'
 );
-const tripMainNewEventButtonElement = tripMainElement.querySelector(
-  '.trip-main__event-add-btn'
-);
 
 const eventsModel = new EventsModel({
   eventsApiService: new EventsApiService(END_POINT, AUTHORIZATION),
@@ -26,7 +23,6 @@ const tripPresenter = new TripPresenter({
   eventsContainer: tripEventsElement,
   eventsModel,
   filterModel,
-  newEventButtonComponent: tripMainNewEventButtonElement,
 });
 
 const filterPresenter = new FilterPresenter({
