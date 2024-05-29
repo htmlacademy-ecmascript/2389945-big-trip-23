@@ -11,7 +11,6 @@ import { calcTotalPrice, getRoute } from '../utils/event.js';
 import {
   FilterType,
   EventsMessage,
-  filterTypeMessage,
   SortType,
   UpdateType,
   UserAction,
@@ -81,7 +80,7 @@ export default class TripPresenter {
   get events() {
     this.#filterType = this.#filterModel.filter;
     const events = this.#eventsModel.events;
-    let filteredEvents = filter[this.#filterType](events);
+    let filteredEvents = filter[this.#filterType].function(events);
 
     filteredEvents = this.#sortEvents(this.#currentSortType, filteredEvents);
     return filteredEvents;
@@ -233,7 +232,7 @@ export default class TripPresenter {
     }
 
     if (this.events.length === 0 && !message) {
-      message = filterTypeMessage[this.#filterModel.filter];
+      message = filter[this.#filterModel.filter].emptyMessage;
     }
 
     if (message) {

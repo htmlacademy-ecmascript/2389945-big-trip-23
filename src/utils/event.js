@@ -1,13 +1,5 @@
-import dayjs from 'dayjs';
 import { formatDate } from './common';
 import { DateTimeSettings } from '../const';
-
-export const isEventPresent = (dateFrom, dateTo) =>
-  dayjs().isAfter(dayjs(dateFrom)) && dayjs().isBefore(dayjs(dateTo));
-
-export const isEventPast = (date) => dayjs().isAfter(dayjs(date));
-
-export const isEventFuture = (date) => dayjs().isBefore(dayjs(date));
 
 export const getOfferById = (offers, type, id) =>
   offers
