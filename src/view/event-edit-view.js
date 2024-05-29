@@ -345,7 +345,7 @@ export default class EventEditView extends AbstractStatefulView {
       {
         dateFormat: 'd/m/y H:i',
         defaultDate: this._state.dateTo,
-        minDate: this.#datepickerFrom.selectedDates[0],
+        minDate: this._state.dateFrom,
         enableTime: true,
         ['time_24hr']: true,
         onChange: this.#dateToCloseHandler,
@@ -427,6 +427,7 @@ export default class EventEditView extends AbstractStatefulView {
 
   #dateFromCloseHandler = ([userDate]) => {
     this._setState({ dateFrom: userDate });
+    this.#setDatepickerTo();
   };
 
   #dateToCloseHandler = ([userDate]) => {

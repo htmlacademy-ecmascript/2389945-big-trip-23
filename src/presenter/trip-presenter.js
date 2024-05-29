@@ -220,7 +220,7 @@ export default class TripPresenter {
   #renderNoEvents = () => {
     let message = null;
 
-    if (this.#isError && !message) {
+    if (this.#isError) {
       this.#setNewButtonDisabled(true);
       message = EventsMessage.ERROR;
     }
@@ -234,17 +234,15 @@ export default class TripPresenter {
     }
 
     if (message) {
-      if (this.#isNewEvent) {
-        return true;
-      } else {
+      if (!this.#isNewEvent) {
         this.#messageComponent = new EventsMessageView(message);
         render(
           this.#messageComponent,
           this.#eventsContainer,
           RenderPosition.AFTERBEGIN
         );
-        return true;
       }
+      return true;
     }
 
     return false;
