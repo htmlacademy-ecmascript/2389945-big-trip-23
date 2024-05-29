@@ -75,7 +75,7 @@ export default class TripPresenter {
 
     this.#newEventButtonComponent.addEventListener(
       'click',
-      this.#handleNewEventButtonClick
+      this.#newEventButtonClickHandler
     );
   }
 
@@ -284,7 +284,7 @@ export default class TripPresenter {
     this.#newEventButtonComponent.disabled = disabled;
   };
 
-  #handleNewEventButtonClick = () => {
+  #newEventButtonClickHandler = () => {
     this.#isNewEvent = true;
     this.createEvent();
     this.#setNewButtonDisabled(true);
