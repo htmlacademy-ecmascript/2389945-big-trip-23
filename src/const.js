@@ -1,3 +1,5 @@
+export const EVENT_PRICE_PATTERN = /[0-9]/;
+
 export const Method = {
   GET: 'GET',
   PUT: 'PUT',
@@ -17,11 +19,6 @@ export const DateTimeSettings = {
 export const EventMode = {
   VIEW: 'VIEW',
   EDIT: 'EDIT',
-};
-
-export const EventSettings = {
-  ITEM_COUNT: 0,
-  PRICE_PATTERN: /[0-9]/,
 };
 
 export const FilterType = {
@@ -69,3 +66,5 @@ export const TimeLimit = {
   LOWER_LIMIT: 350,
   UPPER_LIMIT: 1000,
 };
+
+
