@@ -1,3 +1,5 @@
+export const EVENT_PRICE_PATTERN = /[0-9]/;
+
 export const Method = {
   GET: 'GET',
   PUT: 'PUT',
@@ -19,23 +21,11 @@ export const EventMode = {
   EDIT: 'EDIT',
 };
 
-export const EventSettings = {
-  ITEM_COUNT: 0,
-  PRICE_PATTERN: /[0-9]/,
-};
-
 export const FilterType = {
   EVERYTHING: 'everything',
   FUTURE: 'future',
   PRESENT: 'present',
   PAST: 'past',
-};
-
-export const filterTypeMessage = {
-  [FilterType.EVERYTHING]: 'Click New Event to create your first point',
-  [FilterType.FUTURE]: 'There are no future events now',
-  [FilterType.PRESENT]: 'There are no present events now',
-  [FilterType.PAST]: 'There are no past events now',
 };
 
 export const EventsMessage = {
@@ -69,3 +59,5 @@ export const TimeLimit = {
   LOWER_LIMIT: 350,
   UPPER_LIMIT: 1000,
 };
+
+

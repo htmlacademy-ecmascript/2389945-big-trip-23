@@ -2,7 +2,7 @@ import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import he from 'he';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
-import { DateTimeSettings, EventSettings } from '../const.js';
+import { DateTimeSettings, EVENT_PRICE_PATTERN } from '../const.js';
 import { capitalizeFirstLetter, formatDate } from '../utils/common.js';
 import { getDestinationById, getOfferById } from '../utils/event.js';
 import { UserAction } from '../const.js';
@@ -345,7 +345,7 @@ export default class EventEditView extends AbstractStatefulView {
       {
         dateFormat: 'd/m/y H:i',
         defaultDate: this._state.dateTo,
-        minDate: this.#datepickerFrom.selectedDates[0],
+        minDate: this._state.dateFrom,
         enableTime: true,
         ['time_24hr']: true,
         onChange: this.#dateToCloseHandler,
@@ -394,7 +394,7 @@ export default class EventEditView extends AbstractStatefulView {
   };
 
   #priceKeypressHandler = (evt) => {
-    if (!EventSettings.PRICE_PATTERN.test(evt.key)) {
+    if (!EVENT_PRICE_PATTERN.test(evt.key)) {
       evt.preventDefault();
     }
   };
@@ -427,6 +427,7 @@ export default class EventEditView extends AbstractStatefulView {
 
   #dateFromCloseHandler = ([userDate]) => {
     this._setState({ dateFrom: userDate });
+    this.#setDatepickerTo();
   };
 
   #dateToCloseHandler = ([userDate]) => {

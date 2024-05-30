@@ -1,4 +1,5 @@
 import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
+import NewEventButtonView from '../view/new-event-button-view.js';
 import EventsListView from '../view/events-list-view.js';
 import EventsMessageView from '../view/events-message-view.js';
 import TripInfoView from '../view/trip-info-view.js';
@@ -10,7 +11,6 @@ import { calcTotalPrice, getRoute } from '../utils/event.js';
 import {
   FilterType,
   EventsMessage,
-  filterTypeMessage,
   SortType,
   UpdateType,
   UserAction,
@@ -56,13 +56,16 @@ export default class TripPresenter {
     eventsContainer,
     eventsModel,
     filterModel,
-    newEventButtonComponent,
   }) {
     this.#mainContainer = mainContainer;
     this.#eventsContainer = eventsContainer;
     this.#eventsModel = eventsModel;
     this.#filterModel = filterModel;
-    this.#newEventButtonComponent = newEventButtonComponent;
+
+    this.#newEventButtonComponent = new NewEventButtonView({
+      container: this.#mainContainer,
+      onButtonClick: this.#newEventButtonClickHandler,
+    });
 
     this.#newEventPresenter = new NewEventPresenter({
       eventListContainer: this.#eventsListComponent.element,
@@ -72,17 +75,12 @@ export default class TripPresenter {
 
     this.#eventsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
-
-    this.#newEventButtonComponent.addEventListener(
-      'click',
-      this.#handleNewEventButtonClick
-    );
   }
 
   get events() {
     this.#filterType = this.#filterModel.filter;
     const events = this.#eventsModel.events;
-    let filteredEvents = filter[this.#filterType](events);
+    let filteredEvents = filter[this.#filterType].function(events);
 
     filteredEvents = this.#sortEvents(this.#currentSortType, filteredEvents);
     return filteredEvents;
@@ -94,7 +92,7 @@ export default class TripPresenter {
     this.#renderTrip();
   };
 
-  createEvent = () => {
+  #createEvent = () => {
     this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(FilterType.EVERYTHING);
     this.#newEventPresenter.init(this.#destinations, this.#offers);
@@ -122,7 +120,10 @@ export default class TripPresenter {
 
   #handleViewAction = async (actionType, updateType, update) => {
     this.#uiBlocker.block();
-    const activeForm = UserAction.ADD_EVENT === actionType ? this.#newEventPresenter : this.#eventPresenters.get(update.id);
+    const activeForm =
+      UserAction.ADD_EVENT === actionType
+        ? this.#newEventPresenter
+        : this.#eventPresenters.get(update.id);
     switch (actionType) {
       case UserAction.UPDATE_EVENT:
         activeForm.setSaving();
@@ -220,8 +221,9 @@ export default class TripPresenter {
   #renderNoEvents = () => {
     let message = null;
 
-    if (this.#isError && !message) {
-      this.#setNewButtonDisabled(true);
+    if (this.#isError) {
+      this.#newEventButtonComponent.disable();
+
       message = EventsMessage.ERROR;
     }
 
@@ -230,21 +232,19 @@ export default class TripPresenter {
     }
 
     if (this.events.length === 0 && !message) {
-      message = filterTypeMessage[this.#filterModel.filter];
+      message = filter[this.#filterModel.filter].emptyMessage;
     }
 
     if (message) {
-      if (this.#isNewEvent) {
-        return true;
-      } else {
+      if (!this.#isNewEvent) {
         this.#messageComponent = new EventsMessageView(message);
         render(
           this.#messageComponent,
           this.#eventsContainer,
           RenderPosition.AFTERBEGIN
         );
-        return true;
       }
+      return true;
     }
 
     return false;
@@ -282,19 +282,15 @@ export default class TripPresenter {
     }
   };
 
-  #setNewButtonDisabled = (disabled) => {
-    this.#newEventButtonComponent.disabled = disabled;
-  };
-
-  #handleNewEventButtonClick = () => {
+  #newEventButtonClickHandler = () => {
     this.#isNewEvent = true;
-    this.createEvent();
-    this.#setNewButtonDisabled(true);
+    this.#createEvent();
+    this.#newEventButtonComponent.disable();
   };
 
   #handleNewEventFormClose = () => {
     this.#isNewEvent = false;
-    this.#setNewButtonDisabled(false);
+    this.#newEventButtonComponent.enable();
     this.#renderNoEvents();
   };
 
