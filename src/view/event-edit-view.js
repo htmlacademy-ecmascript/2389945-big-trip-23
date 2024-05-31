@@ -297,10 +297,10 @@ export default class EventEditView extends AbstractStatefulView {
       .addEventListener('submit', this.#formSubmitHandler);
     this.element
       .querySelector('.event__reset-btn')
-      .addEventListener('click', this.#formDeleteHandler);
+      .addEventListener('click', this.#resetButtonClickHandler);
     this.element
       .querySelector('.event__rollup-btn')
-      .addEventListener('click', this.#formCloseHandler);
+      .addEventListener('click', this.#rollupButtonClickHandler);
     this.element
       .querySelector('.event__type-group')
       .addEventListener('change', this.#typeChangeHandler);
@@ -360,12 +360,12 @@ export default class EventEditView extends AbstractStatefulView {
     this.#handleFormSubmit(EventEditView.parseStateToEvent(this._state));
   };
 
-  #formDeleteHandler = (evt) => {
+  #resetButtonClickHandler = (evt) => {
     evt.preventDefault();
     this.#handleFormDelete(EventEditView.parseStateToEvent(this._state));
   };
 
-  #formCloseHandler = (evt) => {
+  #rollupButtonClickHandler = (evt) => {
     evt.preventDefault();
     this.#handleFormClose();
   };
