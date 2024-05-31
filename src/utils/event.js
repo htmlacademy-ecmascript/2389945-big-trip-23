@@ -1,7 +1,9 @@
 import { formatDate } from './common';
-import { DateTimeSettings } from '../const';
+import { DateTimeSetting } from '../const';
 
-export const getOfferById = (offers, type, id) =>
+const SHOWN_POINTS_COUNT = 3;
+
+const getOfferById = (offers, type, id) =>
   offers
     .find((offer) => offer.type === type)
     .offers.find((item) => item.id === id);
@@ -12,13 +14,13 @@ const calcTotalEventPrice = (event, offers) => event.basePrice +
     0
   );
 
-export const calcTotalPrice = (events, offers) =>
+const calcTotalPrice = (events, offers) =>
   events.reduce((sum, event) => sum + calcTotalEventPrice(event, offers), 0);
 
-export const getDestinationById = (destinations, id) =>
+const getDestinationById = (destinations, id) =>
   destinations.find((destination) => destination.id === id);
 
-export const getRoute = (events, destinations) => {
+const getRoute = (events, destinations) => {
   let route = '';
   let routeDates = '';
   const eventsLength = events.length;
@@ -27,13 +29,13 @@ export const getRoute = (events, destinations) => {
 
   routeDates = `${formatDate(
     eventFirst.dateFrom,
-    DateTimeSettings.ROUTE_DATE_FORMAT
+    DateTimeSetting.ROUTE_DATE_FORMAT
   )}&nbsp;&mdash;&nbsp;${formatDate(
     eventLast.dateTo,
-    DateTimeSettings.ROUTE_DATE_FORMAT
+    DateTimeSetting.ROUTE_DATE_FORMAT
   )}`;
 
-  if (eventsLength <= 3) {
+  if (eventsLength <= SHOWN_POINTS_COUNT) {
     route = events
       .map((event) => getDestinationById(destinations, event.destination).name)
       .join(' &mdash; ');
@@ -55,3 +57,5 @@ export const getRoute = (events, destinations) => {
 
   return { route, routeDates };
 };
+
+export { getOfferById, calcTotalPrice, getDestinationById, getRoute };

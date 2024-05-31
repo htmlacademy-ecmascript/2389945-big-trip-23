@@ -80,7 +80,7 @@ export default class TripPresenter {
   get events() {
     this.#filterType = this.#filterModel.filter;
     const events = this.#eventsModel.events;
-    let filteredEvents = filter[this.#filterType].function(events);
+    let filteredEvents = filter[this.#filterType].getFilterFunction(events);
 
     filteredEvents = this.#sortEvents(this.#currentSortType, filteredEvents);
     return filteredEvents;
@@ -282,12 +282,6 @@ export default class TripPresenter {
     }
   };
 
-  #newEventButtonClickHandler = () => {
-    this.#isNewEvent = true;
-    this.#createEvent();
-    this.#newEventButtonComponent.disable();
-  };
-
   #handleNewEventFormClose = () => {
     this.#isNewEvent = false;
     this.#newEventButtonComponent.enable();
@@ -304,5 +298,11 @@ export default class TripPresenter {
     this.#renderInfo(this.#eventsModel.events);
     this.#renderSort();
     this.#renderEvents(this.events);
+  };
+
+  #newEventButtonClickHandler = () => {
+    this.#isNewEvent = true;
+    this.#createEvent();
+    this.#newEventButtonComponent.disable();
   };
 }

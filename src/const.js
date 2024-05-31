@@ -1,13 +1,18 @@
-export const EVENT_PRICE_PATTERN = /[0-9]/;
+const Connection = {
+  AUTHORIZATION: 'Basic xS2d557gsdsgdf3478k',
+  END_POINT: 'https://23.objects.htmlacademy.pro/big-trip',
+};
 
-export const Method = {
+const Method = {
   GET: 'GET',
   PUT: 'PUT',
   POST: 'POST',
   DELETE: 'DELETE',
 };
 
-export const DateTimeSettings = {
+const EVENT_PRICE_PATTERN = /[0-9]/;
+
+const DateTimeSetting = {
   LIST_TIME_FORMAT: 'HH:mm',
   LIST_DATE_FORMAT: 'MMM DD',
   EDIT_DATE_FORMAT: 'DD/MM/YY HH:mm',
@@ -16,24 +21,24 @@ export const DateTimeSettings = {
   HOUR_MINUTES: 60,
 };
 
-export const EventMode = {
+const EventMode = {
   VIEW: 'VIEW',
   EDIT: 'EDIT',
 };
 
-export const FilterType = {
+const FilterType = {
   EVERYTHING: 'everything',
   FUTURE: 'future',
   PRESENT: 'present',
   PAST: 'past',
 };
 
-export const EventsMessage = {
+const EventsMessage = {
   LOADING: 'Loading...',
-  ERROR: 'Failed to load latest route information'
+  ERROR: 'Failed to load latest route information',
 };
 
-export const SortType = {
+const SortType = {
   DAY: 'day',
   EVENT: 'event',
   TIME: 'time',
@@ -41,23 +46,35 @@ export const SortType = {
   OFFERS: 'offers',
 };
 
-export const UserAction = {
+const UserAction = {
   UPDATE_EVENT: 'UPDATE_EVENT',
   ADD_EVENT: 'ADD_EVENT',
   DELETE_EVENT: 'DELETE_EVENT',
 };
 
-export const UpdateType = {
+const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
   INIT: 'INIT',
-  ERROR: 'ERROR'
+  ERROR: 'ERROR',
 };
 
-export const TimeLimit = {
+const TimeLimit = {
   LOWER_LIMIT: 350,
   UPPER_LIMIT: 1000,
 };
 
-
+export {
+  Connection,
+  EVENT_PRICE_PATTERN,
+  Method,
+  DateTimeSetting,
+  EventMode,
+  FilterType,
+  EventsMessage,
+  SortType,
+  UserAction,
+  UpdateType,
+  TimeLimit,
+};
