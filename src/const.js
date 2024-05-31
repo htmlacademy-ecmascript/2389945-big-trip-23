@@ -1,4 +1,7 @@
-const EVENT_PRICE_PATTERN = /[0-9]/;
+const Connection = {
+  AUTHORIZATION: 'Basic xS2d557gsdsgdf3478k',
+  END_POINT: 'https://23.objects.htmlacademy.pro/big-trip',
+};
 
 const Method = {
   GET: 'GET',
@@ -6,6 +9,8 @@ const Method = {
   POST: 'POST',
   DELETE: 'DELETE',
 };
+
+const EVENT_PRICE_PATTERN = /[0-9]/;
 
 const DateTimeSetting = {
   LIST_TIME_FORMAT: 'HH:mm',
@@ -61,6 +66,7 @@ const TimeLimit = {
 };
 
 export {
+  Connection,
   EVENT_PRICE_PATTERN,
   Method,
   DateTimeSetting,

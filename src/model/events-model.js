@@ -107,7 +107,4 @@ export default class EventsModel extends Observable {
 
     return adaptedEvent;
   };
-
-  getAllDestinations = () => this.#destinations;
-  getAllOffers = () => this.#offers;
 }

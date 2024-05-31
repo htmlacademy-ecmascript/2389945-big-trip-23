@@ -1,6 +1,8 @@
 import { formatDate } from './common';
 import { DateTimeSetting } from '../const';
 
+const SHOWN_POINTS_COUNT = 3;
+
 const getOfferById = (offers, type, id) =>
   offers
     .find((offer) => offer.type === type)
@@ -33,7 +35,7 @@ const getRoute = (events, destinations) => {
     DateTimeSetting.ROUTE_DATE_FORMAT
   )}`;
 
-  if (eventsLength <= 3) {
+  if (eventsLength <= SHOWN_POINTS_COUNT) {
     route = events
       .map((event) => getDestinationById(destinations, event.destination).name)
       .join(' &mdash; ');

@@ -282,12 +282,6 @@ export default class TripPresenter {
     }
   };
 
-  #newEventButtonClickHandler = () => {
-    this.#isNewEvent = true;
-    this.#createEvent();
-    this.#newEventButtonComponent.disable();
-  };
-
   #handleNewEventFormClose = () => {
     this.#isNewEvent = false;
     this.#newEventButtonComponent.enable();
@@ -304,5 +298,11 @@ export default class TripPresenter {
     this.#renderInfo(this.#eventsModel.events);
     this.#renderSort();
     this.#renderEvents(this.events);
+  };
+
+  #newEventButtonClickHandler = () => {
+    this.#isNewEvent = true;
+    this.#createEvent();
+    this.#newEventButtonComponent.disable();
   };
 }

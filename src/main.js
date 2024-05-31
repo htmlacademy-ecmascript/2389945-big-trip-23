@@ -3,9 +3,7 @@ import FilterModel from './model/filter-model.js';
 import TripPresenter from './presenter/trip-presenter.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import EventsApiService from './events-api-service.js';
-
-const AUTHORIZATION = 'Basic xS2d557gsdsgdf3478k';
-const END_POINT = 'https://23.objects.htmlacademy.pro/big-trip';
+import { Connection } from './const.js';
 
 const tripEventsElement = document.querySelector('.trip-events');
 const tripMainElement = document.querySelector('.trip-main');
@@ -14,7 +12,10 @@ const tripControlsFiltersElement = tripMainElement.querySelector(
 );
 
 const eventsModel = new EventsModel({
-  eventsApiService: new EventsApiService(END_POINT, AUTHORIZATION),
+  eventsApiService: new EventsApiService(
+    Connection.END_POINT,
+    Connection.AUTHORIZATION
+  ),
 });
 const filterModel = new FilterModel();
 

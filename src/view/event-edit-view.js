@@ -17,11 +17,13 @@ const NEW_EVENT = {
   type: 'flight',
 };
 
-const createEventDestinstionsTemplate = (destinations) => {
+const createEventDestinationsTemplate = (destinations) => {
   let destinationsTemplate = '';
-  for (let i = 0; i < destinations.length; i++) {
-    destinationsTemplate += `<option value="${destinations[i].name}"></option>`;
-  }
+
+  destinations.forEach((destination) => {
+    destinationsTemplate += `<option value="${destination.name}"></option>`;
+  });
+
   return destinationsTemplate;
 };
 
@@ -161,7 +163,7 @@ const createEventEditTemplate = (event, destinations, offers, editMode) => {
 
   const totalPrice = basePrice;
   const typesTemplate = createEventTypesTemplate(offers, type);
-  const destinationsTemplate = createEventDestinstionsTemplate(destinations);
+  const destinationsTemplate = createEventDestinationsTemplate(destinations);
   const detailsTemplate = createEventDetailsTemplate(
     availableOffers,
     selectedOffers,
@@ -411,12 +413,12 @@ export default class EventEditView extends AbstractStatefulView {
 
   #offerChangeHandler = (evt) => {
     evt.preventDefault();
-    const availableOffers = this.element
+    const availableOffersElement = this.element
       .querySelector('.event__available-offers')
       .querySelectorAll('input');
     const selectedOffers = [];
 
-    for (const availableOffer of availableOffers) {
+    for (const availableOffer of availableOffersElement) {
       if (availableOffer.checked) {
         selectedOffers.push(availableOffer.id);
       }
