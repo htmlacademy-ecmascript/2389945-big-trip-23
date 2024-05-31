@@ -2,7 +2,7 @@ import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import he from 'he';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
-import { DateTimeSettings, EVENT_PRICE_PATTERN } from '../const.js';
+import { DateTimeSetting, EVENT_PRICE_PATTERN } from '../const.js';
 import { capitalizeFirstLetter, formatDate } from '../utils/common.js';
 import { getDestinationById, getOfferById } from '../utils/event.js';
 import { UserAction } from '../const.js';
@@ -156,8 +156,8 @@ const createEventEditTemplate = (event, destinations, offers, editMode) => {
   );
   const availableOffers = offers.find((item) => item.type === type).offers;
 
-  const startDate = formatDate(dateFrom, DateTimeSettings.EDIT_DATE_FORMAT);
-  const endDate = formatDate(dateTo, DateTimeSettings.EDIT_DATE_FORMAT);
+  const startDate = formatDate(dateFrom, DateTimeSetting.EDIT_DATE_FORMAT);
+  const endDate = formatDate(dateTo, DateTimeSetting.EDIT_DATE_FORMAT);
 
   const totalPrice = basePrice;
   const typesTemplate = createEventTypesTemplate(offers, type);
@@ -416,9 +416,9 @@ export default class EventEditView extends AbstractStatefulView {
       .querySelectorAll('input');
     const selectedOffers = [];
 
-    for (const availableoffer of availableOffers) {
-      if (availableoffer.checked) {
-        selectedOffers.push(availableoffer.id);
+    for (const availableOffer of availableOffers) {
+      if (availableOffer.checked) {
+        selectedOffers.push(availableOffer.id);
       }
     }
 

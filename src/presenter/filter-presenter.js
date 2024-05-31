@@ -23,7 +23,7 @@ export default class FilterPresenter {
   get filters() {
     return Object.values(FilterType).map((type) => ({
       type,
-      count: filter[type].function(this.#events).length,
+      count: filter[type].getFilterFunction(this.#events).length,
     }));
   }
 

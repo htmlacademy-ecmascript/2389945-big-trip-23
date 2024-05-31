@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { DateTimeSettings } from '../const.js';
+import { DateTimeSetting } from '../const.js';
 import { formatDate, getDurationTime } from '../utils/common.js';
 import { getDestinationById, getOfferById } from '../utils/event.js';
 
@@ -29,9 +29,9 @@ const createEventTemplate = (event, destinations, offers) => {
     getOfferById(offers, event.type, offer)
   );
 
-  const startDate = formatDate(dateFrom, DateTimeSettings.LIST_DATE_FORMAT);
-  const startTime = formatDate(dateFrom, DateTimeSettings.LIST_TIME_FORMAT);
-  const endTime = formatDate(dateTo, DateTimeSettings.LIST_TIME_FORMAT);
+  const startDate = formatDate(dateFrom, DateTimeSetting.LIST_DATE_FORMAT);
+  const startTime = formatDate(dateFrom, DateTimeSetting.LIST_TIME_FORMAT);
+  const endTime = formatDate(dateTo, DateTimeSetting.LIST_TIME_FORMAT);
   const durationTime = getDurationTime(dateFrom, dateTo);
 
   const totalPrice = basePrice;
